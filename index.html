@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rishta Registry — Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RISHTA REGISTRY — design tokens
+   Palette: ivory field, pine + emerald greens, nikah-gold thread
+   Type: Fraunces (display) / Atkinson Hyperlegible (body — designed
+   for low-vision readers) / Noto Nastaliq Urdu (اردو)
+   ============================================================ */
+:root{
+  --ivory:#FAF6EE; --card:#FFFFFF; --ink:#1C2A21; --ink-soft:#4A5A50;
+  --pine:#14532D; --emerald:#1B7A4A; --emerald-dark:#125C37;
+  --gold:#C9A227; --gold-deep:#A8841B; --gold-soft:#F3E8C5;
+  --line:#E5DCC6; --error:#B3261E; --ok:#1B7A4A;
+  --wa:#25D366; --wa-dark:#128C4A;
+  --radius:18px; --shadow:0 10px 30px rgba(28,42,33,.10);
+  --fs-copy:17px; --fs-label:19px; --fs-big:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ivory);
+  color:var(--ink);
+  font-family:'Atkinson Hyperlegible',system-ui,sans-serif;
+  font-size:var(--fs-copy);
+  line-height:1.6;
+  min-height:100vh;
+}
+body.ur{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif; line-height:2.1}
+body.ur .en-font{font-family:'Atkinson Hyperlegible',sans-serif; line-height:1.4}
+
+/* ---------- header ---------- */
+header{
+  max-width:720px;margin:0 auto;padding:22px 20px 6px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{
+  width:52px;height:52px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#2A8A58,var(--pine));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 0 3px var(--gold-soft),0 4px 10px rgba(20,83,45,.25);
+  font-size:26px;
+}
+.brand h1{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:var(--pine);letter-spacing:.2px}
+.brand p{font-size:15px;color:var(--ink-soft)}
+body.ur .brand h1{font-family:'Noto Nastaliq Urdu',serif}
+
+/* language toggle */
+.lang-toggle{
+  display:flex;border:2px solid var(--pine);border-radius:999px;overflow:hidden;background:#fff;
+}
+.lang-toggle button{
+  min-height:48px;padding:6px 22px;border:0;background:transparent;cursor:pointer;
+  font-size:18px;font-weight:700;color:var(--pine);font-family:inherit;
+}
+.lang-toggle button.active{background:var(--pine);color:#fff}
+.lang-toggle button:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+
+/* ---------- golden-thread progress (signature) ---------- */
+.progress-wrap{max-width:720px;margin:14px auto 4px;padding:0 20px}
+.pct-readout{
+  text-align:center;font-family:'Fraunces',serif;font-size:20px;color:var(--gold-deep);
+  font-weight:600;margin-bottom:4px;min-height:28px;
+}
+.thread{position:relative;height:76px}
+.thread-line,.thread-fill{
+  position:absolute;top:26px;left:6%;right:6%;height:6px;border-radius:6px;
+}
+.thread-line{background:var(--line)}
+.thread-fill{
+  right:auto;width:0%;max-width:88%;
+  background:linear-gradient(90deg,var(--gold-deep),var(--gold) 40%,#E8CB6A 50%,var(--gold) 60%,var(--gold-deep));
+  background-size:200% 100%;
+  animation:shimmer 3.2s linear infinite;
+  transition:width .9s cubic-bezier(.65,0,.35,1);
+  box-shadow:0 1px 6px rgba(201,162,39,.45);
+}
+body.ur .thread-fill{left:auto;right:6%;}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+.milestones{position:absolute;inset:0;display:flex;justify-content:space-between;padding:0 calc(6% - 26px)}
+.node{width:auto;text-align:center;flex:0 0 auto}
+.node .dot{
+  width:52px;height:52px;border-radius:50%;margin:0 auto;
+  background:#fff;border:3px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  transition:all .5s ease;position:relative;z-index:1;
+}
+.node.done .dot,.node.current .dot{border-color:var(--gold);background:var(--gold-soft);box-shadow:0 0 0 5px rgba(201,162,39,.18)}
+.node.done .dot{background:var(--gold);color:#fff}
+.node.current .dot{animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(201,162,39,.18)}50%{box-shadow:0 0 0 10px rgba(201,162,39,.10)}}
+.node span{display:block;margin-top:6px;font-size:15px;font-weight:700;color:var(--ink-soft)}
+.node.current span{color:var(--pine)}
+
+/* ---------- step cards + transitions ---------- */
+main{max-width:720px;margin:0 auto;padding:10px 20px 120px;position:relative}
+.step{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:30px 26px;display:none;
+}
+.step.active{display:block;animation:slideIn .55s cubic-bezier(.22,.9,.32,1)}
+.step.leaving{animation:slideOut .4s ease forwards}
+@keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+@keyframes slideOut{to{opacity:0;transform:translateX(-60px)}}
+body.ur .step.active{animation-name:slideInR}
+@keyframes slideInR{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .step.active,.step.leaving,.thread-fill,.node.current .dot{animation:none!important;transition:none!important}
+}
+.step h2{font-family:'Fraunces',serif;font-size:28px;color:var(--pine);margin-bottom:6px;font-weight:600}
+body.ur .step h2{font-family:'Noto Nastaliq Urdu',serif}
+.step .lead{color:var(--ink-soft);margin-bottom:24px;font-size:17px}
+
+/* ---------- form controls (large, permanent labels) ---------- */
+.field{margin-bottom:22px}
+.field label{
+  display:block;font-size:var(--fs-label);font-weight:700;color:var(--ink);margin-bottom:8px;
+}
+.field .hint{font-size:15px;color:var(--ink-soft);font-weight:400}
+input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{
+  width:100%;min-height:56px;padding:12px 16px;font-size:19px;font-family:inherit;
+  border:2px solid var(--line);border-radius:12px;background:#FFFDF8;color:var(--ink);
+}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--gold);border-color:var(--gold-deep)}
+input.invalid{border-color:var(--error);background:#FFF6F5}
+.err-msg{color:var(--error);font-size:15px;font-weight:700;margin-top:6px;display:none}
+.err-msg.show{display:block}
+
+/* big option cards (radio / choice) */
+.opt-grid{display:grid;gap:12px}
+.opt-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.opt-card{
+  display:flex;align-items:center;gap:14px;min-height:64px;padding:14px 16px;cursor:pointer;
+  border:2px solid var(--line);border-radius:14px;background:#FFFDF8;font-size:18px;font-weight:700;
+  transition:border-color .2s, background .2s, transform .1s;
+}
+.opt-card:hover{border-color:var(--emerald)}
+.opt-card:active{transform:scale(.98)}
+.opt-card input{position:absolute;opacity:0;width:1px;height:1px}
+.opt-card .ico{font-size:26px}
+.opt-card.selected{border-color:var(--emerald);background:#EBF6EF;box-shadow:0 0 0 2px var(--emerald) inset}
+.opt-card:focus-within{outline:3px solid var(--gold);outline-offset:2px}
+.opt-sub{display:block;font-size:14.5px;font-weight:400;color:var(--ink-soft)}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:56px;padding:12px 30px;border-radius:14px;border:0;cursor:pointer;
+  font-size:20px;font-weight:700;font-family:inherit;transition:transform .1s, box-shadow .2s;
+  width:100%;
+}
+.btn:active{transform:scale(.98)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.btn-primary{background:var(--emerald);color:#fff;box-shadow:0 6px 16px rgba(27,122,74,.30)}
+.btn-primary:hover{background:var(--emerald-dark)}
+.btn-primary:disabled{background:#9DB8A8;box-shadow:none;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--pine);border:2px solid var(--pine)}
+.btn-wa{background:var(--wa);color:#fff;box-shadow:0 6px 16px rgba(37,211,102,.35)}
+.btn-wa:hover{background:var(--wa-dark)}
+.btn-row{display:flex;gap:14px;margin-top:26px}
+.btn-row .btn-ghost{flex:0 0 34%}
+
+/* OTP boxes */
+.otp-boxes{display:flex;gap:12px;justify-content:center;margin:18px 0;direction:ltr}
+.otp-boxes input{
+  width:64px;height:72px;text-align:center;font-size:34px;font-weight:700;
+  border:2px solid var(--line);border-radius:14px;background:#FFFDF8;
+}
+.otp-boxes input:focus{outline:3px solid var(--gold);border-color:var(--gold-deep)}
+
+/* upload zones */
+.upload-zone{
+  border:2.5px dashed var(--gold-deep);border-radius:16px;background:#FFFDF4;
+  padding:26px 18px;text-align:center;cursor:pointer;transition:background .2s;
+  min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+}
+.upload-zone:hover,.upload-zone.drag{background:var(--gold-soft)}
+.upload-zone .big-ico{font-size:40px}
+.upload-zone img.preview{max-width:100%;max-height:190px;border-radius:10px;box-shadow:var(--shadow)}
+.upload-zone .zone-status{font-size:15px;color:var(--ink-soft)}
+.upload-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.upload-pair{grid-template-columns:1fr}}
+
+/* scanner animation */
+.scanbox{position:relative;overflow:hidden;border-radius:12px}
+.scanbox::after{
+  content:"";position:absolute;left:0;right:0;height:4px;top:0;
+  background:linear-gradient(90deg,transparent,var(--emerald),transparent);
+  animation:scanline 1.6s ease-in-out infinite;box-shadow:0 0 14px var(--emerald);
+}
+@keyframes scanline{0%{top:0}50%{top:calc(100% - 4px)}100%{top:0}}
+.scan-msg{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--emerald);font-weight:700;margin-top:12px}
+.spinner{width:22px;height:22px;border:3px solid var(--gold-soft);border-top-color:var(--emerald);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* voice mic */
+.mic-wrap{position:relative}
+.mic-btn{
+  position:absolute;bottom:10px;inset-inline-end:10px;width:52px;height:52px;border-radius:50%;
+  border:2px solid var(--emerald);background:#fff;font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.mic-btn.listening{background:var(--error);border-color:var(--error);animation:pulse 1.2s infinite}
+.mic-btn:focus-visible{outline:3px solid var(--gold)}
+
+/* autosave chip */
+.autosave{
+  position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);
+  background:var(--pine);color:#fff;padding:10px 22px;border-radius:999px;
+  font-size:16px;font-weight:700;display:flex;gap:10px;align-items:center;
+  box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.22,.9,.32,1);z-index:60;
+}
+.autosave.show{transform:translate(-50%,0)}
+
+/* WhatsApp FAB */
+.fab{
+  position:fixed;bottom:24px;inset-inline-end:22px;z-index:70;
+  background:var(--wa);color:#fff;border:0;border-radius:999px;cursor:pointer;
+  min-height:60px;padding:10px 22px;font-size:18px;font-weight:700;font-family:inherit;
+  display:flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(18,140,74,.45);
+  transition:transform .15s;
+}
+.fab:hover{transform:translateY(-3px)}
+.fab:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.fab .fab-ico{font-size:24px}
+@media(max-width:560px){.fab span.fab-text{display:none}.fab{padding:0;width:64px;height:64px;justify-content:center}}
+
+/* success */
+.success-wrap{text-align:center;padding:30px 0}
+.ring{
+  width:120px;height:120px;border-radius:50%;margin:0 auto 20px;position:relative;
+  background:radial-gradient(circle at 35% 30%,#2A8A58,var(--pine));
+  display:flex;align-items:center;justify-content:center;
+  animation:pop .6s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 0 0 8px var(--gold-soft),0 14px 34px rgba(20,83,45,.35);
+}
+.ring svg{width:64px;height:64px}
+.ring svg path{stroke:#fff;stroke-width:7;fill:none;stroke-linecap:round;stroke-dasharray:80;stroke-dashoffset:80;animation:draw .7s .35s ease forwards}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.confetti{position:fixed;top:-10px;font-size:22px;animation:fall linear forwards;z-index:80;pointer-events:none}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
+
+.divider{height:1px;background:var(--line);margin:26px 0}
+.notice{
+  background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;
+  padding:12px 16px;font-size:16px;margin:14px 0;
+}
+.checkbox-row{display:flex;gap:14px;align-items:flex-start;cursor:pointer}
+.checkbox-row input{width:30px;height:30px;flex:0 0 30px;accent-color:var(--emerald);cursor:pointer;margin-top:4px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">🌿</div>
+    <div>
+      <h1 data-i18n="brand">Rishta Registry</h1>
+      <p data-i18n="tagline">A respectful way to find your match</p>
+    </div>
+  </div>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button id="btnEn" class="active" onclick="setLang('en')">English</button>
+    <button id="btnUr" onclick="setLang('ur')">اردو</button>
+  </div>
+</header>
+
+<!-- Golden-thread progress -->
+<div class="progress-wrap" aria-live="polite">
+  <div class="pct-readout"><span id="pctNum">0</span>% <span data-i18n="complete">complete</span></div>
+  <div class="thread">
+    <div class="thread-line"></div>
+    <div class="thread-fill" id="threadFill"></div>
+    <div class="milestones">
+      <div class="node current" id="node1"><div class="dot">📱</div><span data-i18n="s1">Verify</span></div>
+      <div class="node" id="node2"><div class="dot">🪪</div><span data-i18n="s2">Identity</span></div>
+      <div class="node" id="node3"><div class="dot">💚</div><span data-i18n="s3">Preferences</span></div>
+      <div class="node" id="node4"><div class="dot">📷</div><span data-i18n="s4">Photos</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+<!-- ================= STEP 1 : OTP ================= -->
+<section class="step active" id="step1">
+  <h2 data-i18n="s1_title">Let's confirm it's really you</h2>
+  <p class="lead" data-i18n="s1_lead">Choose the easiest way for you to receive a free 4-digit code. No charges — ever.</p>
+
+  <div id="otpChoose">
+    <div class="field">
+      <label data-i18n="s1_how">How would you like to receive your code?</label>
+      <div class="opt-grid">
+        <label class="opt-card" data-otp="sms">
+          <input type="radio" name="otpChannel" value="sms">
+          <span class="ico">💬</span>
+          <span><span data-i18n="ch_sms">Free SMS to my mobile</span><span class="opt-sub" data-i18n="ch_sms_sub">Sent through your network, free of cost</span></span>
+        </label>
+        <label class="opt-card" data-otp="whatsapp">
+          <input type="radio" name="otpChannel" value="whatsapp">
+          <span class="ico">🟢</span>
+          <span><span data-i18n="ch_wa">Verify on WhatsApp</span><span class="opt-sub" data-i18n="ch_wa_sub">One tap — nothing to type</span></span>
+        </label>
+        <label class="opt-card" data-otp="email">
+          <input type="radio" name="otpChannel" value="email">
+          <span class="ico">✉️</span>
+          <span><span data-i18n="ch_em">Code by Email</span><span class="opt-sub" data-i18n="ch_em_sub">Sent instantly to your inbox</span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="field hidden" id="fldPhone">
+      <label for="phone" data-i18n="lbl_phone">Mobile number</label>
+      <input type="tel" id="phone" inputmode="numeric" pattern="[0-9]*" placeholder="03XX XXXXXXX" class="en-font" autocomplete="tel">
+      <div class="err-msg" id="errPhone" data-i18n="err_phone">Please enter a valid mobile number (11 digits, starts with 03).</div>
+    </div>
+
+    <div class="field hidden" id="fldCarrier">
+      <label data-i18n="lbl_carrier">Your mobile network</label>
+      <div class="opt-grid cols2" id="carrierGrid">
+        <label class="opt-card"><input type="radio" name="carrier" value="jazz"><span class="ico">🔴</span> Jazz / Mobilink</label>
+        <label class="opt-card"><input type="radio" name="carrier" value="zong"><span class="ico">🟣</span> Zong</label>
+        <label class="opt-card"><input type="radio" name="carrier" value="telenor"><span class="ico">🔵</span> Telenor</label>
+        <label class="opt-card"><input type="radio" name="carrier" value="ufone"><span class="ico">🟠</span> Ufone</label>
+      </div>
+    </div>
+
+    <div class="field hidden" id="fldEmail">
+      <label for="email" data-i18n="lbl_email">Email address</label>
+      <input type="email" id="email" placeholder="name@example.com" class="en-font" autocomplete="email">
+      <div class="err-msg" id="errEmail" data-i18n="err_email">Please enter a valid email address.</div>
+    </div>
+
+    <button class="btn btn-primary hidden" id="btnSendOtp" onclick="sendOtp()"><span data-i18n="btn_send">Send my free code</span> ➜</button>
+    <button class="btn btn-wa hidden" id="btnWaVerify" onclick="waVerify()">🟢 <span data-i18n="btn_wa">Tap to Verify on WhatsApp</span></button>
+  </div>
+
+  <div id="otpEnter" class="hidden">
+    <div class="notice" id="otpSentMsg"></div>
+    <div class="field">
+      <label data-i18n="lbl_code" style="text-align:center">Enter your 4-digit code</label>
+      <div class="otp-boxes">
+        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 1">
+        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 2">
+        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 3">
+        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 4">
+      </div>
+      <div class="err-msg" id="errOtp" style="text-align:center" data-i18n="err_otp">That code doesn't match. Please check and try again.</div>
+    </div>
+    <button class="btn btn-primary" onclick="verifyOtp()"><span data-i18n="btn_verify">Verify & Continue</span> ✓</button>
+    <button class="btn btn-ghost" style="margin-top:12px" onclick="resetOtp()" data-i18n="btn_resend">↺ Choose another way / resend</button>
+  </div>
+</section>
+
+<!-- ================= STEP 2 : CNIC ================= -->
+<section class="step" id="step2">
+  <h2 data-i18n="s2_title">Your identity card (CNIC)</h2>
+  <p class="lead" data-i18n="s2_lead">Take a photo or upload both sides. We read your name and date of birth automatically — you won't have to type them.</p>
+
+  <div class="upload-pair">
+    <div>
+      <div class="field"><label data-i18n="lbl_front">CNIC — Front side</label></div>
+      <div class="upload-zone" id="zoneFront" tabindex="0" role="button" aria-label="Upload CNIC front">
+        <span class="big-ico">📷</span>
+        <strong data-i18n="zone_tap">Tap to take a photo</strong>
+        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
+      </div>
+      <input type="file" id="fileFront" accept="image/*" capture="environment" class="hidden">
+    </div>
+    <div>
+      <div class="field"><label data-i18n="lbl_back">CNIC — Back side</label></div>
+      <div class="upload-zone" id="zoneBack" tabindex="0" role="button" aria-label="Upload CNIC back">
+        <span class="big-ico">📷</span>
+        <strong data-i18n="zone_tap">Tap to take a photo</strong>
+        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
+      </div>
+      <input type="file" id="fileBack" accept="image/*" capture="environment" class="hidden">
+    </div>
+  </div>
+
+  <div class="scan-msg hidden" id="scanMsg"><div class="spinner"></div><span data-i18n="scanning">Scanning identity card…</span></div>
+
+  <div class="divider"></div>
+
+  <div class="field">
+    <label for="fullName" data-i18n="lbl_name">Full name <span class="hint" data-i18n="hint_auto">(filled automatically — please check)</span></label>
+    <input type="text" id="fullName" autocomplete="name">
+  </div>
+  <div class="field">
+    <label for="dob" data-i18n="lbl_dob">Date of birth</label>
+    <input type="date" id="dob" class="en-font">
+  </div>
+  <div class="field">
+    <label for="cnic" data-i18n="lbl_cnic">CNIC number</label>
+    <input type="tel" id="cnic" inputmode="numeric" placeholder="35201-1234567-8" class="en-font">
+    <div class="err-msg" id="errCnic" data-i18n="err_cnic">CNIC should have 13 digits, e.g. 35201-1234567-8.</div>
+  </div>
+  <div class="field">
+    <label data-i18n="lbl_gender">Gender</label>
+    <div class="opt-grid cols2" id="genderGrid">
+      <label class="opt-card"><input type="radio" name="gender" value="male"><span class="ico">👨</span> <span data-i18n="g_m">Male</span></label>
+      <label class="opt-card"><input type="radio" name="gender" value="female"><span class="ico">👩</span> <span data-i18n="g_f">Female</span></label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(1)" data-i18n="btn_back">← Back</button>
+    <button class="btn btn-primary" onclick="validateStep2()"><span data-i18n="btn_next">Save & Continue</span> ➜</button>
+  </div>
+</section>
+
+<!-- ================= STEP 3 : PREFERENCES ================= -->
+<section class="step" id="step3">
+  <h2 data-i18n="s3_title">About you & your ideal match</h2>
+  <p class="lead" data-i18n="s3_lead">Tap the cards that describe you. For the written parts, you can press the microphone 🎙️ and simply speak.</p>
+
+  <div class="field">
+    <label data-i18n="lbl_marital">Marital status</label>
+    <div class="opt-grid cols2" id="maritalGrid">
+      <label class="opt-card"><input type="radio" name="marital" value="single"><span class="ico">🙂</span> <span data-i18n="m_single">Single</span></label>
+      <label class="opt-card"><input type="radio" name="marital" value="divorced"><span class="ico">🌤️</span> <span data-i18n="m_div">Divorced</span></label>
+      <label class="opt-card"><input type="radio" name="marital" value="widowed"><span class="ico">🕊️</span> <span data-i18n="m_wid">Widowed</span></label>
+      <label class="opt-card"><input type="radio" name="marital" value="separated"><span class="ico">🌗</span> <span data-i18n="m_sep">Separated</span></label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="education" data-i18n="lbl_edu">Highest education</label>
+    <select id="education">
+      <option value="" data-i18n="opt_sel">— Select —</option>
+      <option value="matric" data-i18n="e_matric">Matric / below</option>
+      <option value="inter" data-i18n="e_inter">Intermediate</option>
+      <option value="bachelor" data-i18n="e_ba">Bachelor's</option>
+      <option value="master" data-i18n="e_ma">Master's or higher</option>
+      <option value="religious" data-i18n="e_rel">Religious education</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label data-i18n="lbl_income">Monthly income (PKR)</label>
+    <div class="opt-grid cols2" id="incomeGrid">
+      <label class="opt-card"><input type="radio" name="income" value="lt50"><span class="en-font">&lt; 50,000</span></label>
+      <label class="opt-card"><input type="radio" name="income" value="50to150"><span class="en-font">50,000 – 150,000</span></label>
+      <label class="opt-card"><input type="radio" name="income" value="150to400"><span class="en-font">150,000 – 400,000</span></label>
+      <label class="opt-card"><input type="radio" name="income" value="gt400"><span class="en-font">400,000+</span></label>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="city" data-i18n="lbl_city">City / Location</label>
+    <input type="text" id="city" data-i18n-ph="ph_city" placeholder="e.g. Lahore, Karachi, Muscat…">
+  </div>
+
+  <div class="field">
+    <label for="prefs" data-i18n="lbl_prefs">What are you looking for in a partner?</label>
+    <div class="mic-wrap">
+      <textarea id="prefs" data-i18n-ph="ph_prefs" placeholder="Speak or type freely — age range, values, family type…"></textarea>
+      <button class="mic-btn" data-mic="prefs" aria-label="Speak instead of typing" title="Speak">🎙️</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="family" data-i18n="lbl_family">Tell us about your family</label>
+    <div class="mic-wrap">
+      <textarea id="family" data-i18n-ph="ph_family" placeholder="Brothers, sisters, parents, hometown…"></textarea>
+      <button class="mic-btn" data-mic="family" aria-label="Speak instead of typing" title="Speak">🎙️</button>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(2)" data-i18n="btn_back">← Back</button>
+    <button class="btn btn-primary" onclick="validateStep3()"><span data-i18n="btn_next">Save & Continue</span> ➜</button>
+  </div>
+</section>
+
+<!-- ================= STEP 4 : PHOTOS ================= -->
+<section class="step" id="step4">
+  <h2 data-i18n="s4_title">Add your best photos</h2>
+  <p class="lead" data-i18n="s4_lead">Upload 1 or 2 recent photos. A clear, smiling picture receives 3× more interest.</p>
+
+  <div class="upload-pair">
+    <div>
+      <div class="field"><label data-i18n="lbl_p1">Photo 1 (required)</label></div>
+      <div class="upload-zone" id="zoneP1" tabindex="0" role="button" aria-label="Upload photo 1">
+        <span class="big-ico">🖼️</span>
+        <strong data-i18n="zone_tap">Tap to take a photo</strong>
+        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
+      </div>
+      <input type="file" id="fileP1" accept="image/*" class="hidden">
+    </div>
+    <div>
+      <div class="field"><label data-i18n="lbl_p2">Photo 2 (optional)</label></div>
+      <div class="upload-zone" id="zoneP2" tabindex="0" role="button" aria-label="Upload photo 2">
+        <span class="big-ico">🖼️</span>
+        <strong data-i18n="zone_tap">Tap to take a photo</strong>
+        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
+      </div>
+      <input type="file" id="fileP2" accept="image/*" class="hidden">
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <label class="checkbox-row">
+    <input type="checkbox" id="consent">
+    <span style="font-size:18px" data-i18n="consent">I agree to share my details only with verified matches, and I confirm the information above is true.</span>
+  </label>
+  <div class="err-msg" id="errConsent" data-i18n="err_consent">Please tick the consent box to finish.</div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(3)" data-i18n="btn_back">← Back</button>
+    <button class="btn btn-primary" id="btnSubmit" onclick="submitAll()"><span data-i18n="btn_submit">Complete my registration</span> ✓</button>
+  </div>
+</section>
+
+<!-- ================= SUCCESS ================= -->
+<section class="step" id="stepDone">
+  <div class="success-wrap">
+    <div class="ring"><svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-18"/></svg></div>
+    <h2 data-i18n="done_title">Success! Your profile is verified 🎉</h2>
+    <p class="lead" style="margin-top:10px" data-i18n="done_lead">Thank you. Our team will review your profile and contact you on your verified number, insha'Allah, within 2 working days.</p>
+    <div class="notice"><span data-i18n="done_ref">Your reference number:</span> <strong class="en-font" id="refNum"></strong></div>
+  </div>
+</section>
+
+</main>
+
+<!-- autosave chip -->
+<div class="autosave" id="autosave">✓ <span data-i18n="autosaved">Progress auto-saved</span></div>
+
+<!-- WhatsApp help FAB -->
+<button class="fab" onclick="openHelp()" aria-label="Ask for help on WhatsApp">
+  <span class="fab-ico">🟢</span><span class="fab-text" data-i18n="fab">Stuck? Ask for Help</span>
+</button>
+
+<script>
+/* ============================================================
+   CONFIG — connect to your Google Apps Script Web App
+   Leave API_URL empty ("") to run in DEMO mode (everything is
+   simulated locally, the OTP is shown on screen for testing).
+   ============================================================ */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
+  SUPPORT_WHATSAPP: '923154822167', // digits only, country code first
+  MAX_IMAGE_KB: 300,
+  MAX_IMAGE_DIM: 1600
+};
+
+/* ---------------- i18n ---------------- */
+const T = {
+  en:{brand:'Rishta Registry',tagline:'A respectful way to find your match',complete:'complete',
+    s1:'Verify',s2:'Identity',s3:'Preferences',s4:'Photos',
+    s1_title:"Let's confirm it's really you",s1_lead:'Choose the easiest way for you to receive a free 4-digit code. No charges — ever.',
+    s1_how:'How would you like to receive your code?',
+    ch_sms:'Free SMS to my mobile',ch_sms_sub:'Sent through your network, free of cost',
+    ch_wa:'Verify on WhatsApp',ch_wa_sub:'One tap — nothing to type',
+    ch_em:'Code by Email',ch_em_sub:'Sent instantly to your inbox',
+    lbl_phone:'Mobile number',err_phone:'Please enter a valid mobile number (11 digits, starts with 03).',
+    lbl_carrier:'Your mobile network',lbl_email:'Email address',err_email:'Please enter a valid email address.',
+    btn_send:'Send my free code',btn_wa:'Tap to Verify on WhatsApp',
+    lbl_code:'Enter your 4-digit code',err_otp:"That code doesn't match. Please check and try again.",
+    btn_verify:'Verify & Continue',btn_resend:'↺ Choose another way / resend',
+    otp_sent_sms:'A free SMS with your code is on its way to',otp_sent_em:'Your code has been emailed to',
+    otp_sent_wa:'After sending the WhatsApp message, type the same 4-digit code below.',
+    s2_title:'Your identity card (CNIC)',s2_lead:"Take a photo or upload both sides. We read your name and date of birth automatically — you won't have to type them.",
+    lbl_front:'CNIC — Front side',lbl_back:'CNIC — Back side',zone_tap:'Tap to take a photo',zone_drop:'or drag & drop the image here',
+    scanning:'Scanning identity card…',lbl_name:'Full name ',hint_auto:'(filled automatically — please check)',
+    lbl_dob:'Date of birth',lbl_cnic:'CNIC number',err_cnic:'CNIC should have 13 digits, e.g. 35201-1234567-8.',
+    lbl_gender:'Gender',g_m:'Male',g_f:'Female',
+    s3_title:'About you & your ideal match',s3_lead:'Tap the cards that describe you. For the written parts, you can press the microphone 🎙️ and simply speak.',
+    lbl_marital:'Marital status',m_single:'Single',m_div:'Divorced',m_wid:'Widowed',m_sep:'Separated',
+    lbl_edu:'Highest education',opt_sel:'— Select —',e_matric:'Matric / below',e_inter:'Intermediate',e_ba:"Bachelor's",e_ma:"Master's or higher",e_rel:'Religious education',
+    lbl_income:'Monthly income (PKR)',lbl_city:'City / Location',ph_city:'e.g. Lahore, Karachi, Muscat…',
+    lbl_prefs:'What are you looking for in a partner?',ph_prefs:'Speak or type freely — age range, values, family type…',
+    lbl_family:'Tell us about your family',ph_family:'Brothers, sisters, parents, hometown…',
+    s4_title:'Add your best photos',s4_lead:'Upload 1 or 2 recent photos. A clear, smiling picture receives 3× more interest.',
+    lbl_p1:'Photo 1 (required)',lbl_p2:'Photo 2 (optional)',
+    consent:'I agree to share my details only with verified matches, and I confirm the information above is true.',
+    err_consent:'Please tick the consent box to finish.',
+    btn_back:'← Back',btn_next:'Save & Continue',btn_submit:'Complete my registration',
+    done_title:'Success! Your profile is verified 🎉',
+    done_lead:"Thank you. Our team will review your profile and contact you on your verified number, insha'Allah, within 2 working days.",
+    done_ref:'Your reference number:',autosaved:'Progress auto-saved',fab:'Stuck? Ask for Help',
+    need_photo:'Please add at least Photo 1.',compressing:'Optimising photo…',uploaded:'✓ Photo added',
+    demo_otp:'DEMO MODE — your test code is'},
+  ur:{brand:'رشتہ رجسٹری',tagline:'رشتہ تلاش کرنے کا باوقار طریقہ',complete:'مکمل',
+    s1:'تصدیق',s2:'شناخت',s3:'ترجیحات',s4:'تصاویر',
+    s1_title:'آئیے تصدیق کریں کہ یہ واقعی آپ ہیں',s1_lead:'مفت 4 ہندسوں کا کوڈ حاصل کرنے کا آسان طریقہ منتخب کریں۔ کوئی چارج نہیں — کبھی بھی نہیں۔',
+    s1_how:'آپ اپنا کوڈ کیسے وصول کرنا چاہیں گے؟',
+    ch_sms:'میرے موبائل پر مفت SMS',ch_sms_sub:'آپ کے نیٹ ورک کے ذریعے، بالکل مفت',
+    ch_wa:'واٹس ایپ پر تصدیق کریں',ch_wa_sub:'صرف ایک ٹچ — کچھ ٹائپ نہیں کرنا',
+    ch_em:'ای میل پر کوڈ',ch_em_sub:'فوری طور پر آپ کے ان باکس میں',
+    lbl_phone:'موبائل نمبر',err_phone:'براہ کرم درست موبائل نمبر درج کریں (11 ہندسے، 03 سے شروع)۔',
+    lbl_carrier:'آپ کا موبائل نیٹ ورک',lbl_email:'ای میل ایڈریس',err_email:'براہ کرم درست ای میل درج کریں۔',
+    btn_send:'میرا مفت کوڈ بھیجیں',btn_wa:'واٹس ایپ پر تصدیق کے لیے دبائیں',
+    lbl_code:'اپنا 4 ہندسوں کا کوڈ درج کریں',err_otp:'کوڈ درست نہیں۔ براہ کرم دوبارہ چیک کریں۔',
+    btn_verify:'تصدیق کریں اور آگے بڑھیں',btn_resend:'↺ دوسرا طریقہ منتخب کریں / دوبارہ بھیجیں',
+    otp_sent_sms:'آپ کے کوڈ کے ساتھ مفت SMS بھیج دیا گیا ہے',otp_sent_em:'آپ کا کوڈ ای میل کر دیا گیا ہے',
+    otp_sent_wa:'واٹس ایپ پیغام بھیجنے کے بعد، وہی 4 ہندسوں کا کوڈ نیچے درج کریں۔',
+    s2_title:'آپ کا شناختی کارڈ (CNIC)',s2_lead:'دونوں اطراف کی تصویر لیں یا اپ لوڈ کریں۔ ہم آپ کا نام اور تاریخ پیدائش خود بخود پڑھ لیں گے۔',
+    lbl_front:'شناختی کارڈ — سامنے کا رخ',lbl_back:'شناختی کارڈ — پچھلا رخ',zone_tap:'تصویر لینے کے لیے دبائیں',zone_drop:'یا تصویر یہاں گھسیٹ کر چھوڑیں',
+    scanning:'شناختی کارڈ اسکین ہو رہا ہے…',lbl_name:'پورا نام ',hint_auto:'(خودکار طور پر بھرا گیا — براہ کرم چیک کریں)',
+    lbl_dob:'تاریخ پیدائش',lbl_cnic:'شناختی کارڈ نمبر',err_cnic:'شناختی کارڈ میں 13 ہندسے ہونے چاہئیں، مثلاً 35201-1234567-8۔',
+    lbl_gender:'جنس',g_m:'مرد',g_f:'خاتون',
+    s3_title:'آپ اور آپ کے مثالی رشتے کے بارے میں',s3_lead:'اپنے بارے میں کارڈز پر ٹچ کریں۔ لکھنے کے بجائے مائیکروفون 🎙️ دبا کر بول بھی سکتے ہیں۔',
+    lbl_marital:'ازدواجی حیثیت',m_single:'غیر شادی شدہ',m_div:'مطلقہ',m_wid:'بیوہ / رنڈوا',m_sep:'علیحدگی',
+    lbl_edu:'اعلیٰ ترین تعلیم',opt_sel:'— منتخب کریں —',e_matric:'میٹرک / اس سے کم',e_inter:'انٹرمیڈیٹ',e_ba:'بیچلرز',e_ma:'ماسٹرز یا اس سے زیادہ',e_rel:'دینی تعلیم',
+    lbl_income:'ماہانہ آمدنی (روپے)',lbl_city:'شہر / مقام',ph_city:'مثلاً لاہور، کراچی، مسقط…',
+    lbl_prefs:'آپ اپنے شریکِ حیات میں کیا تلاش کر رہے ہیں؟',ph_prefs:'بولیں یا لکھیں — عمر، اقدار، خاندان کی قسم…',
+    lbl_family:'اپنے خاندان کے بارے میں بتائیں',ph_family:'بھائی، بہنیں، والدین، آبائی شہر…',
+    s4_title:'اپنی بہترین تصاویر شامل کریں',s4_lead:'1 یا 2 حالیہ تصاویر اپ لوڈ کریں۔ صاف اور مسکراتی تصویر کو 3 گنا زیادہ توجہ ملتی ہے۔',
+    lbl_p1:'تصویر 1 (لازمی)',lbl_p2:'تصویر 2 (اختیاری)',
+    consent:'میں اپنی تفصیلات صرف تصدیق شدہ رشتوں کے ساتھ شیئر کرنے پر رضامند ہوں، اور تصدیق کرتا/کرتی ہوں کہ مذکورہ معلومات درست ہیں۔',
+    err_consent:'مکمل کرنے کے لیے براہ کرم رضامندی کا خانہ ٹک کریں۔',
+    btn_back:'→ واپس',btn_next:'محفوظ کریں اور آگے بڑھیں',btn_submit:'میری رجسٹریشن مکمل کریں',
+    done_title:'مبارک ہو! آپ کا پروفائل تصدیق شدہ ہے 🎉',
+    done_lead:'شکریہ۔ ہماری ٹیم آپ کے پروفائل کا جائزہ لے کر، ان شاء اللہ، 2 کاروباری دنوں میں آپ کے تصدیق شدہ نمبر پر رابطہ کرے گی۔',
+    done_ref:'آپ کا حوالہ نمبر:',autosaved:'پیش رفت خود بخود محفوظ',fab:'مدد چاہیے؟ یہاں دبائیں',
+    need_photo:'براہ کرم کم از کم تصویر 1 شامل کریں۔',compressing:'تصویر بہتر کی جا رہی ہے…',uploaded:'✓ تصویر شامل ہو گئی',
+    demo_otp:'ڈیمو موڈ — آپ کا آزمائشی کوڈ ہے'}
+};
+let lang='en';
+function t(k){return (T[lang][k]!==undefined?T[lang][k]:T.en[k])||k}
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=(l==='ur')?'rtl':'ltr';
+  document.body.classList.toggle('ur',l==='ur');
+  document.getElementById('btnEn').classList.toggle('active',l==='en');
+  document.getElementById('btnUr').classList.toggle('active',l==='ur');
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+  state.language=l; queueAutosave();
+}
+
+/* ---------------- state ---------------- */
+const state={
+  sessionId:'RR-'+Date.now().toString(36).toUpperCase()+Math.floor(Math.random()*900+100),
+  language:'en', step:1, verified:false,
+  contact:'', otpChannel:'', carrier:'',
+  fullName:'', dob:'', cnic:'', gender:'',
+  education:'', income:'', maritalStatus:'', city:'',
+  partnerPreferences:'', familyDetails:'',
+  cnicFrontUrl:'', cnicBackUrl:'', photo1Url:'', photo2Url:'', consent:false
+};
+let demoOtp=null;
+
+/* ---------------- backend bridge ---------------- */
+async function api(payload){
+  if(!CONFIG.API_URL){                       // DEMO MODE
+    await new Promise(r=>setTimeout(r,600));
+    if(payload.action==='sendOtp'){
+      demoOtp=(''+Math.floor(1000+Math.random()*9000));
+      toast(t('demo_otp')+' '+demoOtp,4500);
+      return {ok:true,code:demoOtp,number:CONFIG.SUPPORT_WHATSAPP};
+    }
+    if(payload.action==='verifyOtp') return {ok:true,verified:String(payload.code)===demoOtp};
+    if(payload.action==='uploadImage') return {ok:true,url:'demo://'+payload.name};
+    return {ok:true};
+  }
+  const res=await fetch(CONFIG.API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},  // avoids CORS preflight with Apps Script
+    body:JSON.stringify(payload)
+  });
+  return res.json();
+}
+
+/* ---------------- navigation & progress ---------------- */
+const PCT=[0,25,50,75,100];
+function goTo(n){
+  const cur=document.querySelector('.step.active');
+  cur.classList.add('leaving');
+  setTimeout(()=>{
+    cur.classList.remove('active','leaving');
+    const next=(n===5)?document.getElementById('stepDone'):document.getElementById('step'+n);
+    next.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  },380);
+  state.step=n;
+  setProgress(n===5?100:PCT[n-1]);
+  const icons=['📱','🪪','💚','📷'];
+  for(let i=1;i<=4;i++){
+    const node=document.getElementById('node'+i), done=(i<n||n===5);
+    node.classList.toggle('done', done);
+    node.classList.toggle('current', i===n);
+    node.querySelector('.dot').textContent=done?'✓':icons[i-1];
+  }
+  queueAutosave();
+}
+function setProgress(p){
+  document.getElementById('threadFill').style.width=(p*0.88)+'%';
+  animateNumber(document.getElementById('pctNum'),p);
+}
+function animateNumber(el,to){
+  const from=parseInt(el.textContent)||0, t0=performance.now();
+  (function tick(now){
+    const k=Math.min((now-t0)/700,1);
+    el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));
+    if(k<1)requestAnimationFrame(tick);
+  })(t0);
+}
+
+/* ---------------- STEP 1 : OTP ---------------- */
+document.querySelectorAll('#otpChoose .opt-card[data-otp] input').forEach(r=>{
+  r.addEventListener('change',()=>{
+    document.querySelectorAll('#otpChoose .opt-card').forEach(c=>c.classList.remove('selected'));
+    r.closest('.opt-card').classList.add('selected');
+    const ch=r.value; state.otpChannel=ch;
+    show('fldPhone', ch==='sms'||ch==='whatsapp');
+    show('fldCarrier', ch==='sms');
+    show('fldEmail', ch==='email');
+    show('btnSendOtp', ch!=='whatsapp');
+    show('btnWaVerify', ch==='whatsapp');
+  });
+});
+document.querySelectorAll('#carrierGrid input').forEach(r=>r.addEventListener('change',()=>{
+  markSelected('carrierGrid',r); state.carrier=r.value;
+}));
+
+function validContact(){
+  const ch=state.otpChannel;
+  if(ch==='email'){
+    const em=val('email');
+    const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+    flagErr('email','errEmail',!ok); if(ok)state.contact=em; return ok;
+  }
+  const ph=val('phone').replace(/\D/g,'');
+  const ok=/^0?3\d{9}$/.test(ph);
+  flagErr('phone','errPhone',!ok);
+  if(ch==='sms'&&!state.carrier){toast(t('lbl_carrier'));return false}
+  if(ok)state.contact=ph; return ok;
+}
+async function sendOtp(){
+  if(!validContact())return;
+  busy('btnSendOtp',true);
+  const r=await api({action:'sendOtp',sessionId:state.sessionId,channel:state.otpChannel,contact:state.contact,carrier:state.carrier});
+  busy('btnSendOtp',false);
+  if(!r.ok){toast(r.error||'Error');return}
+  document.getElementById('otpSentMsg').textContent=
+    (state.otpChannel==='email'?t('otp_sent_em'):t('otp_sent_sms'))+' '+state.contact;
+  showEnter();
+}
+async function waVerify(){
+  if(!validContact())return;
+  busy('btnWaVerify',true);
+  const r=await api({action:'sendOtp',sessionId:state.sessionId,channel:'whatsapp',contact:state.contact});
+  busy('btnWaVerify',false);
+  if(!r.ok){toast(r.error||'Error');return}
+  const msg=encodeURIComponent('My verification code is '+r.code);
+  window.open('https://wa.me/'+(r.number||CONFIG.SUPPORT_WHATSAPP)+'?text='+msg,'_blank');
+  document.getElementById('otpSentMsg').textContent=t('otp_sent_wa');
+  showEnter();
+}
+function showEnter(){
+  document.getElementById('otpChoose').classList.add('hidden');
+  document.getElementById('otpEnter').classList.remove('hidden');
+  document.querySelector('.otp-boxes input').focus();
+}
+function resetOtp(){
+  document.getElementById('otpEnter').classList.add('hidden');
+  document.getElementById('otpChoose').classList.remove('hidden');
+  document.querySelectorAll('.otp-boxes input').forEach(i=>i.value='');
+}
+// auto-advance OTP boxes
+const boxes=[...document.querySelectorAll('.otp-boxes input')];
+boxes.forEach((b,i)=>{
+  b.addEventListener('input',()=>{b.value=b.value.replace(/\D/g,'');if(b.value&&i<3)boxes[i+1].focus()});
+  b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)boxes[i-1].focus()});
+});
+async function verifyOtp(){
+  const code=boxes.map(b=>b.value).join('');
+  if(code.length<4){flagShow('errOtp',true);return}
+  const r=await api({action:'verifyOtp',sessionId:state.sessionId,code});
+  if(r.verified){flagShow('errOtp',false);state.verified=true;goTo(2)}
+  else flagShow('errOtp',true);
+}
+
+/* ---------------- image compression (canvas) ---------------- */
+function compressImage(file,maxKB=CONFIG.MAX_IMAGE_KB,maxDim=CONFIG.MAX_IMAGE_DIM){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let{width:w,height:h}=img;
+      const scale=Math.min(1,maxDim/Math.max(w,h));
+      w=Math.round(w*scale);h=Math.round(h*scale);
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      let q=0.85;
+      (function attempt(){
+        cv.toBlob(blob=>{
+          if(!blob)return reject('Compression failed');
+          if(blob.size/1024<=maxKB||q<=0.35){
+            const fr=new FileReader();
+            fr.onload=()=>resolve({blob,dataUrl:cv.toDataURL('image/jpeg',q),b64:fr.result.split(',')[1],kb:Math.round(blob.size/1024)});
+            fr.readAsDataURL(blob);
+          }else{q-=0.1;attempt()}
+        },'image/jpeg',q);
+      })();
+      URL.revokeObjectURL(img.src);
+    };
+    img.onerror=()=>reject('Could not read image');
+    img.src=URL.createObjectURL(file);
+  });
+}
+
+/* ---------------- upload zones ---------------- */
+function wireZone(zoneId,inputId,onDone){
+  const z=document.getElementById(zoneId),f=document.getElementById(inputId);
+  const open=()=>f.click();
+  z.addEventListener('click',open);
+  z.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
+  ['dragover','dragenter'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add('drag')}));
+  ['dragleave','drop'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove('drag')}));
+  z.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handle(e.dataTransfer.files[0])});
+  f.addEventListener('change',()=>{if(f.files[0])handle(f.files[0])});
+  async function handle(file){
+    z.innerHTML='<div class="spinner"></div><span class="zone-status">'+t('compressing')+'</span>';
+    try{
+      const out=await compressImage(file);
+      z.innerHTML='<img class="preview" src="'+out.dataUrl+'" alt=""><span class="zone-status">'+t('uploaded')+' · '+out.kb+' KB</span>';
+      onDone(out);
+    }catch(err){z.innerHTML='<span class="big-ico">⚠️</span><strong>'+err+'</strong>';}
+  }
+}
+async function pushImage(out,name,stateKey){
+  const r=await api({action:'uploadImage',b64:out.b64,mime:'image/jpeg',name:state.sessionId+'_'+name+'.jpg'});
+  if(r.ok){state[stateKey]=r.url;queueAutosave()}
+}
+
+/* CNIC zones + OCR mock */
+wireZone('zoneFront','fileFront',out=>{pushImage(out,'cnic_front','cnicFrontUrl');runOcrMock('zoneFront')});
+wireZone('zoneBack','fileBack',out=>pushImage(out,'cnic_back','cnicBackUrl'));
+function runOcrMock(zoneId){
+  const z=document.getElementById(zoneId);
+  z.classList.add('scanbox');
+  show('scanMsg',true);
+  setTimeout(()=>{
+    z.classList.remove('scanbox');
+    show('scanMsg',false);
+    // In production, Drive OCR (Docs conversion) results arrive here.
+    if(!val('fullName'))setVal('fullName','');   // left blank for the user to confirm
+    document.getElementById('fullName').focus();
+    toast(lang==='ur'?'براہ کرم نیچے اپنی تفصیلات چیک کریں':'Please check your details below');
+  },2600);
+}
+
+/* profile photo zones */
+wireZone('zoneP1','fileP1',out=>pushImage(out,'photo1','photo1Url'));
+wireZone('zoneP2','fileP2',out=>pushImage(out,'photo2','photo2Url'));
+
+/* ---------------- step 2/3 validation ---------------- */
+document.querySelectorAll('#genderGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('genderGrid',r);state.gender=r.value;queueAutosave()}));
+document.querySelectorAll('#maritalGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('maritalGrid',r);state.maritalStatus=r.value;queueAutosave()}));
+document.querySelectorAll('#incomeGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('incomeGrid',r);state.income=r.value;queueAutosave()}));
+
+function validateStep2(){
+  state.fullName=val('fullName');state.dob=val('dob');state.cnic=val('cnic');
+  const digits=state.cnic.replace(/\D/g,'');
+  const bad=digits.length!==13;
+  flagErr('cnic','errCnic',bad&&state.cnic!=='');
+  if(!state.fullName){document.getElementById('fullName').focus();return}
+  if(bad){document.getElementById('cnic').focus();return}
+  goTo(3);
+}
+function validateStep3(){
+  state.education=val('education');state.city=val('city');
+  state.partnerPreferences=val('prefs');state.familyDetails=val('family');
+  goTo(4);
+}
+
+/* ---------------- voice-to-text (Web Speech API) ---------------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+document.querySelectorAll('.mic-btn').forEach(btn=>{
+  if(!SR){btn.style.display='none';return}
+  let rec=null;
+  btn.addEventListener('click',()=>{
+    if(rec){rec.stop();return}
+    rec=new SR();
+    rec.lang=(lang==='ur')?'ur-PK':'en-US';
+    rec.interimResults=true;rec.continuous=true;
+    const ta=document.getElementById(btn.dataset.mic);
+    const base=ta.value?ta.value+' ':'';
+    btn.classList.add('listening');btn.textContent='⏹';
+    rec.onresult=e=>{
+      let txt='';for(const r of e.results)txt+=r[0].transcript;
+      ta.value=base+txt;
+    };
+    rec.onend=()=>{btn.classList.remove('listening');btn.textContent='🎙️';rec=null;queueAutosave()};
+    rec.onerror=()=>{btn.classList.remove('listening');btn.textContent='🎙️';rec=null};
+    rec.start();
+  });
+});
+
+/* ---------------- autosave (save-as-you-go) ---------------- */
+let saveTimer=null;
+function queueAutosave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(async()=>{
+    collectLive();
+    const r=await api({action:'saveDraft',sessionId:state.sessionId,data:state});
+    if(r.ok)flashAutosave();
+  },900);
+}
+function collectLive(){
+  ['fullName','dob','cnic','city','education'].forEach(id=>{const el=document.getElementById(id);if(el)state[id==='education'?'education':id]=el.value});
+  state.partnerPreferences=val('prefs');state.familyDetails=val('family');
+}
+document.querySelectorAll('input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea')
+  .forEach(el=>el.addEventListener('change',queueAutosave));
+function flashAutosave(){
+  const a=document.getElementById('autosave');
+  a.classList.add('show');
+  setTimeout(()=>a.classList.remove('show'),2200);
+}
+
+/* ---------------- final submit ---------------- */
+async function submitAll(){
+  if(!state.photo1Url){toast(t('need_photo'));return}
+  const c=document.getElementById('consent');
+  flagShow('errConsent',!c.checked);
+  if(!c.checked)return;
+  state.consent=true;collectLive();
+  busy('btnSubmit',true);
+  const r=await api({action:'finalize',sessionId:state.sessionId,data:state});
+  busy('btnSubmit',false);
+  if(!r.ok){toast(r.error||'Error');return}
+  document.getElementById('refNum').textContent=state.sessionId;
+  goTo(5);
+  celebrate();
+}
+function celebrate(){
+  const glyphs=['🌿','✨','💚','🌸','⭐'];
+  for(let i=0;i<26;i++){
+    const s=document.createElement('div');
+    s.className='confetti';s.textContent=glyphs[i%glyphs.length];
+    s.style.left=Math.random()*100+'vw';
+    s.style.animationDuration=(2.4+Math.random()*2.2)+'s';
+    s.style.animationDelay=(Math.random()*0.8)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),6000);
+  }
+}
+
+/* ---------------- helpers ---------------- */
+function val(id){return (document.getElementById(id)||{}).value?.trim()||''}
+function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v}
+function show(id,on){document.getElementById(id).classList.toggle('hidden',!on)}
+function markSelected(gridId,input){
+  document.querySelectorAll('#'+gridId+' .opt-card').forEach(c=>c.classList.remove('selected'));
+  input.closest('.opt-card').classList.add('selected');
+}
+function flagErr(inputId,errId,bad){
+  document.getElementById(inputId).classList.toggle('invalid',bad);
+  flagShow(errId,bad);
+}
+function flagShow(errId,on){document.getElementById(errId).classList.toggle('show',on)}
+function busy(btnId,on){const b=document.getElementById(btnId);b.disabled=on;b.style.opacity=on?0.7:1}
+let toastTimer=null;
+function toast(msg,ms=2800){
+  const a=document.getElementById('autosave');
+  a.innerHTML='ℹ️ '+msg;
+  a.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{a.classList.remove('show');setTimeout(()=>a.innerHTML='✓ <span>'+t('autosaved')+'</span>',500)},ms);
+}
+function openHelp(){
+  window.open('https://wa.me/'+CONFIG.SUPPORT_WHATSAPP+'?text='+encodeURIComponent('Hello, I need help filling out the registration form.'),'_blank');
+}
+</script>
+</body>
+</html>
