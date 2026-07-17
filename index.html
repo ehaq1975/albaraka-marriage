@@ -1,982 +1,847 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Rishta Registry — Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>البرکہ میرج بیورو — Al-Baraka Marriage Bureau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-/* ============================================================
-   RISHTA REGISTRY — design tokens
-   Palette: ivory field, pine + emerald greens, nikah-gold thread
-   Type: Fraunces (display) / Atkinson Hyperlegible (body — designed
-   for low-vision readers) / Noto Nastaliq Urdu (اردو)
-   ============================================================ */
 :root{
-  --ivory:#FAF6EE; --card:#FFFFFF; --ink:#1C2A21; --ink-soft:#4A5A50;
-  --pine:#14532D; --emerald:#1B7A4A; --emerald-dark:#125C37;
-  --gold:#C9A227; --gold-deep:#A8841B; --gold-soft:#F3E8C5;
-  --line:#E5DCC6; --error:#B3261E; --ok:#1B7A4A;
-  --wa:#25D366; --wa-dark:#128C4A;
-  --radius:18px; --shadow:0 10px 30px rgba(28,42,33,.10);
-  --fs-copy:17px; --fs-label:19px; --fs-big:22px;
+  --green:#14532D; --green2:#1E6B3C; --gold:#C9A227; --gold2:#E3C766;
+  --cream:#FAF7F0; --card:#FFFFFF; --ink:#1F2937; --muted:#6B7280;
+  --err:#B91C1C; --ok:#15803D; --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  background:var(--ivory);
-  color:var(--ink);
-  font-family:'Atkinson Hyperlegible',system-ui,sans-serif;
-  font-size:var(--fs-copy);
-  line-height:1.6;
-  min-height:100vh;
-}
-body.ur{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif; line-height:2.1}
-body.ur .en-font{font-family:'Atkinson Hyperlegible',sans-serif; line-height:1.4}
-
-/* ---------- header ---------- */
-header{
-  max-width:720px;margin:0 auto;padding:22px 20px 6px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-mark{
-  width:52px;height:52px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#2A8A58,var(--pine));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:inset 0 0 0 3px var(--gold-soft),0 4px 10px rgba(20,83,45,.25);
-  font-size:26px;
-}
-.brand h1{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:var(--pine);letter-spacing:.2px}
-.brand p{font-size:15px;color:var(--ink-soft)}
-body.ur .brand h1{font-family:'Noto Nastaliq Urdu',serif}
-
-/* language toggle */
-.lang-toggle{
-  display:flex;border:2px solid var(--pine);border-radius:999px;overflow:hidden;background:#fff;
-}
-.lang-toggle button{
-  min-height:48px;padding:6px 22px;border:0;background:transparent;cursor:pointer;
-  font-size:18px;font-weight:700;color:var(--pine);font-family:inherit;
-}
-.lang-toggle button.active{background:var(--pine);color:#fff}
-.lang-toggle button:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
-
-/* ---------- golden-thread progress (signature) ---------- */
-.progress-wrap{max-width:720px;margin:14px auto 4px;padding:0 20px}
-.pct-readout{
-  text-align:center;font-family:'Fraunces',serif;font-size:20px;color:var(--gold-deep);
-  font-weight:600;margin-bottom:4px;min-height:28px;
-}
-.thread{position:relative;height:76px}
-.thread-line,.thread-fill{
-  position:absolute;top:26px;left:6%;right:6%;height:6px;border-radius:6px;
-}
-.thread-line{background:var(--line)}
-.thread-fill{
-  right:auto;width:0%;max-width:88%;
-  background:linear-gradient(90deg,var(--gold-deep),var(--gold) 40%,#E8CB6A 50%,var(--gold) 60%,var(--gold-deep));
-  background-size:200% 100%;
-  animation:shimmer 3.2s linear infinite;
-  transition:width .9s cubic-bezier(.65,0,.35,1);
-  box-shadow:0 1px 6px rgba(201,162,39,.45);
-}
-body.ur .thread-fill{left:auto;right:6%;}
-@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
-.milestones{position:absolute;inset:0;display:flex;justify-content:space-between;padding:0 calc(6% - 26px)}
-.node{width:auto;text-align:center;flex:0 0 auto}
-.node .dot{
-  width:52px;height:52px;border-radius:50%;margin:0 auto;
-  background:#fff;border:3px solid var(--line);
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-  transition:all .5s ease;position:relative;z-index:1;
-}
-.node.done .dot,.node.current .dot{border-color:var(--gold);background:var(--gold-soft);box-shadow:0 0 0 5px rgba(201,162,39,.18)}
-.node.done .dot{background:var(--gold);color:#fff}
-.node.current .dot{animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(201,162,39,.18)}50%{box-shadow:0 0 0 10px rgba(201,162,39,.10)}}
-.node span{display:block;margin-top:6px;font-size:15px;font-weight:700;color:var(--ink-soft)}
-.node.current span{color:var(--pine)}
-
-/* ---------- step cards + transitions ---------- */
-main{max-width:720px;margin:0 auto;padding:10px 20px 120px;position:relative}
-.step{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:30px 26px;display:none;
-}
-.step.active{display:block;animation:slideIn .55s cubic-bezier(.22,.9,.32,1)}
-.step.leaving{animation:slideOut .4s ease forwards}
-@keyframes slideIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
-@keyframes slideOut{to{opacity:0;transform:translateX(-60px)}}
-body.ur .step.active{animation-name:slideInR}
-@keyframes slideInR{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){
-  .step.active,.step.leaving,.thread-fill,.node.current .dot{animation:none!important;transition:none!important}
-}
-.step h2{font-family:'Fraunces',serif;font-size:28px;color:var(--pine);margin-bottom:6px;font-weight:600}
-body.ur .step h2{font-family:'Noto Nastaliq Urdu',serif}
-.step .lead{color:var(--ink-soft);margin-bottom:24px;font-size:17px}
-
-/* ---------- form controls (large, permanent labels) ---------- */
-.field{margin-bottom:22px}
-.field label{
-  display:block;font-size:var(--fs-label);font-weight:700;color:var(--ink);margin-bottom:8px;
-}
-.field .hint{font-size:15px;color:var(--ink-soft);font-weight:400}
-input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{
-  width:100%;min-height:56px;padding:12px 16px;font-size:19px;font-family:inherit;
-  border:2px solid var(--line);border-radius:12px;background:#FFFDF8;color:var(--ink);
-}
-textarea{min-height:110px;resize:vertical}
-input:focus,select:focus,textarea:focus{outline:3px solid var(--gold);border-color:var(--gold-deep)}
-input.invalid{border-color:var(--error);background:#FFF6F5}
-.err-msg{color:var(--error);font-size:15px;font-weight:700;margin-top:6px;display:none}
-.err-msg.show{display:block}
-
-/* big option cards (radio / choice) */
-.opt-grid{display:grid;gap:12px}
-.opt-grid.cols2{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-.opt-card{
-  display:flex;align-items:center;gap:14px;min-height:64px;padding:14px 16px;cursor:pointer;
-  border:2px solid var(--line);border-radius:14px;background:#FFFDF8;font-size:18px;font-weight:700;
-  transition:border-color .2s, background .2s, transform .1s;
-}
-.opt-card:hover{border-color:var(--emerald)}
-.opt-card:active{transform:scale(.98)}
-.opt-card input{position:absolute;opacity:0;width:1px;height:1px}
-.opt-card .ico{font-size:26px}
-.opt-card.selected{border-color:var(--emerald);background:#EBF6EF;box-shadow:0 0 0 2px var(--emerald) inset}
-.opt-card:focus-within{outline:3px solid var(--gold);outline-offset:2px}
-.opt-sub{display:block;font-size:14.5px;font-weight:400;color:var(--ink-soft)}
-
-/* buttons */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  min-height:56px;padding:12px 30px;border-radius:14px;border:0;cursor:pointer;
-  font-size:20px;font-weight:700;font-family:inherit;transition:transform .1s, box-shadow .2s;
-  width:100%;
-}
-.btn:active{transform:scale(.98)}
-.btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.btn-primary{background:var(--emerald);color:#fff;box-shadow:0 6px 16px rgba(27,122,74,.30)}
-.btn-primary:hover{background:var(--emerald-dark)}
-.btn-primary:disabled{background:#9DB8A8;box-shadow:none;cursor:not-allowed}
-.btn-ghost{background:transparent;color:var(--pine);border:2px solid var(--pine)}
-.btn-wa{background:var(--wa);color:#fff;box-shadow:0 6px 16px rgba(37,211,102,.35)}
-.btn-wa:hover{background:var(--wa-dark)}
-.btn-row{display:flex;gap:14px;margin-top:26px}
-.btn-row .btn-ghost{flex:0 0 34%}
-
-/* OTP boxes */
-.otp-boxes{display:flex;gap:12px;justify-content:center;margin:18px 0;direction:ltr}
-.otp-boxes input{
-  width:64px;height:72px;text-align:center;font-size:34px;font-weight:700;
-  border:2px solid var(--line);border-radius:14px;background:#FFFDF8;
-}
-.otp-boxes input:focus{outline:3px solid var(--gold);border-color:var(--gold-deep)}
-
-/* upload zones */
-.upload-zone{
-  border:2.5px dashed var(--gold-deep);border-radius:16px;background:#FFFDF4;
-  padding:26px 18px;text-align:center;cursor:pointer;transition:background .2s;
-  min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-}
-.upload-zone:hover,.upload-zone.drag{background:var(--gold-soft)}
-.upload-zone .big-ico{font-size:40px}
-.upload-zone img.preview{max-width:100%;max-height:190px;border-radius:10px;box-shadow:var(--shadow)}
-.upload-zone .zone-status{font-size:15px;color:var(--ink-soft)}
-.upload-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:560px){.upload-pair{grid-template-columns:1fr}}
-
-/* scanner animation */
-.scanbox{position:relative;overflow:hidden;border-radius:12px}
-.scanbox::after{
-  content:"";position:absolute;left:0;right:0;height:4px;top:0;
-  background:linear-gradient(90deg,transparent,var(--emerald),transparent);
-  animation:scanline 1.6s ease-in-out infinite;box-shadow:0 0 14px var(--emerald);
-}
-@keyframes scanline{0%{top:0}50%{top:calc(100% - 4px)}100%{top:0}}
-.scan-msg{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--emerald);font-weight:700;margin-top:12px}
-.spinner{width:22px;height:22px;border:3px solid var(--gold-soft);border-top-color:var(--emerald);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* voice mic */
-.mic-wrap{position:relative}
-.mic-btn{
-  position:absolute;bottom:10px;inset-inline-end:10px;width:52px;height:52px;border-radius:50%;
-  border:2px solid var(--emerald);background:#fff;font-size:22px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
-.mic-btn.listening{background:var(--error);border-color:var(--error);animation:pulse 1.2s infinite}
-.mic-btn:focus-visible{outline:3px solid var(--gold)}
-
-/* autosave chip */
-.autosave{
-  position:fixed;bottom:24px;left:50%;transform:translate(-50%,80px);
-  background:var(--pine);color:#fff;padding:10px 22px;border-radius:999px;
-  font-size:16px;font-weight:700;display:flex;gap:10px;align-items:center;
-  box-shadow:var(--shadow);transition:transform .45s cubic-bezier(.22,.9,.32,1);z-index:60;
-}
-.autosave.show{transform:translate(-50%,0)}
-
-/* WhatsApp FAB */
-.fab{
-  position:fixed;bottom:24px;inset-inline-end:22px;z-index:70;
-  background:var(--wa);color:#fff;border:0;border-radius:999px;cursor:pointer;
-  min-height:60px;padding:10px 22px;font-size:18px;font-weight:700;font-family:inherit;
-  display:flex;align-items:center;gap:10px;box-shadow:0 8px 22px rgba(18,140,74,.45);
-  transition:transform .15s;
-}
-.fab:hover{transform:translateY(-3px)}
-.fab:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-.fab .fab-ico{font-size:24px}
-@media(max-width:560px){.fab span.fab-text{display:none}.fab{padding:0;width:64px;height:64px;justify-content:center}}
-
-/* success */
-.success-wrap{text-align:center;padding:30px 0}
-.ring{
-  width:120px;height:120px;border-radius:50%;margin:0 auto 20px;position:relative;
-  background:radial-gradient(circle at 35% 30%,#2A8A58,var(--pine));
-  display:flex;align-items:center;justify-content:center;
-  animation:pop .6s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 0 0 8px var(--gold-soft),0 14px 34px rgba(20,83,45,.35);
-}
-.ring svg{width:64px;height:64px}
-.ring svg path{stroke:#fff;stroke-width:7;fill:none;stroke-linecap:round;stroke-dasharray:80;stroke-dashoffset:80;animation:draw .7s .35s ease forwards}
-@keyframes pop{from{transform:scale(.3);opacity:0}}
-@keyframes draw{to{stroke-dashoffset:0}}
-.confetti{position:fixed;top:-10px;font-size:22px;animation:fall linear forwards;z-index:80;pointer-events:none}
-@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
-
-.divider{height:1px;background:var(--line);margin:26px 0}
-.notice{
-  background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;
-  padding:12px 16px;font-size:16px;margin:14px 0;
-}
-.checkbox-row{display:flex;gap:14px;align-items:flex-start;cursor:pointer}
-.checkbox-row input{width:30px;height:30px;flex:0 0 30px;accent-color:var(--emerald);cursor:pointer;margin-top:4px}
+body{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif;background:var(--cream);color:var(--ink);font-size:17px;line-height:2}
+[dir=ltr] body,body.en{font-family:'Atkinson Hyperlegible','Noto Nastaliq Urdu',sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:12px}
 .hidden{display:none!important}
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 4px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;color:var(--gold2);font-size:26px;box-shadow:0 4px 12px rgba(20,83,45,.35)}
+.brand h1{font-size:22px;color:var(--green);line-height:1.6}
+.brand small{display:block;color:var(--muted);font-size:12.5px;font-family:'Atkinson Hyperlegible'}
+.langbtn{border:2px solid var(--green);border-radius:999px;overflow:hidden;display:flex;cursor:pointer;background:#fff}
+.langbtn span{padding:6px 16px;font-size:15px}
+.langbtn .on{background:var(--green);color:#fff}
+/* cards & buttons */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 24px rgba(31,41,55,.08);padding:22px;margin:14px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;padding:14px 26px;font-size:18px;font-family:inherit;cursor:pointer;min-height:56px;width:100%;transition:.2s}
+.btn-p{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 6px 16px rgba(20,83,45,.35)}
+.btn-p:active{transform:scale(.98)}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#3B2F04}
+.btn-o{background:#fff;color:var(--green);border:2px solid var(--green)}
+.btn-sm{min-height:44px;padding:8px 18px;font-size:15px;width:auto}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:140px}
+/* fields */
+label{display:block;font-size:16.5px;font-weight:600;color:var(--green);margin:14px 0 4px}
+label small{color:var(--muted);font-weight:400;font-size:12.5px;font-family:'Atkinson Hyperlegible'}
+input,select,textarea{width:100%;min-height:54px;border:2px solid #D6D3C8;border-radius:12px;padding:10px 14px;font-size:17px;font-family:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:90px}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--gold2);border-color:var(--gold)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:6px}
+.opt{border:2px solid #D6D3C8;border-radius:14px;padding:14px 10px;text-align:center;cursor:pointer;background:#fff;font-size:16.5px;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt.on{border-color:var(--green);background:#EAF4EE;color:var(--green);font-weight:700;box-shadow:0 0 0 2px var(--green) inset}
+/* progress */
+.prog{margin:10px 0 4px}
+.pbar{height:10px;background:#E7E2D6;border-radius:99px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));background-size:200%;animation:sh 2.5s linear infinite;border-radius:99px;transition:width .5s;width:0%}
+@keyframes sh{to{background-position:200%}}
+.ptxt{text-align:center;color:var(--gold);font-weight:700;font-size:15px}
+.steps{display:flex;justify-content:space-between;margin:6px 0}
+.stp{text-align:center;flex:1;font-size:12px;color:var(--muted)}
+.stp .dot{width:34px;height:34px;border-radius:50%;background:#E7E2D6;margin:0 auto 2px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.stp.on .dot{background:var(--green);color:#fff;animation:pulse 1.6s infinite}
+.stp.done .dot{background:var(--gold);color:#3B2F04}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(20,83,45,.15)}}
+/* landing */
+.hero{background:linear-gradient(150deg,var(--green) 0%,var(--green2) 60%,#2c7a4b);color:#fff;border-radius:20px;padding:30px 22px;text-align:center;box-shadow:0 10px 30px rgba(20,83,45,.35)}
+.hero h2{font-size:26px;color:var(--gold2);margin-bottom:8px}
+.hero p{font-size:16px;opacity:.95}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.feat div{background:#fff;border-radius:14px;padding:14px;text-align:center;box-shadow:0 4px 14px rgba(31,41,55,.07);font-size:15px}
+.feat .ic{font-size:26px}
+/* upload */
+.up{border:2.5px dashed var(--gold);border-radius:14px;background:#FFFDF5;padding:18px;text-align:center;cursor:pointer;min-height:110px;position:relative;overflow:hidden}
+.up img{max-width:100%;max-height:170px;border-radius:10px}
+.scanline{position:absolute;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,var(--ok),transparent);animation:scan 1.4s linear infinite;top:0}
+@keyframes scan{0%{top:0}100%{top:100%}}
+.badge{display:inline-block;background:#EAF4EE;color:var(--ok);border-radius:99px;padding:2px 14px;font-size:14px;margin-top:6px}
+.badge.err{background:#FEE2E2;color:var(--err)}
+/* otp */
+.otpbox{display:flex;gap:10px;justify-content:center;direction:ltr}
+.otpbox input{width:58px;height:64px;text-align:center;font-size:28px;font-weight:700}
+/* toast */
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 24px;border-radius:99px;font-size:15px;transition:.4s;z-index:99;opacity:0}
+#toast.show{transform:translateX(-50%);opacity:1}
+/* success */
+.ring{width:110px;height:110px;border-radius:50%;border:6px solid var(--ok);display:flex;align-items:center;justify-content:center;font-size:52px;color:var(--ok);margin:10px auto;animation:pop .6s}
+@keyframes pop{0%{transform:scale(.3);opacity:0}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.bigid{font-size:30px;font-weight:700;color:var(--green);letter-spacing:2px;background:#EAF4EE;border-radius:14px;padding:10px;text-align:center;direction:ltr}
+/* dashboard */
+.chip{display:inline-block;border-radius:99px;padding:3px 16px;font-size:14px;font-weight:700}
+.chip.Active{background:#EAF4EE;color:var(--ok)}
+.chip.Married{background:#FEF3C7;color:#92400E}
+.chip.Closed{background:#F3F4F6;color:#6B7280}
+.kv{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #E5E1D5;padding:7px 2px;font-size:15.5px}
+.kv b{color:var(--green)}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:20px 0}
+footer a{color:var(--green)}
+@media(max-width:480px){
+  body{font-size:16px}
+  .card{padding:16px}
+  .otpbox input{width:48px;height:56px;font-size:24px}
+  .brand h1{font-size:18px}
+  .hero h2{font-size:21px}
+}
+/* PDF template (hidden on screen) */
+#pdfT{position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-size:15px;direction:rtl}
+#pdfT .ph{background:linear-gradient(135deg,#14532D,#1E6B3C);color:#fff;padding:26px 30px;display:flex;justify-content:space-between;align-items:center}
+#pdfT .ph h2{color:#E3C766;font-size:26px}
+#pdfT .ph .pid{font-size:20px;font-weight:700;direction:ltr;background:rgba(255,255,255,.15);padding:4px 16px;border-radius:10px}
+#pdfT .sec{margin:14px 26px;border:1.5px solid #E3C766;border-radius:12px;overflow:hidden}
+#pdfT .sec h3{background:#FDF6E3;color:#14532D;padding:8px 16px;font-size:17px;border-bottom:1.5px solid #E3C766}
+#pdfT table{width:100%;border-collapse:collapse}
+#pdfT td{padding:7px 16px;border-bottom:1px solid #F1EDE0;font-size:14.5px}
+#pdfT td:first-child{color:#14532D;font-weight:700;width:38%}
+#pdfT .pf{margin:16px 26px;text-align:center;color:#6B7280;font-size:12.5px;border-top:2px solid #E3C766;padding-top:10px}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <div class="brand">
-    <div class="brand-mark" aria-hidden="true">🌿</div>
-    <div>
-      <h1 data-i18n="brand">Rishta Registry</h1>
-      <p data-i18n="tagline">A respectful way to find your match</p>
+  <!-- HEADER -->
+  <div class="top">
+    <div class="brand">
+      <div class="logo">🕌</div>
+      <div><h1 id="bname">البرکہ میرج بیورو</h1><small>Al-Baraka Marriage Bureau</small></div>
+    </div>
+    <div class="langbtn" onclick="toggleLang()"><span id="lu" class="on">اردو</span><span id="le">English</span></div>
+  </div>
+
+  <!-- LANDING -->
+  <div id="v-land">
+    <div class="hero">
+      <h2 data-ur="بسم اللہ الرحمٰن الرحیم" data-en="In the name of Allah">بسم اللہ الرحمٰن الرحیم</h2>
+      <p data-ur="البرکہ میرج بیورو ایک باوقار اور بااعتماد ادارہ ہے جو شرعی اصولوں کے مطابق مناسب رشتے تلاش کرنے میں خاندانوں کی مدد کرتا ہے۔ ہمارا مقصد آسان، محفوظ اور عزت دار طریقے سے نکاح جیسے مقدس بندھن کو ممکن بنانا ہے۔"
+         data-en="Al-Baraka Marriage Bureau is a respected and trusted institution helping families find suitable matches according to Islamic values. Our mission is to make the sacred bond of Nikah possible in an easy, safe and dignified way.">
+      البرکہ میرج بیورو ایک باوقار اور بااعتماد ادارہ ہے جو شرعی اصولوں کے مطابق مناسب رشتے تلاش کرنے میں خاندانوں کی مدد کرتا ہے۔ ہمارا مقصد آسان، محفوظ اور عزت دار طریقے سے نکاح جیسے مقدس بندھن کو ممکن بنانا ہے۔</p>
+    </div>
+    <div class="feat">
+      <div><div class="ic">🔒</div><span data-ur="مکمل رازداری" data-en="Full privacy">مکمل رازداری</span></div>
+      <div><div class="ic">✅</div><span data-ur="تصدیق شدہ پروفائلز" data-en="Verified profiles">تصدیق شدہ پروفائلز</span></div>
+      <div><div class="ic">🤝</div><span data-ur="خاندانی اقدار" data-en="Family values">خاندانی اقدار</span></div>
+      <div><div class="ic">📱</div><span data-ur="موبائل پر آسان" data-en="Mobile friendly">موبائل پر آسان</span></div>
+    </div>
+    <div class="card">
+      <button class="btn btn-p" onclick="startRegister()" data-ur="✨ نیا رجسٹریشن شروع کریں" data-en="✨ Start New Registration">✨ نیا رجسٹریشن شروع کریں</button>
+      <div style="height:10px"></div>
+      <button class="btn btn-o" onclick="show('v-login')" data-ur="🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں" data-en="🔑 Already registered? Log in">🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں</button>
     </div>
   </div>
-  <div class="lang-toggle" role="group" aria-label="Language">
-    <button id="btnEn" class="active" onclick="setLang('en')">English</button>
-    <button id="btnUr" onclick="setLang('ur')">اردو</button>
-  </div>
-</header>
 
-<!-- Golden-thread progress -->
-<div class="progress-wrap" aria-live="polite">
-  <div class="pct-readout"><span id="pctNum">0</span>% <span data-i18n="complete">complete</span></div>
-  <div class="thread">
-    <div class="thread-line"></div>
-    <div class="thread-fill" id="threadFill"></div>
-    <div class="milestones">
-      <div class="node current" id="node1"><div class="dot">📱</div><span data-i18n="s1">Verify</span></div>
-      <div class="node" id="node2"><div class="dot">🪪</div><span data-i18n="s2">Identity</span></div>
-      <div class="node" id="node3"><div class="dot">💚</div><span data-i18n="s3">Preferences</span></div>
-      <div class="node" id="node4"><div class="dot">📷</div><span data-i18n="s4">Photos</span></div>
+  <!-- LOGIN -->
+  <div id="v-login" class="hidden">
+    <div class="card">
+      <h2 style="color:var(--green)" data-ur="لاگ ان" data-en="Log in">لاگ ان</h2>
+      <label data-ur="پروفائل آئی ڈی" data-en="Profile ID">پروفائل آئی ڈی <small>ABM-0001</small></label>
+      <input id="li-id" style="direction:ltr;text-align:center" placeholder="ABM-0001" autocapitalize="characters">
+      <label data-ur="پاس ورڈ" data-en="Password">پاس ورڈ</label>
+      <input id="li-pw" type="password" style="direction:ltr">
+      <div id="li-err" class="badge err hidden"></div>
+      <div style="height:12px"></div>
+      <button class="btn btn-p" onclick="doLogin()" data-ur="لاگ ان کریں" data-en="Log in">لاگ ان کریں</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-o btn-sm" onclick="show('v-land')" data-ur="← واپس" data-en="← Back">← واپس</button>
     </div>
   </div>
+
+  <!-- DASHBOARD -->
+  <div id="v-dash" class="hidden">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <h2 style="color:var(--green)" id="d-name">—</h2>
+        <span class="chip" id="d-status">—</span>
+      </div>
+      <div class="bigid" id="d-id">—</div>
+      <div id="d-summary" style="margin-top:10px"></div>
+      <div style="height:14px"></div>
+      <div class="row">
+        <button class="btn btn-p btn-sm" onclick="startEdit()" data-ur="✏️ پروفائل میں ترمیم" data-en="✏️ Edit profile">✏️ پروفائل میں ترمیم</button>
+        <button class="btn btn-g btn-sm" onclick="downloadPDF()" data-ur="📄 پی ڈی ایف ڈاؤن لوڈ" data-en="📄 Download PDF">📄 پی ڈی ایف ڈاؤن لوڈ</button>
+      </div>
+      <div style="height:8px"></div>
+      <div class="row">
+        <button class="btn btn-o btn-sm" id="d-married" onclick="markMarried()" data-ur="💍 الحمدللہ شادی ہوگئی" data-en="💍 Mark as married">💍 الحمدللہ شادی ہوگئی</button>
+        <button class="btn btn-o btn-sm" onclick="logout()" data-ur="لاگ آؤٹ" data-en="Log out">لاگ آؤٹ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER / EDIT WIZARD -->
+  <div id="v-reg" class="hidden">
+    <div class="prog">
+      <div class="ptxt"><span id="pct">0</span>%</div>
+      <div class="pbar"><div class="pfill" id="pfill"></div></div>
+      <div class="steps" id="stepdots"></div>
+    </div>
+
+    <!-- STEP 1 : OTP -->
+    <div class="card wstep" id="s1">
+      <h2 style="color:var(--green)" data-ur="تصدیق کریں" data-en="Verify yourself">تصدیق کریں</h2>
+      <p data-ur="مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں" data-en="Choose how to receive your free 4-digit code">مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں</p>
+      <div class="opts" id="chan">
+        <div class="opt" data-v="sms">📩 SMS</div>
+        <div class="opt" data-v="whatsapp">💚 WhatsApp</div>
+        <div class="opt" data-v="email">✉️ Email</div>
+      </div>
+      <div id="smsx" class="hidden">
+        <label data-ur="نیٹ ورک" data-en="Network">نیٹ ورک</label>
+        <select id="carrier"><option value="jazz">Jazz</option><option value="zong">Zong</option><option value="telenor">Telenor</option><option value="ufone">Ufone</option></select>
+      </div>
+      <label id="contactlbl" data-ur="موبائل نمبر / ای میل" data-en="Mobile / Email">موبائل نمبر / ای میل</label>
+      <input id="contact" style="direction:ltr" inputmode="tel" placeholder="03xx xxxxxxx">
+      <div style="height:10px"></div>
+      <button class="btn btn-p" onclick="sendOtp()" id="sendbtn" data-ur="کوڈ بھیجیں" data-en="Send code">کوڈ بھیجیں</button>
+      <div id="otpArea" class="hidden" style="margin-top:16px">
+        <p style="text-align:center" data-ur="کوڈ درج کریں" data-en="Enter the code">کوڈ درج کریں</p>
+        <div class="otpbox">
+          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+          <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+        </div>
+        <div id="demoOtp" class="badge hidden" style="display:block;text-align:center"></div>
+        <div id="otpErr" class="badge err hidden" style="display:block;text-align:center"></div>
+        <div style="height:10px"></div>
+        <button class="btn btn-g" onclick="verifyOtp()" data-ur="تصدیق کریں" data-en="Verify">تصدیق کریں</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 : IDENTITY -->
+    <div class="card wstep hidden" id="s2">
+      <h2 style="color:var(--green)" data-ur="سیکشن 1: ذاتی معلومات" data-en="Section 1: Personal details">سیکشن 1: ذاتی معلومات</h2>
+      <label data-ur="شناختی کارڈ (سامنے)" data-en="CNIC front">شناختی کارڈ (سامنے) <small>خودکار OCR</small></label>
+      <div class="up" id="upF" onclick="pick('cnicF')"><span data-ur="📷 تصویر لیں یا منتخب کریں" data-en="📷 Take or choose photo">📷 تصویر لیں یا منتخب کریں</span></div>
+      <input type="file" id="cnicF" accept="image/*" capture="environment" class="hidden">
+      <div id="ocrStat" class="badge hidden"></div>
+      <label data-ur="شناختی کارڈ (پیچھے)" data-en="CNIC back">شناختی کارڈ (پیچھے)</label>
+      <div class="up" id="upB" onclick="pick('cnicB')"><span>📷</span></div>
+      <input type="file" id="cnicB" accept="image/*" capture="environment" class="hidden">
+
+      <label data-ur="پورا نام" data-en="Full name">پورا نام</label>
+      <input id="f-fullName">
+      <label data-ur="شناختی کارڈ نمبر" data-en="CNIC number">شناختی کارڈ نمبر</label>
+      <input id="f-cnic" style="direction:ltr;text-align:center" inputmode="numeric" placeholder="xxxxx-xxxxxxx-x">
+      <label data-ur="جنس" data-en="Gender">جنس</label>
+      <div class="opts" data-f="gender">
+        <div class="opt" data-v="male" data-ur="👨 مرد" data-en="👨 Male">👨 مرد</div>
+        <div class="opt" data-v="female" data-ur="👩 عورت" data-en="👩 Female">👩 عورت</div>
+      </div>
+      <div class="row">
+        <div><label data-ur="تاریخ پیدائش" data-en="Date of birth">تاریخ پیدائش</label>
+        <input id="f-dob" type="date" style="direction:ltr" onchange="calcAge()"></div>
+        <div><label data-ur="عمر" data-en="Age">عمر</label>
+        <input id="f-age" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="قد" data-en="Height">قد</label>
+        <select id="f-height"></select></div>
+        <div><label data-ur="بچوں کی تعداد" data-en="Children">بچوں کی تعداد</label>
+        <input id="f-children" inputmode="numeric" value="0"></div>
+      </div>
+      <label data-ur="ازدواجی حیثیت" data-en="Marital status">ازدواجی حیثیت</label>
+      <div class="opts" data-f="maritalStatus">
+        <div class="opt" data-v="single" data-ur="کنوارہ/کنواری" data-en="Single">کنوارہ/کنواری</div>
+        <div class="opt" data-v="divorced" data-ur="طلاق یافتہ" data-en="Divorced">طلاق یافتہ</div>
+        <div class="opt" data-v="widowed" data-ur="بیوہ/رنڈوا" data-en="Widowed">بیوہ/رنڈوا</div>
+      </div>
+      <div style="height:12px"></div>
+      <button class="btn btn-p" onclick="next(3)" data-ur="اگلا مرحلہ ←" data-en="Next →">اگلا مرحلہ ←</button>
+    </div>
+
+    <!-- STEP 3 : RELIGION + EDUCATION -->
+    <div class="card wstep hidden" id="s3">
+      <h2 style="color:var(--green)" data-ur="سیکشن 2: مذہبی، تعلیمی و پیشہ ورانہ معلومات" data-en="Section 2: Religion, education & work">سیکشن 2: مذہبی، تعلیمی و پیشہ ورانہ معلومات</h2>
+      <div class="row">
+        <div><label data-ur="مذہب" data-en="Religion">مذہب</label><input id="f-religion" value="اسلام"></div>
+        <div><label data-ur="مسلک" data-en="Sect">مسلک</label>
+        <select id="f-sect"><option value="">—</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
+      </div>
+      <label data-ur="ذات / برادری" data-en="Caste">ذات / برادری <small>جٹ، آرائیں، راجپوت...</small></label>
+      <input id="f-caste">
+      <div class="row">
+        <div><label data-ur="حافظِ قرآن؟" data-en="Hafiz-e-Quran?">حافظِ قرآن؟</label>
+        <select id="f-hafizQuran"><option value="">—</option><option value="yes">ہاں</option><option value="no">نہیں</option></select></div>
+        <div><label data-ur="نماز کی پابندی؟" data-en="Regular prayers?">نماز کی پابندی؟</label>
+        <select id="f-prayerRegular"><option value="">—</option><option value="always">ہمیشہ</option><option value="sometimes">کبھی کبھار</option><option value="rarely">کم</option></select></div>
+      </div>
+      <div id="purdahBox" class="hidden">
+        <label data-ur="پردہ کرتی ہیں؟" data-en="Observes purdah?">پردہ کرتی ہیں؟</label>
+        <select id="f-purdah"><option value="">—</option><option value="yes">ہاں</option><option value="no">نہیں</option></select>
+      </div>
+      <div class="row">
+        <div><label data-ur="تعلیم" data-en="Education">تعلیم</label>
+        <select id="f-education"><option value="">—</option><option>میٹرک</option><option>انٹرمیڈیٹ</option><option>بیچلرز</option><option>ماسٹرز</option><option>ڈاکٹر</option><option>انجینئر</option><option>حافظ/عالم دین</option><option>دیگر</option></select></div>
+        <div><label data-ur="پیشہ" data-en="Profession">پیشہ</label><input id="f-profession"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="کمپنی / ادارہ" data-en="Company">کمپنی / ادارہ</label><input id="f-company"></div>
+        <div><label data-ur="ماہانہ آمدنی" data-en="Monthly income">ماہانہ آمدنی</label>
+        <select id="f-income"><option value="">—</option><option>50 ہزار سے کم</option><option>50 ہزار – 1 لاکھ</option><option>1 – 2 لاکھ</option><option>2 لاکھ سے زائد</option></select></div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="row">
+        <button class="btn btn-o btn-sm" onclick="next(2)" data-ur="→ پچھلا" data-en="← Back">→ پچھلا</button>
+        <button class="btn btn-p btn-sm" onclick="next(4)" data-ur="اگلا مرحلہ ←" data-en="Next →">اگلا مرحلہ ←</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 : RESIDENCE + FAMILY -->
+    <div class="card wstep hidden" id="s4">
+      <h2 style="color:var(--green)" data-ur="سیکشن 3: رہائش و خاندانی معلومات" data-en="Section 3: Residence & family">سیکشن 3: رہائش و خاندانی معلومات</h2>
+      <div class="row">
+        <div><label data-ur="صوبہ" data-en="Province">صوبہ</label>
+        <select id="f-province"><option value="">—</option><option>پنجاب</option><option>سندھ</option><option>خیبر پختونخوا</option><option>بلوچستان</option><option>گلگت بلتستان</option><option>آزاد کشمیر</option><option>اسلام آباد</option><option>بیرونِ ملک</option></select></div>
+        <div><label data-ur="ضلع" data-en="District">ضلع</label><input id="f-district"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="شہر / گاؤں" data-en="City / village">شہر / گاؤں</label><input id="f-city"></div>
+        <div><label data-ur="گھر" data-en="House">گھر</label>
+        <select id="f-houseType"><option value="">—</option><option value="owned">ذاتی</option><option value="rented">کرایہ</option></select></div>
+      </div>
+      <label data-ur="والد / سرپرست کا نام" data-en="Father / guardian name">والد / سرپرست کا نام</label>
+      <input id="f-guardianName">
+      <div class="row">
+        <div><label data-ur="والد کا پیشہ" data-en="Father's occupation">والد کا پیشہ</label><input id="f-fatherOccupation"></div>
+        <div><label data-ur="والدہ کا پیشہ" data-en="Mother's occupation">والدہ کا پیشہ</label><input id="f-motherOccupation"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="بھائیوں کی تعداد" data-en="Brothers">بھائیوں کی تعداد</label><input id="f-brothers" inputmode="numeric"></div>
+        <div><label data-ur="بہنوں کی تعداد" data-en="Sisters">بہنوں کی تعداد</label><input id="f-sisters" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="موبائل نمبر" data-en="Mobile">موبائل نمبر</label><input id="f-mobile" style="direction:ltr" inputmode="tel"></div>
+        <div><label data-ur="متبادل نمبر" data-en="Alternate">متبادل نمبر <small>اختیاری</small></label><input id="f-altMobile" style="direction:ltr" inputmode="tel"></div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="row">
+        <button class="btn btn-o btn-sm" onclick="next(3)" data-ur="→ پچھلا" data-en="← Back">→ پچھلا</button>
+        <button class="btn btn-p btn-sm" onclick="next(5)" data-ur="اگلا مرحلہ ←" data-en="Next →">اگلا مرحلہ ←</button>
+      </div>
+    </div>
+
+    <!-- STEP 5 : PREFERENCES -->
+    <div class="card wstep hidden" id="s5">
+      <h2 style="color:var(--green)" data-ur="سیکشن 4: مطلوبہ رشتہ" data-en="Section 4: Partner preferences">سیکشن 4: مطلوبہ رشتہ</h2>
+      <div class="row">
+        <div><label data-ur="مطلوبہ عمر" data-en="Preferred age">مطلوبہ عمر <small>مثلاً 25–30</small></label><input id="f-prefAge" placeholder="25-30" style="direction:ltr;text-align:center"></div>
+        <div><label data-ur="مطلوبہ قد" data-en="Preferred height">مطلوبہ قد</label><input id="f-prefHeight"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="مطلوبہ تعلیم" data-en="Preferred education">مطلوبہ تعلیم</label><input id="f-prefEducation"></div>
+        <div><label data-ur="مطلوبہ شہر" data-en="Preferred city">مطلوبہ شہر</label><input id="f-prefCity"></div>
+      </div>
+      <div class="row">
+        <div><label data-ur="مطلوبہ ذات" data-en="Preferred caste">مطلوبہ ذات</label><input id="f-prefCaste"></div>
+        <div><label data-ur="مطلوبہ مسلک" data-en="Preferred sect">مطلوبہ مسلک</label><input id="f-prefSect"></div>
+      </div>
+      <label data-ur="دیگر شرائط" data-en="Other conditions">دیگر شرائط</label>
+      <textarea id="f-otherConditions"></textarea>
+      <div style="height:12px"></div>
+      <div class="row">
+        <button class="btn btn-o btn-sm" onclick="next(4)" data-ur="→ پچھلا" data-en="← Back">→ پچھلا</button>
+        <button class="btn btn-p btn-sm" onclick="next(6)" data-ur="اگلا مرحلہ ←" data-en="Next →">اگلا مرحلہ ←</button>
+      </div>
+    </div>
+
+    <!-- STEP 6 : PHOTOS + PASSWORD -->
+    <div class="card wstep hidden" id="s6">
+      <h2 style="color:var(--green)" data-ur="سیکشن 5: تصاویر اور پاس ورڈ" data-en="Section 5: Photos & password">سیکشن 5: تصاویر اور پاس ورڈ</h2>
+      <label data-ur="تصویر 1" data-en="Photo 1">تصویر 1 <small>اختیاری</small></label>
+      <div class="up" id="upP1" onclick="pick('ph1')"><span>📷</span></div>
+      <input type="file" id="ph1" accept="image/*" class="hidden">
+      <label data-ur="تصویر 2" data-en="Photo 2">تصویر 2 <small>اختیاری</small></label>
+      <div class="up" id="upP2" onclick="pick('ph2')"><span>📷</span></div>
+      <input type="file" id="ph2" accept="image/*" class="hidden">
+
+      <div id="pwBox">
+        <label data-ur="پاس ورڈ بنائیں" data-en="Create password">پاس ورڈ بنائیں <small>کم از کم 4 حروف — بعد میں لاگ ان کے لیے</small></label>
+        <input id="f-pw1" type="password" style="direction:ltr">
+        <label data-ur="پاس ورڈ دوبارہ" data-en="Confirm password">پاس ورڈ دوبارہ</label>
+        <input id="f-pw2" type="password" style="direction:ltr">
+      </div>
+
+      <div style="margin:14px 0;display:flex;gap:10px;align-items:flex-start">
+        <input type="checkbox" id="consent" style="width:26px;height:26px;min-height:26px;margin-top:8px">
+        <label for="consent" style="margin:0" data-ur="میں تصدیق کرتا/کرتی ہوں کہ تمام معلومات درست ہیں اور البرکہ میرج بیورو کو رشتہ تلاش کرنے کے لیے استعمال کی اجازت دیتا/دیتی ہوں۔" data-en="I confirm all information is correct and permit Al-Baraka Marriage Bureau to use it for match-making.">میں تصدیق کرتا/کرتی ہوں کہ تمام معلومات درست ہیں اور البرکہ میرج بیورو کو رشتہ تلاش کرنے کے لیے استعمال کی اجازت دیتا/دیتی ہوں۔</label>
+      </div>
+      <div id="finErr" class="badge err hidden" style="display:block;text-align:center"></div>
+      <div class="row">
+        <button class="btn btn-o btn-sm" onclick="next(5)" data-ur="→ پچھلا" data-en="← Back">→ پچھلا</button>
+        <button class="btn btn-g btn-sm" id="finBtn" onclick="finalize()" data-ur="✅ رجسٹریشن مکمل کریں" data-en="✅ Complete registration">✅ رجسٹریشن مکمل کریں</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="card wstep hidden" id="s7" style="text-align:center">
+      <div class="ring">✓</div>
+      <h2 style="color:var(--green)" data-ur="مبارک ہو! رجسٹریشن مکمل" data-en="Congratulations! Registered">مبارک ہو! رجسٹریشن مکمل</h2>
+      <p data-ur="آپ کی پروفائل آئی ڈی — اسے محفوظ رکھیں، لاگ ان کے لیے ضروری ہے" data-en="Your Profile ID — keep it safe, needed to log in">آپ کی پروفائل آئی ڈی — اسے محفوظ رکھیں، لاگ ان کے لیے ضروری ہے</p>
+      <div class="bigid" id="doneId">ABM-0000</div>
+      <div style="height:14px"></div>
+      <button class="btn btn-g" onclick="downloadPDF()" data-ur="📄 اپنی پروفائل PDF ڈاؤن لوڈ کریں" data-en="📄 Download your profile PDF">📄 اپنی پروفائل PDF ڈاؤن لوڈ کریں</button>
+      <div style="height:8px"></div>
+      <button class="btn btn-p" onclick="show('v-dash');fillDash()" data-ur="🏠 میرا ڈیش بورڈ" data-en="🏠 My dashboard">🏠 میرا ڈیش بورڈ</button>
+    </div>
+
+    <div style="text-align:center;margin:6px">
+      <button class="btn btn-o btn-sm" onclick="exitWizard()" data-ur="✖ بند کریں" data-en="✖ Close">✖ بند کریں</button>
+    </div>
+  </div>
+
+  <footer>
+    <span data-ur="مدد کے لیے واٹس ایپ" data-en="WhatsApp for help">مدد کے لیے واٹس ایپ</span>:
+    <a href="#" onclick="waHelp();return false" style="direction:ltr">+92 315 4822167</a>
+    &nbsp;|&nbsp; <a href="admin.html" data-ur="ایڈمن" data-en="Admin">ایڈمن</a>
+  </footer>
 </div>
 
-<main>
+<div id="toast"></div>
 
-<!-- ================= STEP 1 : OTP ================= -->
-<section class="step active" id="step1">
-  <h2 data-i18n="s1_title">Let's confirm it's really you</h2>
-  <p class="lead" data-i18n="s1_lead">Choose the easiest way for you to receive a free 4-digit code. No charges — ever.</p>
-
-  <div id="otpChoose">
-    <div class="field">
-      <label data-i18n="s1_how">How would you like to receive your code?</label>
-      <div class="opt-grid">
-        <label class="opt-card" data-otp="sms">
-          <input type="radio" name="otpChannel" value="sms">
-          <span class="ico">💬</span>
-          <span><span data-i18n="ch_sms">Free SMS to my mobile</span><span class="opt-sub" data-i18n="ch_sms_sub">Sent through your network, free of cost</span></span>
-        </label>
-        <label class="opt-card" data-otp="whatsapp">
-          <input type="radio" name="otpChannel" value="whatsapp">
-          <span class="ico">🟢</span>
-          <span><span data-i18n="ch_wa">Verify on WhatsApp</span><span class="opt-sub" data-i18n="ch_wa_sub">One tap — nothing to type</span></span>
-        </label>
-        <label class="opt-card" data-otp="email">
-          <input type="radio" name="otpChannel" value="email">
-          <span class="ico">✉️</span>
-          <span><span data-i18n="ch_em">Code by Email</span><span class="opt-sub" data-i18n="ch_em_sub">Sent instantly to your inbox</span></span>
-        </label>
-      </div>
-    </div>
-
-    <div class="field hidden" id="fldPhone">
-      <label for="phone" data-i18n="lbl_phone">Mobile number</label>
-      <input type="tel" id="phone" inputmode="numeric" pattern="[0-9]*" placeholder="03XX XXXXXXX" class="en-font" autocomplete="tel">
-      <div class="err-msg" id="errPhone" data-i18n="err_phone">Please enter a valid mobile number (11 digits, starts with 03).</div>
-    </div>
-
-    <div class="field hidden" id="fldCarrier">
-      <label data-i18n="lbl_carrier">Your mobile network</label>
-      <div class="opt-grid cols2" id="carrierGrid">
-        <label class="opt-card"><input type="radio" name="carrier" value="jazz"><span class="ico">🔴</span> Jazz / Mobilink</label>
-        <label class="opt-card"><input type="radio" name="carrier" value="zong"><span class="ico">🟣</span> Zong</label>
-        <label class="opt-card"><input type="radio" name="carrier" value="telenor"><span class="ico">🔵</span> Telenor</label>
-        <label class="opt-card"><input type="radio" name="carrier" value="ufone"><span class="ico">🟠</span> Ufone</label>
-      </div>
-    </div>
-
-    <div class="field hidden" id="fldEmail">
-      <label for="email" data-i18n="lbl_email">Email address</label>
-      <input type="email" id="email" placeholder="name@example.com" class="en-font" autocomplete="email">
-      <div class="err-msg" id="errEmail" data-i18n="err_email">Please enter a valid email address.</div>
-    </div>
-
-    <button class="btn btn-primary hidden" id="btnSendOtp" onclick="sendOtp()"><span data-i18n="btn_send">Send my free code</span> ➜</button>
-    <button class="btn btn-wa hidden" id="btnWaVerify" onclick="waVerify()">🟢 <span data-i18n="btn_wa">Tap to Verify on WhatsApp</span></button>
+<!-- PDF TEMPLATE -->
+<div id="pdfT">
+  <div class="ph">
+    <div><h2>البرکہ میرج بیورو</h2><div style="font-size:13px;font-family:'Atkinson Hyperlegible'">Al-Baraka Marriage Bureau — Rishta Profile</div></div>
+    <div class="pid" id="p-id">ABM-0000</div>
   </div>
-
-  <div id="otpEnter" class="hidden">
-    <div class="notice" id="otpSentMsg"></div>
-    <div class="field">
-      <label data-i18n="lbl_code" style="text-align:center">Enter your 4-digit code</label>
-      <div class="otp-boxes">
-        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 1">
-        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 2">
-        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 3">
-        <input type="tel" maxlength="1" inputmode="numeric" aria-label="Digit 4">
-      </div>
-      <div class="err-msg" id="errOtp" style="text-align:center" data-i18n="err_otp">That code doesn't match. Please check and try again.</div>
-    </div>
-    <button class="btn btn-primary" onclick="verifyOtp()"><span data-i18n="btn_verify">Verify & Continue</span> ✓</button>
-    <button class="btn btn-ghost" style="margin-top:12px" onclick="resetOtp()" data-i18n="btn_resend">↺ Choose another way / resend</button>
-  </div>
-</section>
-
-<!-- ================= STEP 2 : CNIC ================= -->
-<section class="step" id="step2">
-  <h2 data-i18n="s2_title">Your identity card (CNIC)</h2>
-  <p class="lead" data-i18n="s2_lead">Take a photo or upload both sides. We read your name and date of birth automatically — you won't have to type them.</p>
-
-  <div class="upload-pair">
-    <div>
-      <div class="field"><label data-i18n="lbl_front">CNIC — Front side</label></div>
-      <div class="upload-zone" id="zoneFront" tabindex="0" role="button" aria-label="Upload CNIC front">
-        <span class="big-ico">📷</span>
-        <strong data-i18n="zone_tap">Tap to take a photo</strong>
-        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
-      </div>
-      <input type="file" id="fileFront" accept="image/*" capture="environment" class="hidden">
-    </div>
-    <div>
-      <div class="field"><label data-i18n="lbl_back">CNIC — Back side</label></div>
-      <div class="upload-zone" id="zoneBack" tabindex="0" role="button" aria-label="Upload CNIC back">
-        <span class="big-ico">📷</span>
-        <strong data-i18n="zone_tap">Tap to take a photo</strong>
-        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
-      </div>
-      <input type="file" id="fileBack" accept="image/*" capture="environment" class="hidden">
-    </div>
-  </div>
-
-  <div class="scan-msg hidden" id="scanMsg"><div class="spinner"></div><span data-i18n="scanning">Scanning identity card…</span></div>
-
-  <div class="divider"></div>
-
-  <div class="field">
-    <label for="fullName" data-i18n="lbl_name">Full name <span class="hint" data-i18n="hint_auto">(filled automatically — please check)</span></label>
-    <input type="text" id="fullName" autocomplete="name">
-  </div>
-  <div class="field">
-    <label for="dob" data-i18n="lbl_dob">Date of birth</label>
-    <input type="date" id="dob" class="en-font">
-  </div>
-  <div class="field">
-    <label for="cnic" data-i18n="lbl_cnic">CNIC number</label>
-    <input type="tel" id="cnic" inputmode="numeric" placeholder="35201-1234567-8" class="en-font">
-    <div class="err-msg" id="errCnic" data-i18n="err_cnic">CNIC should have 13 digits, e.g. 35201-1234567-8.</div>
-  </div>
-  <div class="field">
-    <label data-i18n="lbl_gender">Gender</label>
-    <div class="opt-grid cols2" id="genderGrid">
-      <label class="opt-card"><input type="radio" name="gender" value="male"><span class="ico">👨</span> <span data-i18n="g_m">Male</span></label>
-      <label class="opt-card"><input type="radio" name="gender" value="female"><span class="ico">👩</span> <span data-i18n="g_f">Female</span></label>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-ghost" onclick="goTo(1)" data-i18n="btn_back">← Back</button>
-    <button class="btn btn-primary" onclick="validateStep2()"><span data-i18n="btn_next">Save & Continue</span> ➜</button>
-  </div>
-</section>
-
-<!-- ================= STEP 3 : PREFERENCES ================= -->
-<section class="step" id="step3">
-  <h2 data-i18n="s3_title">About you & your ideal match</h2>
-  <p class="lead" data-i18n="s3_lead">Tap the cards that describe you. For the written parts, you can press the microphone 🎙️ and simply speak.</p>
-
-  <div class="field">
-    <label data-i18n="lbl_marital">Marital status</label>
-    <div class="opt-grid cols2" id="maritalGrid">
-      <label class="opt-card"><input type="radio" name="marital" value="single"><span class="ico">🙂</span> <span data-i18n="m_single">Single</span></label>
-      <label class="opt-card"><input type="radio" name="marital" value="divorced"><span class="ico">🌤️</span> <span data-i18n="m_div">Divorced</span></label>
-      <label class="opt-card"><input type="radio" name="marital" value="widowed"><span class="ico">🕊️</span> <span data-i18n="m_wid">Widowed</span></label>
-      <label class="opt-card"><input type="radio" name="marital" value="separated"><span class="ico">🌗</span> <span data-i18n="m_sep">Separated</span></label>
-    </div>
-  </div>
-
-  <div class="field">
-    <label for="education" data-i18n="lbl_edu">Highest education</label>
-    <select id="education">
-      <option value="" data-i18n="opt_sel">— Select —</option>
-      <option value="matric" data-i18n="e_matric">Matric / below</option>
-      <option value="inter" data-i18n="e_inter">Intermediate</option>
-      <option value="bachelor" data-i18n="e_ba">Bachelor's</option>
-      <option value="master" data-i18n="e_ma">Master's or higher</option>
-      <option value="religious" data-i18n="e_rel">Religious education</option>
-    </select>
-  </div>
-
-  <div class="field">
-    <label data-i18n="lbl_income">Monthly income (PKR)</label>
-    <div class="opt-grid cols2" id="incomeGrid">
-      <label class="opt-card"><input type="radio" name="income" value="lt50"><span class="en-font">&lt; 50,000</span></label>
-      <label class="opt-card"><input type="radio" name="income" value="50to150"><span class="en-font">50,000 – 150,000</span></label>
-      <label class="opt-card"><input type="radio" name="income" value="150to400"><span class="en-font">150,000 – 400,000</span></label>
-      <label class="opt-card"><input type="radio" name="income" value="gt400"><span class="en-font">400,000+</span></label>
-    </div>
-  </div>
-
-  <div class="field">
-    <label for="city" data-i18n="lbl_city">City / Location</label>
-    <input type="text" id="city" data-i18n-ph="ph_city" placeholder="e.g. Lahore, Karachi, Muscat…">
-  </div>
-
-  <div class="field">
-    <label for="prefs" data-i18n="lbl_prefs">What are you looking for in a partner?</label>
-    <div class="mic-wrap">
-      <textarea id="prefs" data-i18n-ph="ph_prefs" placeholder="Speak or type freely — age range, values, family type…"></textarea>
-      <button class="mic-btn" data-mic="prefs" aria-label="Speak instead of typing" title="Speak">🎙️</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <label for="family" data-i18n="lbl_family">Tell us about your family</label>
-    <div class="mic-wrap">
-      <textarea id="family" data-i18n-ph="ph_family" placeholder="Brothers, sisters, parents, hometown…"></textarea>
-      <button class="mic-btn" data-mic="family" aria-label="Speak instead of typing" title="Speak">🎙️</button>
-    </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-ghost" onclick="goTo(2)" data-i18n="btn_back">← Back</button>
-    <button class="btn btn-primary" onclick="validateStep3()"><span data-i18n="btn_next">Save & Continue</span> ➜</button>
-  </div>
-</section>
-
-<!-- ================= STEP 4 : PHOTOS ================= -->
-<section class="step" id="step4">
-  <h2 data-i18n="s4_title">Add your best photos</h2>
-  <p class="lead" data-i18n="s4_lead">Upload 1 or 2 recent photos. A clear, smiling picture receives 3× more interest.</p>
-
-  <div class="upload-pair">
-    <div>
-      <div class="field"><label data-i18n="lbl_p1">Photo 1 (required)</label></div>
-      <div class="upload-zone" id="zoneP1" tabindex="0" role="button" aria-label="Upload photo 1">
-        <span class="big-ico">🖼️</span>
-        <strong data-i18n="zone_tap">Tap to take a photo</strong>
-        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
-      </div>
-      <input type="file" id="fileP1" accept="image/*" class="hidden">
-    </div>
-    <div>
-      <div class="field"><label data-i18n="lbl_p2">Photo 2 (optional)</label></div>
-      <div class="upload-zone" id="zoneP2" tabindex="0" role="button" aria-label="Upload photo 2">
-        <span class="big-ico">🖼️</span>
-        <strong data-i18n="zone_tap">Tap to take a photo</strong>
-        <span class="zone-status" data-i18n="zone_drop">or drag & drop the image here</span>
-      </div>
-      <input type="file" id="fileP2" accept="image/*" class="hidden">
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <label class="checkbox-row">
-    <input type="checkbox" id="consent">
-    <span style="font-size:18px" data-i18n="consent">I agree to share my details only with verified matches, and I confirm the information above is true.</span>
-  </label>
-  <div class="err-msg" id="errConsent" data-i18n="err_consent">Please tick the consent box to finish.</div>
-
-  <div class="btn-row">
-    <button class="btn btn-ghost" onclick="goTo(3)" data-i18n="btn_back">← Back</button>
-    <button class="btn btn-primary" id="btnSubmit" onclick="submitAll()"><span data-i18n="btn_submit">Complete my registration</span> ✓</button>
-  </div>
-</section>
-
-<!-- ================= SUCCESS ================= -->
-<section class="step" id="stepDone">
-  <div class="success-wrap">
-    <div class="ring"><svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-18"/></svg></div>
-    <h2 data-i18n="done_title">Success! Your profile is verified 🎉</h2>
-    <p class="lead" style="margin-top:10px" data-i18n="done_lead">Thank you. Our team will review your profile and contact you on your verified number, insha'Allah, within 2 working days.</p>
-    <div class="notice"><span data-i18n="done_ref">Your reference number:</span> <strong class="en-font" id="refNum"></strong></div>
-  </div>
-</section>
-
-</main>
-
-<!-- autosave chip -->
-<div class="autosave" id="autosave">✓ <span data-i18n="autosaved">Progress auto-saved</span></div>
-
-<!-- WhatsApp help FAB -->
-<button class="fab" onclick="openHelp()" aria-label="Ask for help on WhatsApp">
-  <span class="fab-ico">🟢</span><span class="fab-text" data-i18n="fab">Stuck? Ask for Help</span>
-</button>
+  <div class="sec"><h3>ذاتی معلومات</h3><table>
+    <tr><td>نام</td><td id="p-fullName"></td></tr>
+    <tr><td>جنس</td><td id="p-gender"></td></tr>
+    <tr><td>عمر / تاریخ پیدائش</td><td id="p-age"></td></tr>
+    <tr><td>قد</td><td id="p-height"></td></tr>
+    <tr><td>ازدواجی حیثیت</td><td id="p-marital"></td></tr>
+    <tr><td>بچے</td><td id="p-children"></td></tr>
+  </table></div>
+  <div class="sec"><h3>مذہبی معلومات</h3><table>
+    <tr><td>مذہب / مسلک</td><td id="p-relig"></td></tr>
+    <tr><td>ذات</td><td id="p-caste"></td></tr>
+    <tr><td>حافظِ قرآن / نماز</td><td id="p-deen"></td></tr>
+  </table></div>
+  <div class="sec"><h3>تعلیم و ملازمت</h3><table>
+    <tr><td>تعلیم</td><td id="p-education"></td></tr>
+    <tr><td>پیشہ / ادارہ</td><td id="p-prof"></td></tr>
+    <tr><td>ماہانہ آمدنی</td><td id="p-income"></td></tr>
+  </table></div>
+  <div class="sec"><h3>رہائش</h3><table>
+    <tr><td>صوبہ / ضلع</td><td id="p-prov"></td></tr>
+    <tr><td>شہر / گاؤں</td><td id="p-city"></td></tr>
+    <tr><td>گھر</td><td id="p-house"></td></tr>
+  </table></div>
+  <div class="sec"><h3>خاندانی معلومات</h3><table>
+    <tr><td>والد / سرپرست</td><td id="p-guardian"></td></tr>
+    <tr><td>والد / والدہ کا پیشہ</td><td id="p-parents"></td></tr>
+    <tr><td>بھائی / بہنیں</td><td id="p-sibs"></td></tr>
+  </table></div>
+  <div class="sec"><h3>رابطہ</h3><table>
+    <tr><td>موبائل</td><td id="p-mobile" style="direction:ltr;text-align:right"></td></tr>
+  </table></div>
+  <div class="sec"><h3>مطلوبہ رشتہ</h3><table>
+    <tr><td>عمر / قد</td><td id="p-prefAge"></td></tr>
+    <tr><td>تعلیم / شہر</td><td id="p-prefEdu"></td></tr>
+    <tr><td>ذات / مسلک</td><td id="p-prefCaste"></td></tr>
+    <tr><td>دیگر شرائط</td><td id="p-prefOther"></td></tr>
+  </table></div>
+  <div class="pf">البرکہ میرج بیورو — رابطہ: +92 315 4822167 — یہ پروفائل صرف رشتہ کی غرض سے جاری کی گئی ہے<br><span id="p-date"></span></div>
+</div>
 
 <script>
-/* ============================================================
-   CONFIG — connect to your Google Apps Script Web App
-   Leave API_URL empty ("") to run in DEMO mode (everything is
-   simulated locally, the OTP is shown on screen for testing).
-   ============================================================ */
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
-  SUPPORT_WHATSAPP: '923154822167', // digits only, country code first
-  MAX_IMAGE_KB: 300,
-  MAX_IMAGE_DIM: 1600
+  SUPPORT_WHATSAPP: '923154822167'
 };
-
-/* ---------------- i18n ---------------- */
-const T = {
-  en:{brand:'Rishta Registry',tagline:'A respectful way to find your match',complete:'complete',
-    s1:'Verify',s2:'Identity',s3:'Preferences',s4:'Photos',
-    s1_title:"Let's confirm it's really you",s1_lead:'Choose the easiest way for you to receive a free 4-digit code. No charges — ever.',
-    s1_how:'How would you like to receive your code?',
-    ch_sms:'Free SMS to my mobile',ch_sms_sub:'Sent through your network, free of cost',
-    ch_wa:'Verify on WhatsApp',ch_wa_sub:'One tap — nothing to type',
-    ch_em:'Code by Email',ch_em_sub:'Sent instantly to your inbox',
-    lbl_phone:'Mobile number',err_phone:'Please enter a valid mobile number (11 digits, starts with 03).',
-    lbl_carrier:'Your mobile network',lbl_email:'Email address',err_email:'Please enter a valid email address.',
-    btn_send:'Send my free code',btn_wa:'Tap to Verify on WhatsApp',
-    lbl_code:'Enter your 4-digit code',err_otp:"That code doesn't match. Please check and try again.",
-    btn_verify:'Verify & Continue',btn_resend:'↺ Choose another way / resend',
-    otp_sent_sms:'A free SMS with your code is on its way to',otp_sent_em:'Your code has been emailed to',
-    otp_sent_wa:'After sending the WhatsApp message, type the same 4-digit code below.',
-    s2_title:'Your identity card (CNIC)',s2_lead:"Take a photo or upload both sides. We read your name and date of birth automatically — you won't have to type them.",
-    lbl_front:'CNIC — Front side',lbl_back:'CNIC — Back side',zone_tap:'Tap to take a photo',zone_drop:'or drag & drop the image here',
-    scanning:'Scanning identity card…',lbl_name:'Full name ',hint_auto:'(filled automatically — please check)',
-    lbl_dob:'Date of birth',lbl_cnic:'CNIC number',err_cnic:'CNIC should have 13 digits, e.g. 35201-1234567-8.',
-    lbl_gender:'Gender',g_m:'Male',g_f:'Female',
-    s3_title:'About you & your ideal match',s3_lead:'Tap the cards that describe you. For the written parts, you can press the microphone 🎙️ and simply speak.',
-    lbl_marital:'Marital status',m_single:'Single',m_div:'Divorced',m_wid:'Widowed',m_sep:'Separated',
-    lbl_edu:'Highest education',opt_sel:'— Select —',e_matric:'Matric / below',e_inter:'Intermediate',e_ba:"Bachelor's",e_ma:"Master's or higher",e_rel:'Religious education',
-    lbl_income:'Monthly income (PKR)',lbl_city:'City / Location',ph_city:'e.g. Lahore, Karachi, Muscat…',
-    lbl_prefs:'What are you looking for in a partner?',ph_prefs:'Speak or type freely — age range, values, family type…',
-    lbl_family:'Tell us about your family',ph_family:'Brothers, sisters, parents, hometown…',
-    s4_title:'Add your best photos',s4_lead:'Upload 1 or 2 recent photos. A clear, smiling picture receives 3× more interest.',
-    lbl_p1:'Photo 1 (required)',lbl_p2:'Photo 2 (optional)',
-    consent:'I agree to share my details only with verified matches, and I confirm the information above is true.',
-    err_consent:'Please tick the consent box to finish.',
-    btn_back:'← Back',btn_next:'Save & Continue',btn_submit:'Complete my registration',
-    done_title:'Success! Your profile is verified 🎉',
-    done_lead:"Thank you. Our team will review your profile and contact you on your verified number, insha'Allah, within 2 working days.",
-    done_ref:'Your reference number:',autosaved:'Progress auto-saved',fab:'Stuck? Ask for Help',
-    need_photo:'Please add at least Photo 1.',compressing:'Optimising photo…',uploaded:'✓ Photo added',
-    demo_otp:'DEMO MODE — your test code is'},
-  ur:{brand:'رشتہ رجسٹری',tagline:'رشتہ تلاش کرنے کا باوقار طریقہ',complete:'مکمل',
-    s1:'تصدیق',s2:'شناخت',s3:'ترجیحات',s4:'تصاویر',
-    s1_title:'آئیے تصدیق کریں کہ یہ واقعی آپ ہیں',s1_lead:'مفت 4 ہندسوں کا کوڈ حاصل کرنے کا آسان طریقہ منتخب کریں۔ کوئی چارج نہیں — کبھی بھی نہیں۔',
-    s1_how:'آپ اپنا کوڈ کیسے وصول کرنا چاہیں گے؟',
-    ch_sms:'میرے موبائل پر مفت SMS',ch_sms_sub:'آپ کے نیٹ ورک کے ذریعے، بالکل مفت',
-    ch_wa:'واٹس ایپ پر تصدیق کریں',ch_wa_sub:'صرف ایک ٹچ — کچھ ٹائپ نہیں کرنا',
-    ch_em:'ای میل پر کوڈ',ch_em_sub:'فوری طور پر آپ کے ان باکس میں',
-    lbl_phone:'موبائل نمبر',err_phone:'براہ کرم درست موبائل نمبر درج کریں (11 ہندسے، 03 سے شروع)۔',
-    lbl_carrier:'آپ کا موبائل نیٹ ورک',lbl_email:'ای میل ایڈریس',err_email:'براہ کرم درست ای میل درج کریں۔',
-    btn_send:'میرا مفت کوڈ بھیجیں',btn_wa:'واٹس ایپ پر تصدیق کے لیے دبائیں',
-    lbl_code:'اپنا 4 ہندسوں کا کوڈ درج کریں',err_otp:'کوڈ درست نہیں۔ براہ کرم دوبارہ چیک کریں۔',
-    btn_verify:'تصدیق کریں اور آگے بڑھیں',btn_resend:'↺ دوسرا طریقہ منتخب کریں / دوبارہ بھیجیں',
-    otp_sent_sms:'آپ کے کوڈ کے ساتھ مفت SMS بھیج دیا گیا ہے',otp_sent_em:'آپ کا کوڈ ای میل کر دیا گیا ہے',
-    otp_sent_wa:'واٹس ایپ پیغام بھیجنے کے بعد، وہی 4 ہندسوں کا کوڈ نیچے درج کریں۔',
-    s2_title:'آپ کا شناختی کارڈ (CNIC)',s2_lead:'دونوں اطراف کی تصویر لیں یا اپ لوڈ کریں۔ ہم آپ کا نام اور تاریخ پیدائش خود بخود پڑھ لیں گے۔',
-    lbl_front:'شناختی کارڈ — سامنے کا رخ',lbl_back:'شناختی کارڈ — پچھلا رخ',zone_tap:'تصویر لینے کے لیے دبائیں',zone_drop:'یا تصویر یہاں گھسیٹ کر چھوڑیں',
-    scanning:'شناختی کارڈ اسکین ہو رہا ہے…',lbl_name:'پورا نام ',hint_auto:'(خودکار طور پر بھرا گیا — براہ کرم چیک کریں)',
-    lbl_dob:'تاریخ پیدائش',lbl_cnic:'شناختی کارڈ نمبر',err_cnic:'شناختی کارڈ میں 13 ہندسے ہونے چاہئیں، مثلاً 35201-1234567-8۔',
-    lbl_gender:'جنس',g_m:'مرد',g_f:'خاتون',
-    s3_title:'آپ اور آپ کے مثالی رشتے کے بارے میں',s3_lead:'اپنے بارے میں کارڈز پر ٹچ کریں۔ لکھنے کے بجائے مائیکروفون 🎙️ دبا کر بول بھی سکتے ہیں۔',
-    lbl_marital:'ازدواجی حیثیت',m_single:'غیر شادی شدہ',m_div:'مطلقہ',m_wid:'بیوہ / رنڈوا',m_sep:'علیحدگی',
-    lbl_edu:'اعلیٰ ترین تعلیم',opt_sel:'— منتخب کریں —',e_matric:'میٹرک / اس سے کم',e_inter:'انٹرمیڈیٹ',e_ba:'بیچلرز',e_ma:'ماسٹرز یا اس سے زیادہ',e_rel:'دینی تعلیم',
-    lbl_income:'ماہانہ آمدنی (روپے)',lbl_city:'شہر / مقام',ph_city:'مثلاً لاہور، کراچی، مسقط…',
-    lbl_prefs:'آپ اپنے شریکِ حیات میں کیا تلاش کر رہے ہیں؟',ph_prefs:'بولیں یا لکھیں — عمر، اقدار، خاندان کی قسم…',
-    lbl_family:'اپنے خاندان کے بارے میں بتائیں',ph_family:'بھائی، بہنیں، والدین، آبائی شہر…',
-    s4_title:'اپنی بہترین تصاویر شامل کریں',s4_lead:'1 یا 2 حالیہ تصاویر اپ لوڈ کریں۔ صاف اور مسکراتی تصویر کو 3 گنا زیادہ توجہ ملتی ہے۔',
-    lbl_p1:'تصویر 1 (لازمی)',lbl_p2:'تصویر 2 (اختیاری)',
-    consent:'میں اپنی تفصیلات صرف تصدیق شدہ رشتوں کے ساتھ شیئر کرنے پر رضامند ہوں، اور تصدیق کرتا/کرتی ہوں کہ مذکورہ معلومات درست ہیں۔',
-    err_consent:'مکمل کرنے کے لیے براہ کرم رضامندی کا خانہ ٹک کریں۔',
-    btn_back:'→ واپس',btn_next:'محفوظ کریں اور آگے بڑھیں',btn_submit:'میری رجسٹریشن مکمل کریں',
-    done_title:'مبارک ہو! آپ کا پروفائل تصدیق شدہ ہے 🎉',
-    done_lead:'شکریہ۔ ہماری ٹیم آپ کے پروفائل کا جائزہ لے کر، ان شاء اللہ، 2 کاروباری دنوں میں آپ کے تصدیق شدہ نمبر پر رابطہ کرے گی۔',
-    done_ref:'آپ کا حوالہ نمبر:',autosaved:'پیش رفت خود بخود محفوظ',fab:'مدد چاہیے؟ یہاں دبائیں',
-    need_photo:'براہ کرم کم از کم تصویر 1 شامل کریں۔',compressing:'تصویر بہتر کی جا رہی ہے…',uploaded:'✓ تصویر شامل ہو گئی',
-    demo_otp:'ڈیمو موڈ — آپ کا آزمائشی کوڈ ہے'}
+/* ------- state ------- */
+let S = {
+  lang: localStorage.getItem('lang') || 'ur',
+  sessionId: localStorage.getItem('sess') || ('S' + Date.now() + Math.random().toString(36).slice(2, 8)),
+  token: localStorage.getItem('token') || '',
+  profile: JSON.parse(localStorage.getItem('profile') || 'null'),
+  data: {}, verified: false, channel: '', step: 1, editMode: false, demoOtp: ''
 };
-let lang='en';
-function t(k){return (T[lang][k]!==undefined?T[lang][k]:T.en[k])||k}
-function setLang(l){
-  lang=l;
-  document.documentElement.lang=l;
-  document.documentElement.dir=(l==='ur')?'rtl':'ltr';
-  document.body.classList.toggle('ur',l==='ur');
-  document.getElementById('btnEn').classList.toggle('active',l==='en');
-  document.getElementById('btnUr').classList.toggle('active',l==='ur');
-  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
-  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=t(el.dataset.i18nPh));
-  state.language=l; queueAutosave();
-}
+localStorage.setItem('sess', S.sessionId);
 
-/* ---------------- state ---------------- */
-const state={
-  sessionId:'RR-'+Date.now().toString(36).toUpperCase()+Math.floor(Math.random()*900+100),
-  language:'en', step:1, verified:false,
-  contact:'', otpChannel:'', carrier:'',
-  fullName:'', dob:'', cnic:'', gender:'',
-  education:'', income:'', maritalStatus:'', city:'',
-  partnerPreferences:'', familyDetails:'',
-  cnicFrontUrl:'', cnicBackUrl:'', photo1Url:'', photo2Url:'', consent:false
-};
-let demoOtp=null;
-
-/* ---------------- backend bridge ---------------- */
-async function api(payload){
-  if(!CONFIG.API_URL){                       // DEMO MODE
-    await new Promise(r=>setTimeout(r,600));
-    if(payload.action==='sendOtp'){
-      demoOtp=(''+Math.floor(1000+Math.random()*9000));
-      toast(t('demo_otp')+' '+demoOtp,4500);
-      return {ok:true,code:demoOtp,number:CONFIG.SUPPORT_WHATSAPP};
-    }
-    if(payload.action==='verifyOtp') return {ok:true,verified:String(payload.code)===demoOtp};
-    if(payload.action==='uploadImage') return {ok:true,url:'demo://'+payload.name};
-    return {ok:true};
-  }
-  const res=await fetch(CONFIG.API_URL,{
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},  // avoids CORS preflight with Apps Script
-    body:JSON.stringify(payload)
+/* ------- api ------- */
+async function api(action, payload) {
+  if (!CONFIG.API_URL) { return demoApi(action, payload); }
+  const res = await fetch(CONFIG.API_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action: action, sessionId: S.sessionId }, payload || {}))
   });
   return res.json();
 }
-
-/* ---------------- navigation & progress ---------------- */
-const PCT=[0,25,50,75,100];
-function goTo(n){
-  const cur=document.querySelector('.step.active');
-  cur.classList.add('leaving');
-  setTimeout(()=>{
-    cur.classList.remove('active','leaving');
-    const next=(n===5)?document.getElementById('stepDone'):document.getElementById('step'+n);
-    next.classList.add('active');
-    window.scrollTo({top:0,behavior:'smooth'});
-  },380);
-  state.step=n;
-  setProgress(n===5?100:PCT[n-1]);
-  const icons=['📱','🪪','💚','📷'];
-  for(let i=1;i<=4;i++){
-    const node=document.getElementById('node'+i), done=(i<n||n===5);
-    node.classList.toggle('done', done);
-    node.classList.toggle('current', i===n);
-    node.querySelector('.dot').textContent=done?'✓':icons[i-1];
-  }
-  queueAutosave();
-}
-function setProgress(p){
-  document.getElementById('threadFill').style.width=(p*0.88)+'%';
-  animateNumber(document.getElementById('pctNum'),p);
-}
-function animateNumber(el,to){
-  const from=parseInt(el.textContent)||0, t0=performance.now();
-  (function tick(now){
-    const k=Math.min((now-t0)/700,1);
-    el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-k,3)));
-    if(k<1)requestAnimationFrame(tick);
-  })(t0);
+function demoApi(a) {
+  if (a === 'sendOtp') { S.demoOtp = '1234'; return { ok: true, mode: 'demo', code: '1234' }; }
+  if (a === 'verifyOtp') return { ok: true, verified: true };
+  if (a === 'finalize') return { ok: true, registrationId: 'ABM-DEMO' };
+  return { ok: true };
 }
 
-/* ---------------- STEP 1 : OTP ---------------- */
-document.querySelectorAll('#otpChoose .opt-card[data-otp] input').forEach(r=>{
-  r.addEventListener('change',()=>{
-    document.querySelectorAll('#otpChoose .opt-card').forEach(c=>c.classList.remove('selected'));
-    r.closest('.opt-card').classList.add('selected');
-    const ch=r.value; state.otpChannel=ch;
-    show('fldPhone', ch==='sms'||ch==='whatsapp');
-    show('fldCarrier', ch==='sms');
-    show('fldEmail', ch==='email');
-    show('btnSendOtp', ch!=='whatsapp');
-    show('btnWaVerify', ch==='whatsapp');
+/* ------- i18n ------- */
+function applyLang() {
+  const ur = S.lang === 'ur';
+  document.documentElement.dir = ur ? 'rtl' : 'ltr';
+  document.documentElement.lang = S.lang;
+  document.body.classList.toggle('en', !ur);
+  document.querySelectorAll('[data-ur]').forEach(el => {
+    const t = ur ? el.dataset.ur : el.dataset.en;
+    if (t) { if (el.children.length === 0) el.textContent = t; else el.childNodes[0].textContent = t; }
   });
-});
-document.querySelectorAll('#carrierGrid input').forEach(r=>r.addEventListener('change',()=>{
-  markSelected('carrierGrid',r); state.carrier=r.value;
-}));
+  document.getElementById('lu').classList.toggle('on', ur);
+  document.getElementById('le').classList.toggle('on', !ur);
+}
+function toggleLang() { S.lang = S.lang === 'ur' ? 'en' : 'ur'; localStorage.setItem('lang', S.lang); applyLang(); }
 
-function validContact(){
-  const ch=state.otpChannel;
-  if(ch==='email'){
-    const em=val('email');
-    const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-    flagErr('email','errEmail',!ok); if(ok)state.contact=em; return ok;
+/* ------- navigation ------- */
+function show(id) {
+  ['v-land', 'v-login', 'v-dash', 'v-reg'].forEach(v => document.getElementById(v).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+
+/* ------- wizard ------- */
+const STEPS = [
+  { n: 1, ur: 'تصدیق', en: 'Verify', ic: '📲' }, { n: 2, ur: 'شناخت', en: 'Identity', ic: '🪪' },
+  { n: 3, ur: 'دین و تعلیم', en: 'Deen & Edu', ic: '📖' }, { n: 4, ur: 'خاندان', en: 'Family', ic: '🏠' },
+  { n: 5, ur: 'رشتہ', en: 'Match', ic: '💚' }, { n: 6, ur: 'تصاویر', en: 'Photos', ic: '📷' }];
+function drawSteps() {
+  document.getElementById('stepdots').innerHTML = STEPS.map(s =>
+    `<div class="stp ${s.n < S.step ? 'done' : ''} ${s.n === S.step ? 'on' : ''}"><div class="dot">${s.n < S.step ? '✓' : s.ic}</div>${S.lang === 'ur' ? s.ur : s.en}</div>`).join('');
+  const pct = Math.round((S.step - 1) / 6 * 100);
+  document.getElementById('pct').textContent = pct;
+  document.getElementById('pfill').style.width = pct + '%';
+}
+function next(n) {
+  if (n > 2) collect();
+  S.step = n;
+  for (let i = 1; i <= 7; i++) document.getElementById('s' + i).classList.toggle('hidden', i !== n);
+  drawSteps(); window.scrollTo(0, 0); saveDraftDebounced();
+  document.getElementById('purdahBox').classList.toggle('hidden', S.data.gender !== 'female');
+}
+function startRegister() {
+  S.editMode = false; S.step = 1; S.data = {}; S.verified = false;
+  document.getElementById('pwBox').classList.remove('hidden');
+  show('v-reg'); next(1);
+}
+function exitWizard() { show(S.token ? 'v-dash' : 'v-land'); }
+
+/* option cards */
+document.addEventListener('click', e => {
+  const o = e.target.closest('.opt'); if (!o) return;
+  const g = o.parentElement;
+  g.querySelectorAll('.opt').forEach(x => x.classList.remove('on'));
+  o.classList.add('on');
+  if (g.id === 'chan') {
+    S.channel = o.dataset.v;
+    document.getElementById('smsx').classList.toggle('hidden', S.channel !== 'sms');
+    const l = document.getElementById('contactlbl');
+    l.textContent = S.channel === 'email' ? (S.lang === 'ur' ? 'ای میل' : 'Email') : (S.lang === 'ur' ? 'موبائل نمبر' : 'Mobile number');
+    document.getElementById('contact').placeholder = S.channel === 'email' ? 'name@email.com' : '03xx xxxxxxx';
+  } else if (g.dataset.f) {
+    S.data[g.dataset.f] = o.dataset.v;
+    if (g.dataset.f === 'gender') document.getElementById('purdahBox').classList.toggle('hidden', o.dataset.v !== 'female');
   }
-  const ph=val('phone').replace(/\D/g,'');
-  const ok=/^0?3\d{9}$/.test(ph);
-  flagErr('phone','errPhone',!ok);
-  if(ch==='sms'&&!state.carrier){toast(t('lbl_carrier'));return false}
-  if(ok)state.contact=ph; return ok;
-}
-async function sendOtp(){
-  if(!validContact())return;
-  busy('btnSendOtp',true);
-  const r=await api({action:'sendOtp',sessionId:state.sessionId,channel:state.otpChannel,contact:state.contact,carrier:state.carrier});
-  busy('btnSendOtp',false);
-  if(!r.ok){toast(r.error||'Error');return}
-  document.getElementById('otpSentMsg').textContent=
-    (state.otpChannel==='email'?t('otp_sent_em'):t('otp_sent_sms'))+' '+state.contact;
-  showEnter();
-}
-async function waVerify(){
-  if(!validContact())return;
-  busy('btnWaVerify',true);
-  const r=await api({action:'sendOtp',sessionId:state.sessionId,channel:'whatsapp',contact:state.contact});
-  busy('btnWaVerify',false);
-  if(!r.ok){toast(r.error||'Error');return}
-  const msg=encodeURIComponent('My verification code is '+r.code);
-  window.open('https://wa.me/'+(r.number||CONFIG.SUPPORT_WHATSAPP)+'?text='+msg,'_blank');
-  document.getElementById('otpSentMsg').textContent=t('otp_sent_wa');
-  showEnter();
-}
-function showEnter(){
-  document.getElementById('otpChoose').classList.add('hidden');
-  document.getElementById('otpEnter').classList.remove('hidden');
-  document.querySelector('.otp-boxes input').focus();
-}
-function resetOtp(){
-  document.getElementById('otpEnter').classList.add('hidden');
-  document.getElementById('otpChoose').classList.remove('hidden');
-  document.querySelectorAll('.otp-boxes input').forEach(i=>i.value='');
-}
-// auto-advance OTP boxes
-const boxes=[...document.querySelectorAll('.otp-boxes input')];
-boxes.forEach((b,i)=>{
-  b.addEventListener('input',()=>{b.value=b.value.replace(/\D/g,'');if(b.value&&i<3)boxes[i+1].focus()});
-  b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!b.value&&i>0)boxes[i-1].focus()});
 });
-async function verifyOtp(){
-  const code=boxes.map(b=>b.value).join('');
-  if(code.length<4){flagShow('errOtp',true);return}
-  const r=await api({action:'verifyOtp',sessionId:state.sessionId,code});
-  if(r.verified){flagShow('errOtp',false);state.verified=true;goTo(2)}
-  else flagShow('errOtp',true);
+
+/* ------- OTP ------- */
+async function sendOtp() {
+  const c = document.getElementById('contact').value.trim();
+  if (!S.channel) return toast(S.lang === 'ur' ? 'پہلے طریقہ چنیں' : 'Choose a method first');
+  if (!c) return toast(S.lang === 'ur' ? 'نمبر / ای میل لکھیں' : 'Enter contact');
+  const b = document.getElementById('sendbtn'); b.disabled = true;
+  try {
+    const r = await api('sendOtp', { channel: S.channel, contact: c, carrier: document.getElementById('carrier').value });
+    if (!r.ok) throw r.error;
+    S.data.contact = c; S.data.otpChannel = S.channel;
+    document.getElementById('otpArea').classList.remove('hidden');
+    if (r.mode === 'whatsapp') {
+      window.open('https://wa.me/' + r.number + '?text=' + encodeURIComponent('AL-BARAKA CODE: ' + r.code), '_blank');
+      document.getElementById('demoOtp').textContent = (S.lang === 'ur' ? 'واٹس ایپ کھلا — کوڈ: ' : 'WhatsApp opened — code: ') + r.code;
+      document.getElementById('demoOtp').classList.remove('hidden');
+      S.demoOtp = r.code;
+    } else if (r.mode === 'demo') {
+      document.getElementById('demoOtp').textContent = 'DEMO code: 1234';
+      document.getElementById('demoOtp').classList.remove('hidden');
+    }
+    toast(S.lang === 'ur' ? 'کوڈ بھیج دیا گیا' : 'Code sent');
+  } catch (e) { toast('Error: ' + e); }
+  b.disabled = false;
+}
+document.querySelectorAll('.otpbox input').forEach((inp, i, all) => {
+  inp.addEventListener('input', () => { if (inp.value && i < 3) all[i + 1].focus(); });
+  inp.addEventListener('keydown', e => { if (e.key === 'Backspace' && !inp.value && i > 0) all[i - 1].focus(); });
+});
+async function verifyOtp() {
+  const code = [...document.querySelectorAll('.otpbox input')].map(i => i.value).join('');
+  if (code.length < 4) return;
+  let ok = false;
+  if (S.demoOtp && code === S.demoOtp) ok = true;
+  else { const r = await api('verifyOtp', { code: code }); ok = r.verified; }
+  if (ok) { S.verified = true; S.data.verified = true; toast(S.lang === 'ur' ? '✅ تصدیق ہوگئی' : '✅ Verified'); next(2); }
+  else { const e = document.getElementById('otpErr'); e.textContent = S.lang === 'ur' ? 'غلط کوڈ — دوبارہ کوشش کریں' : 'Wrong code — try again'; e.classList.remove('hidden'); }
 }
 
-/* ---------------- image compression (canvas) ---------------- */
-function compressImage(file,maxKB=CONFIG.MAX_IMAGE_KB,maxDim=CONFIG.MAX_IMAGE_DIM){
-  return new Promise((resolve,reject)=>{
-    const img=new Image();
-    img.onload=()=>{
-      let{width:w,height:h}=img;
-      const scale=Math.min(1,maxDim/Math.max(w,h));
-      w=Math.round(w*scale);h=Math.round(h*scale);
-      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
-      cv.getContext('2d').drawImage(img,0,0,w,h);
-      let q=0.85;
-      (function attempt(){
-        cv.toBlob(blob=>{
-          if(!blob)return reject('Compression failed');
-          if(blob.size/1024<=maxKB||q<=0.35){
-            const fr=new FileReader();
-            fr.onload=()=>resolve({blob,dataUrl:cv.toDataURL('image/jpeg',q),b64:fr.result.split(',')[1],kb:Math.round(blob.size/1024)});
-            fr.readAsDataURL(blob);
-          }else{q-=0.1;attempt()}
-        },'image/jpeg',q);
-      })();
-      URL.revokeObjectURL(img.src);
+/* ------- fields ------- */
+const FIELDS = ['fullName','cnic','dob','age','height','children','religion','sect','caste','hafizQuran','prayerRegular','purdah','education','profession','company','income','province','district','city','houseType','guardianName','fatherOccupation','motherOccupation','brothers','sisters','mobile','altMobile','prefAge','prefHeight','prefEducation','prefCity','prefCaste','prefSect','otherConditions'];
+function collect() {
+  FIELDS.forEach(f => { const el = document.getElementById('f-' + f); if (el) S.data[f] = el.value.trim(); });
+  S.data.language = S.lang;
+}
+function fillForm(p) {
+  FIELDS.forEach(f => { const el = document.getElementById('f-' + f); if (el && p[f] != null) el.value = p[f]; });
+  document.querySelectorAll('[data-f]').forEach(g => {
+    const v = p[g.dataset.f];
+    g.querySelectorAll('.opt').forEach(o => o.classList.toggle('on', o.dataset.v === v));
+  });
+}
+function calcAge() {
+  const d = document.getElementById('f-dob').value;
+  if (d) document.getElementById('f-age').value = Math.floor((Date.now() - new Date(d)) / 31557600000);
+}
+(function () {
+  const hs = document.getElementById('f-height'); let o = '<option value="">—</option>';
+  for (let ft = 4; ft <= 6; ft++) for (let inch = 0; inch <= 11; inch++) {
+    if (ft === 4 && inch < 6) continue; if (ft === 6 && inch > 6) break;
+    o += `<option>${ft}'${inch}"</option>`;
+  }
+  hs.innerHTML = o;
+})();
+
+/* ------- autosave ------- */
+let dTimer;
+function saveDraftDebounced() {
+  if (!S.verified || S.editMode) return;
+  clearTimeout(dTimer);
+  dTimer = setTimeout(async () => {
+    collect();
+    try { await api('saveDraft', { data: S.data }); toast(S.lang === 'ur' ? '💾 محفوظ ہوگیا' : '💾 Auto-saved'); } catch (e) {}
+  }, 2000);
+}
+document.addEventListener('input', e => { if (e.target.closest('#v-reg')) saveDraftDebounced(); });
+
+/* ------- images + OCR ------- */
+function pick(id) { document.getElementById(id).click(); }
+function compress(file, maxW) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      const sc = Math.min(1, maxW / img.width);
+      c.width = img.width * sc; c.height = img.height * sc;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      res(c.toDataURL('image/jpeg', 0.72));
     };
-    img.onerror=()=>reject('Could not read image');
-    img.src=URL.createObjectURL(file);
+    img.src = URL.createObjectURL(file);
   });
 }
-
-/* ---------------- upload zones ---------------- */
-function wireZone(zoneId,inputId,onDone){
-  const z=document.getElementById(zoneId),f=document.getElementById(inputId);
-  const open=()=>f.click();
-  z.addEventListener('click',open);
-  z.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
-  ['dragover','dragenter'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.add('drag')}));
-  ['dragleave','drop'].forEach(ev=>z.addEventListener(ev,e=>{e.preventDefault();z.classList.remove('drag')}));
-  z.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handle(e.dataTransfer.files[0])});
-  f.addEventListener('change',()=>{if(f.files[0])handle(f.files[0])});
-  async function handle(file){
-    z.innerHTML='<div class="spinner"></div><span class="zone-status">'+t('compressing')+'</span>';
-    try{
-      const out=await compressImage(file);
-      z.innerHTML='<img class="preview" src="'+out.dataUrl+'" alt=""><span class="zone-status">'+t('uploaded')+' · '+out.kb+' KB</span>';
-      onDone(out);
-    }catch(err){z.innerHTML='<span class="big-ico">⚠️</span><strong>'+err+'</strong>';}
-  }
+async function handleImg(inputId, boxId, key, ocr) {
+  const f = document.getElementById(inputId).files[0]; if (!f) return;
+  const box = document.getElementById(boxId);
+  const dataUrl = await compress(f, 1100);
+  box.innerHTML = '<img src="' + dataUrl + '"><div class="scanline"></div>';
+  if (ocr) await runOCR(dataUrl);
+  else setTimeout(() => { const s = box.querySelector('.scanline'); if (s) s.remove(); }, 1500);
+  try {
+    const r = await api('uploadImage', { b64: dataUrl.split(',')[1], mime: 'image/jpeg', name: key + '_' + S.sessionId + '.jpg' });
+    if (r.ok) { S.data[key] = r.url; toast('📤 ' + (S.lang === 'ur' ? 'اپ لوڈ مکمل' : 'Uploaded')); }
+  } catch (e) {}
+  const s = box.querySelector('.scanline'); if (s) s.remove();
 }
-async function pushImage(out,name,stateKey){
-  const r=await api({action:'uploadImage',b64:out.b64,mime:'image/jpeg',name:state.sessionId+'_'+name+'.jpg'});
-  if(r.ok){state[stateKey]=r.url;queueAutosave()}
-}
+document.getElementById('cnicF').addEventListener('change', () => handleImg('cnicF', 'upF', 'cnicFrontUrl', true));
+document.getElementById('cnicB').addEventListener('change', () => handleImg('cnicB', 'upB', 'cnicBackUrl', false));
+document.getElementById('ph1').addEventListener('change', () => handleImg('ph1', 'upP1', 'photo1Url', false));
+document.getElementById('ph2').addEventListener('change', () => handleImg('ph2', 'upP2', 'photo2Url', false));
 
-/* CNIC zones + OCR mock */
-wireZone('zoneFront','fileFront',out=>{pushImage(out,'cnic_front','cnicFrontUrl');runOcrMock('zoneFront')});
-wireZone('zoneBack','fileBack',out=>pushImage(out,'cnic_back','cnicBackUrl'));
-function runOcrMock(zoneId){
-  const z=document.getElementById(zoneId);
-  z.classList.add('scanbox');
-  show('scanMsg',true);
-  setTimeout(()=>{
-    z.classList.remove('scanbox');
-    show('scanMsg',false);
-    // In production, Drive OCR (Docs conversion) results arrive here.
-    if(!val('fullName'))setVal('fullName','');   // left blank for the user to confirm
-    document.getElementById('fullName').focus();
-    toast(lang==='ur'?'براہ کرم نیچے اپنی تفصیلات چیک کریں':'Please check your details below');
-  },2600);
-}
-
-/* profile photo zones */
-wireZone('zoneP1','fileP1',out=>pushImage(out,'photo1','photo1Url'));
-wireZone('zoneP2','fileP2',out=>pushImage(out,'photo2','photo2Url'));
-
-/* ---------------- step 2/3 validation ---------------- */
-document.querySelectorAll('#genderGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('genderGrid',r);state.gender=r.value;queueAutosave()}));
-document.querySelectorAll('#maritalGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('maritalGrid',r);state.maritalStatus=r.value;queueAutosave()}));
-document.querySelectorAll('#incomeGrid input').forEach(r=>r.addEventListener('change',()=>{markSelected('incomeGrid',r);state.income=r.value;queueAutosave()}));
-
-function validateStep2(){
-  state.fullName=val('fullName');state.dob=val('dob');state.cnic=val('cnic');
-  const digits=state.cnic.replace(/\D/g,'');
-  const bad=digits.length!==13;
-  flagErr('cnic','errCnic',bad&&state.cnic!=='');
-  if(!state.fullName){document.getElementById('fullName').focus();return}
-  if(bad){document.getElementById('cnic').focus();return}
-  goTo(3);
-}
-function validateStep3(){
-  state.education=val('education');state.city=val('city');
-  state.partnerPreferences=val('prefs');state.familyDetails=val('family');
-  goTo(4);
-}
-
-/* ---------------- voice-to-text (Web Speech API) ---------------- */
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-document.querySelectorAll('.mic-btn').forEach(btn=>{
-  if(!SR){btn.style.display='none';return}
-  let rec=null;
-  btn.addEventListener('click',()=>{
-    if(rec){rec.stop();return}
-    rec=new SR();
-    rec.lang=(lang==='ur')?'ur-PK':'en-US';
-    rec.interimResults=true;rec.continuous=true;
-    const ta=document.getElementById(btn.dataset.mic);
-    const base=ta.value?ta.value+' ':'';
-    btn.classList.add('listening');btn.textContent='⏹';
-    rec.onresult=e=>{
-      let txt='';for(const r of e.results)txt+=r[0].transcript;
-      ta.value=base+txt;
-    };
-    rec.onend=()=>{btn.classList.remove('listening');btn.textContent='🎙️';rec=null;queueAutosave()};
-    rec.onerror=()=>{btn.classList.remove('listening');btn.textContent='🎙️';rec=null};
-    rec.start();
+let tessP = null;
+function loadTess() {
+  if (!tessP) tessP = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js';
+    s.onload = res; s.onerror = rej; document.head.appendChild(s);
   });
-});
-
-/* ---------------- autosave (save-as-you-go) ---------------- */
-let saveTimer=null;
-function queueAutosave(){
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(async()=>{
-    collectLive();
-    const r=await api({action:'saveDraft',sessionId:state.sessionId,data:state});
-    if(r.ok)flashAutosave();
-  },900);
+  return tessP;
 }
-function collectLive(){
-  ['fullName','dob','cnic','city','education'].forEach(id=>{const el=document.getElementById(id);if(el)state[id==='education'?'education':id]=el.value});
-  state.partnerPreferences=val('prefs');state.familyDetails=val('family');
-}
-document.querySelectorAll('input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea')
-  .forEach(el=>el.addEventListener('change',queueAutosave));
-function flashAutosave(){
-  const a=document.getElementById('autosave');
-  a.classList.add('show');
-  setTimeout(()=>a.classList.remove('show'),2200);
-}
-
-/* ---------------- final submit ---------------- */
-async function submitAll(){
-  if(!state.photo1Url){toast(t('need_photo'));return}
-  const c=document.getElementById('consent');
-  flagShow('errConsent',!c.checked);
-  if(!c.checked)return;
-  state.consent=true;collectLive();
-  busy('btnSubmit',true);
-  const r=await api({action:'finalize',sessionId:state.sessionId,data:state});
-  busy('btnSubmit',false);
-  if(!r.ok){toast(r.error||'Error');return}
-  document.getElementById('refNum').textContent=state.sessionId;
-  goTo(5);
-  celebrate();
-}
-function celebrate(){
-  const glyphs=['🌿','✨','💚','🌸','⭐'];
-  for(let i=0;i<26;i++){
-    const s=document.createElement('div');
-    s.className='confetti';s.textContent=glyphs[i%glyphs.length];
-    s.style.left=Math.random()*100+'vw';
-    s.style.animationDuration=(2.4+Math.random()*2.2)+'s';
-    s.style.animationDelay=(Math.random()*0.8)+'s';
-    document.body.appendChild(s);
-    setTimeout(()=>s.remove(),6000);
+async function runOCR(dataUrl) {
+  const st = document.getElementById('ocrStat');
+  st.className = 'badge'; st.classList.remove('hidden');
+  st.textContent = S.lang === 'ur' ? '🔍 شناختی کارڈ پڑھا جا رہا ہے…' : '🔍 Reading ID card…';
+  try {
+    await loadTess();
+    const worker = await Tesseract.createWorker('eng');
+    const { data } = await worker.recognize(dataUrl);
+    await worker.terminate();
+    const txt = data.text || '';
+    let found = 0;
+    const cn = txt.match(/\d{5}-\d{7}-\d/) || txt.replace(/\s/g, '').match(/\d{13}/);
+    if (cn) {
+      let v = cn[0]; if (v.length === 13) v = v.slice(0, 5) + '-' + v.slice(5, 12) + '-' + v.slice(12);
+      document.getElementById('f-cnic').value = v; found++;
+    }
+    const dates = [...txt.matchAll(/(\d{2})[.\/-](\d{2})[.\/-](\d{4})/g)].map(m => ({ d: m[1], m: m[2], y: +m[3] }));
+    if (dates.length) {
+      const dob = dates.sort((a, b) => a.y - b.y)[0];
+      if (dob.y > 1930 && dob.y < 2012) { document.getElementById('f-dob').value = dob.y + '-' + dob.m + '-' + dob.d; calcAge(); found++; }
+    }
+    const nm = txt.match(/Name[^A-Za-z]*\n?([A-Z][A-Za-z ]{3,40})/);
+    if (nm && !document.getElementById('f-fullName').value) { document.getElementById('f-fullName').value = nm[1].trim(); found++; }
+    if (found) { st.textContent = (S.lang === 'ur' ? '✅ خودکار پڑھ لیا گیا (' + found + ' خانے) — برائے مہربانی تصدیق کریں' : '✅ Auto-read ' + found + ' fields — please confirm'); }
+    else { st.className = 'badge err'; st.textContent = S.lang === 'ur' ? '⚠️ خودکار پڑھا نہیں جا سکا — ہاتھ سے لکھیں' : '⚠️ Could not auto-read — enter manually'; }
+  } catch (e) {
+    st.className = 'badge err';
+    st.textContent = S.lang === 'ur' ? '⚠️ OCR دستیاب نہیں — ہاتھ سے لکھیں' : '⚠️ OCR unavailable — enter manually';
   }
 }
 
-/* ---------------- helpers ---------------- */
-function val(id){return (document.getElementById(id)||{}).value?.trim()||''}
-function setVal(id,v){const el=document.getElementById(id);if(el)el.value=v}
-function show(id,on){document.getElementById(id).classList.toggle('hidden',!on)}
-function markSelected(gridId,input){
-  document.querySelectorAll('#'+gridId+' .opt-card').forEach(c=>c.classList.remove('selected'));
-  input.closest('.opt-card').classList.add('selected');
+/* ------- finalize ------- */
+async function finalize() {
+  collect();
+  const err = document.getElementById('finErr');
+  const pw1 = document.getElementById('f-pw1').value, pw2 = document.getElementById('f-pw2').value;
+  err.classList.add('hidden');
+  function bad(m) { err.textContent = m; err.classList.remove('hidden'); }
+  if (!S.data.fullName) return bad(S.lang === 'ur' ? 'نام درج کریں (مرحلہ 2)' : 'Enter name (step 2)');
+  if (!S.data.gender) return bad(S.lang === 'ur' ? 'جنس منتخب کریں (مرحلہ 2)' : 'Select gender (step 2)');
+  if (!S.data.mobile && !S.data.contact) return bad(S.lang === 'ur' ? 'موبائل نمبر درج کریں' : 'Enter mobile');
+  if (!S.editMode) {
+    if (pw1.length < 4) return bad(S.lang === 'ur' ? 'پاس ورڈ کم از کم 4 حروف' : 'Password min 4 chars');
+    if (pw1 !== pw2) return bad(S.lang === 'ur' ? 'پاس ورڈ ایک جیسے نہیں' : 'Passwords do not match');
+  }
+  if (!document.getElementById('consent').checked) return bad(S.lang === 'ur' ? 'اقرار نامہ پر نشان لگائیں' : 'Tick the consent box');
+  S.data.consent = true;
+  const b = document.getElementById('finBtn'); b.disabled = true;
+  try {
+    if (S.editMode) {
+      const r = await api('updateProfile', { token: S.token, data: S.data, newPassword: pw1 || undefined });
+      if (!r.ok) throw r.error;
+      S.profile = r.profile; localStorage.setItem('profile', JSON.stringify(S.profile));
+      toast(S.lang === 'ur' ? '✅ تبدیلیاں محفوظ' : '✅ Saved');
+      show('v-dash'); fillDash();
+    } else {
+      const r = await api('finalize', { data: S.data, password: pw1 });
+      if (!r.ok) throw r.error;
+      S.data.id = r.registrationId;
+      S.profile = JSON.parse(JSON.stringify(S.data));
+      document.getElementById('doneId').textContent = r.registrationId;
+      next(7);
+      confetti();
+    }
+  } catch (e) { bad('Error: ' + e); }
+  b.disabled = false;
 }
-function flagErr(inputId,errId,bad){
-  document.getElementById(inputId).classList.toggle('invalid',bad);
-  flagShow(errId,bad);
+function confetti() {
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:fixed;top:-20px;left:${Math.random() * 100}vw;width:10px;height:14px;background:${['#C9A227', '#14532D', '#E3C766', '#2c7a4b'][i % 4]};z-index:98;border-radius:3px;transition:top ${2 + Math.random() * 2}s linear,transform 2s;`;
+    document.body.appendChild(c);
+    setTimeout(() => { c.style.top = '110vh'; c.style.transform = `rotate(${Math.random() * 720}deg)`; }, 30);
+    setTimeout(() => c.remove(), 4500);
+  }
 }
-function flagShow(errId,on){document.getElementById(errId).classList.toggle('show',on)}
-function busy(btnId,on){const b=document.getElementById(btnId);b.disabled=on;b.style.opacity=on?0.7:1}
-let toastTimer=null;
-function toast(msg,ms=2800){
-  const a=document.getElementById('autosave');
-  a.innerHTML='ℹ️ '+msg;
-  a.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>{a.classList.remove('show');setTimeout(()=>a.innerHTML='✓ <span>'+t('autosaved')+'</span>',500)},ms);
+
+/* ------- login / dashboard ------- */
+async function doLogin() {
+  const id = document.getElementById('li-id').value.trim(), pw = document.getElementById('li-pw').value;
+  const err = document.getElementById('li-err'); err.classList.add('hidden');
+  if (!id || !pw) return;
+  try {
+    const r = await api('login', { profileId: id, password: pw });
+    if (!r.ok) {
+      err.textContent = r.error === 'PROFILE_NOT_FOUND' ? (S.lang === 'ur' ? 'پروفائل نہیں ملی' : 'Profile not found')
+        : r.error === 'WRONG_PASSWORD' ? (S.lang === 'ur' ? 'غلط پاس ورڈ' : 'Wrong password') : r.error;
+      err.classList.remove('hidden'); return;
+    }
+    S.token = r.token; S.profile = r.profile;
+    localStorage.setItem('token', S.token); localStorage.setItem('profile', JSON.stringify(r.profile));
+    show('v-dash'); fillDash();
+  } catch (e) { err.textContent = 'Error: ' + e; err.classList.remove('hidden'); }
 }
-function openHelp(){
-  window.open('https://wa.me/'+CONFIG.SUPPORT_WHATSAPP+'?text='+encodeURIComponent('Hello, I need help filling out the registration form.'),'_blank');
+function fillDash() {
+  const p = S.profile; if (!p) return;
+  document.getElementById('d-name').textContent = p.fullName || '—';
+  document.getElementById('d-id').textContent = p.id || '—';
+  const st = document.getElementById('d-status');
+  st.textContent = p.status === 'Married' ? (S.lang === 'ur' ? '💍 شادی شدہ' : '💍 Married') : p.status === 'Closed' ? (S.lang === 'ur' ? 'بند' : 'Closed') : (S.lang === 'ur' ? '🟢 فعال' : '🟢 Active');
+  st.className = 'chip ' + (p.status || 'Active');
+  document.getElementById('d-married').classList.toggle('hidden', p.status === 'Married');
+  const rows = [
+    [S.lang === 'ur' ? 'عمر' : 'Age', p.age], [S.lang === 'ur' ? 'قد' : 'Height', p.height],
+    [S.lang === 'ur' ? 'شہر' : 'City', p.city], [S.lang === 'ur' ? 'ذات' : 'Caste', p.caste],
+    [S.lang === 'ur' ? 'تعلیم' : 'Education', p.education], [S.lang === 'ur' ? 'موبائل' : 'Mobile', p.mobile]];
+  document.getElementById('d-summary').innerHTML = rows.filter(r => r[1]).map(r => `<div class="kv"><b>${r[0]}</b><span>${r[1]}</span></div>`).join('');
 }
+function startEdit() {
+  S.editMode = true; S.verified = true; S.data = JSON.parse(JSON.stringify(S.profile || {}));
+  fillForm(S.data);
+  document.getElementById('pwBox').classList.add('hidden');
+  document.getElementById('consent').checked = true;
+  show('v-reg'); next(2);
+}
+async function markMarried() {
+  const q = S.lang === 'ur' ? 'کیا واقعی اسٹیٹس "شادی شدہ" کرنا ہے؟ مبارک ہو!' : 'Mark your profile as Married? Congratulations!';
+  if (!confirm(q)) return;
+  const r = await api('setStatus', { token: S.token, status: 'Married' });
+  if (r.ok) { S.profile.status = 'Married'; localStorage.setItem('profile', JSON.stringify(S.profile)); fillDash(); confetti(); }
+}
+function logout() {
+  S.token = ''; S.profile = null;
+  localStorage.removeItem('token'); localStorage.removeItem('profile');
+  show('v-land');
+}
+
+/* ------- PDF ------- */
+const MAP_MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ', widowed: 'بیوہ/رنڈوا' };
+const MAP_G = { male: 'مرد', female: 'عورت' };
+const MAP_YN = { yes: 'ہاں', no: 'نہیں', always: 'ہمیشہ', sometimes: 'کبھی کبھار', rarely: 'کم' };
+const MAP_H = { owned: 'ذاتی', rented: 'کرایہ' };
+function v(x) { return (x == null || x === '') ? '—' : x; }
+function downloadPDF() {
+  const p = S.profile || S.data; if (!p) return;
+  const set = (id, val) => document.getElementById(id).textContent = v(val);
+  set('p-id', p.id); set('p-fullName', p.fullName); set('p-gender', MAP_G[p.gender] || p.gender);
+  set('p-age', v(p.age) + (p.dob ? '  —  ' + p.dob : '')); set('p-height', p.height);
+  set('p-marital', MAP_MS[p.maritalStatus] || p.maritalStatus); set('p-children', p.children);
+  set('p-relig', v(p.religion) + ' / ' + v(p.sect)); set('p-caste', p.caste);
+  set('p-deen', (MAP_YN[p.hafizQuran] || '—') + ' / ' + (MAP_YN[p.prayerRegular] || '—'));
+  set('p-education', p.education); set('p-prof', v(p.profession) + (p.company ? ' — ' + p.company : ''));
+  set('p-income', p.income); set('p-prov', v(p.province) + ' / ' + v(p.district));
+  set('p-city', p.city); set('p-house', MAP_H[p.houseType] || p.houseType);
+  set('p-guardian', p.guardianName); set('p-parents', v(p.fatherOccupation) + ' / ' + v(p.motherOccupation));
+  set('p-sibs', v(p.brothers) + ' بھائی / ' + v(p.sisters) + ' بہنیں'); set('p-mobile', v(p.mobile) + (p.altMobile ? ' , ' + p.altMobile : ''));
+  set('p-prefAge', v(p.prefAge) + ' / ' + v(p.prefHeight)); set('p-prefEdu', v(p.prefEducation) + ' / ' + v(p.prefCity));
+  set('p-prefCaste', v(p.prefCaste) + ' / ' + v(p.prefSect)); set('p-prefOther', p.otherConditions);
+  set('p-date', 'تاریخ اجراء: ' + new Date().toLocaleDateString('ur-PK'));
+  toast(S.lang === 'ur' ? '📄 PDF بن رہی ہے…' : '📄 Generating PDF…');
+  html2pdf().set({
+    margin: 0, filename: (p.id || 'profile') + '_AlBaraka.pdf',
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css'] }
+  }).from(document.getElementById('pdfT')).save();
+}
+
+/* ------- misc ------- */
+function waHelp() {
+  window.open('https://wa.me/' + CONFIG.SUPPORT_WHATSAPP + '?text=' + encodeURIComponent('السلام علیکم، مجھے رجسٹریشن میں مدد چاہیے'), '_blank');
+}
+
+/* ------- init ------- */
+applyLang(); drawSteps();
+if (S.token && S.profile) { show('v-dash'); fillDash(); }
 </script>
 </body>
 </html>

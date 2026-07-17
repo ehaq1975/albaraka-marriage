@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ایڈمن پینل — البرکہ میرج بیورو</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--cream:#FAF7F0;--ink:#1F2937;--muted:#6B7280;--err:#B91C1C;--ok:#15803D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.9}
+.wrap{max-width:1100px;margin:0 auto;padding:12px}
+.hidden{display:none!important}
+.card{background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(31,41,55,.08);padding:20px;margin:12px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:12px;padding:10px 20px;font-size:16px;font-family:inherit;cursor:pointer;min-height:46px;transition:.15s}
+.btn-p{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff}
+.btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#3B2F04}
+.btn-o{background:#fff;color:var(--green);border:2px solid var(--green)}
+.btn-sm{min-height:36px;padding:4px 14px;font-size:14px}
+.btn:disabled{opacity:.5}
+label{display:block;font-size:14.5px;font-weight:700;color:var(--green);margin:8px 0 2px}
+input,select{width:100%;min-height:44px;border:2px solid #D6D3C8;border-radius:10px;padding:6px 12px;font-size:15.5px;font-family:inherit;background:#fff}
+input:focus,select:focus{outline:3px solid var(--gold2);border-color:var(--gold)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;color:var(--gold2);font-size:22px}
+h1{font-size:20px;color:var(--green)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stat{background:linear-gradient(150deg,var(--green),var(--green2));color:#fff;border-radius:14px;padding:12px;text-align:center}
+.stat b{font-size:26px;color:var(--gold2);display:block;font-family:'Atkinson Hyperlegible'}
+.stat span{font-size:13.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{background:#EAF4EE;color:var(--green);padding:8px 6px;text-align:right;white-space:nowrap}
+td{padding:7px 6px;border-bottom:1px solid #F1EDE0;vertical-align:top}
+tr:hover td{background:#FFFDF5}
+.chip{display:inline-block;border-radius:99px;padding:1px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.chip.Active{background:#EAF4EE;color:var(--ok)}
+.chip.Married{background:#FEF3C7;color:#92400E}
+.chip.Closed{background:#F3F4F6;color:#6B7280}
+.chip.m{background:#DBEAFE;color:#1D4ED8}
+.chip.f{background:#FCE7F3;color:#BE185D}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:20px 8px}
+#modal .mcard{background:#fff;border-radius:18px;max-width:720px;width:100%;padding:22px;position:relative}
+.mclose{position:absolute;top:10px;left:14px;background:#F3F4F6;border:none;border-radius:99px;width:38px;height:38px;font-size:17px;cursor:pointer}
+.kv{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #E5E1D5;padding:5px 2px;font-size:15px}
+.kv b{color:var(--green);white-space:nowrap}
+.sechead{background:#FDF6E3;color:var(--green);border-radius:8px;padding:4px 14px;margin:12px 0 4px;font-weight:700;font-size:15.5px;border-right:4px solid var(--gold)}
+.badge{display:inline-block;background:#FEE2E2;color:var(--err);border-radius:99px;padding:2px 14px;font-size:14px;margin-top:6px}
+.score{background:var(--gold2);color:#3B2F04;font-weight:700;border-radius:99px;padding:1px 12px;font-size:13px;font-family:'Atkinson Hyperlegible'}
+.mono{direction:ltr;font-family:'Atkinson Hyperlegible';text-align:left}
+@media(max-width:640px){ .tblwrap{overflow-x:auto} h1{font-size:17px} }
+@media print{ body *{visibility:hidden} #modal,#modal *{visibility:visible} #modal{position:absolute;background:#fff} .noprint{display:none!important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><div class="logo">🕌</div>
+      <div><h1>البرکہ میرج بیورو — ایڈمن پینل</h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
+    </div>
+    <div><a href="index.html" class="btn btn-o btn-sm">🏠 مین سائٹ</a>
+    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">لاگ آؤٹ</button></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="v-login" class="card" style="max-width:420px;margin:30px auto">
+    <h2 style="color:var(--green)">ایڈمن لاگ ان</h2>
+    <label>صارف نام / Username</label>
+    <input id="au" class="mono" autocomplete="username">
+    <label>پاس ورڈ / Password</label>
+    <input id="ap" type="password" class="mono" autocomplete="current-password">
+    <div id="aerr" class="badge hidden"></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-p" style="width:100%" onclick="adminLogin()">لاگ ان کریں</button>
+  </div>
+
+  <!-- PANEL -->
+  <div id="v-panel" class="hidden">
+    <div class="stats" id="stats"></div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+        <h2 style="color:var(--green)">🔎 پروفائل تلاش</h2>
+        <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں</button>
+      </div>
+      <div class="grid">
+        <div><label>تلاش (نام/ID/موبائل)</label><input id="f-q" placeholder="نام یا ABM-0001"></div>
+        <div><label>جنس</label><select id="f-gender"><option value="">سب</option><option value="male">مرد</option><option value="female">عورت</option></select></div>
+        <div><label>عمر (کم از کم)</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
+        <div><label>عمر (زیادہ سے زیادہ)</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
+        <div><label>ضلع</label><input id="f-district" placeholder="لاہور"></div>
+        <div><label>شہر</label><input id="f-city"></div>
+        <div><label>ذات</label><input id="f-caste" placeholder="جٹ، آرائیں…"></div>
+        <div><label>مسلک</label><select id="f-sect"><option value="">سب</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
+        <div><label>تعلیم</label><input id="f-education" placeholder="ڈاکٹر، انجینئر…"></div>
+        <div><label>ازدواجی حیثیت</label><select id="f-marital"><option value="">سب</option><option value="single">کنوارہ/کنواری</option><option value="divorced">طلاق یافتہ</option><option value="widowed">بیوہ/رنڈوا</option></select></div>
+        <div><label>اسٹیٹس</label><select id="f-status"><option value="">سب</option><option value="Active">فعال</option><option value="Married">رشتہ طے ہوگیا</option><option value="Closed">بند</option></select></div>
+      </div>
+      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()">صاف کریں</button></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="color:var(--green)">نتائج <span id="rc" class="score">0</span></h2>
+        <button class="btn btn-o btn-sm" onclick="search()">🔄 تازہ کریں</button>
+      </div>
+      <div class="tblwrap">
+        <table id="tbl">
+          <thead><tr><th>ID</th><th>نام</th><th>جنس</th><th>عمر</th><th>قد</th><th>شہر</th><th>ذات</th><th>مسلک</th><th>تعلیم</th><th>اسٹیٹس</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="modal" class="hidden" onclick="if(event.target===this)closeModal()">
+  <div class="mcard">
+    <button class="mclose noprint" onclick="closeModal()">✖</button>
+    <div id="mbody"></div>
+    <div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-g btn-sm" onclick="waShare()">💚 واٹس ایپ شیئر</button>
+      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ پرنٹ / PDF</button>
+      <button class="btn btn-o btn-sm" onclick="findMatches()">💞 رشتہ ملائیں</button>
+      <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
+        <option value="Active">فعال</option><option value="Married">رشتہ طے ہوگیا</option><option value="Closed">بند</option>
+      </select>
+    </div>
+    <div id="matches"></div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
+  SUPPORT_WHATSAPP: '923154822167'
+};
+let TOKEN = sessionStorage.getItem('admToken') || '';
+let ALL = [], CUR = null;
+
+const MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ', widowed: 'بیوہ/رنڈوا' };
+const G = { male: 'مرد', female: 'عورت' };
+const YN = { yes: 'ہاں', no: 'نہیں', always: 'ہمیشہ', sometimes: 'کبھی کبھار', rarely: 'کم' };
+const HT = { owned: 'ذاتی', rented: 'کرایہ' };
+const ST = { Active: 'فعال', Married: 'رشتہ طے ہوگیا', Closed: 'بند' };
+function v(x) { return (x == null || x === '') ? '—' : x; }
+
+async function api(action, payload) {
+  const res = await fetch(CONFIG.API_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(Object.assign({ action, token: TOKEN }, payload || {}))
+  });
+  return res.json();
+}
+
+async function adminLogin() {
+  const err = document.getElementById('aerr'); err.classList.add('hidden');
+  const r = await api('adminLogin', { username: document.getElementById('au').value.trim(), password: document.getElementById('ap').value });
+  if (!r.ok) { err.textContent = 'غلط صارف نام یا پاس ورڈ'; err.classList.remove('hidden'); return; }
+  TOKEN = r.token; sessionStorage.setItem('admToken', TOKEN);
+  enter();
+}
+function logout() { TOKEN = ''; sessionStorage.removeItem('admToken'); location.reload(); }
+
+async function enter() {
+  document.getElementById('v-login').classList.add('hidden');
+  document.getElementById('v-panel').classList.remove('hidden');
+  document.getElementById('lo').classList.remove('hidden');
+  loadStats(); search();
+}
+
+async function loadStats() {
+  const r = await api('adminStats');
+  if (!r.ok) return authFail(r);
+  const s = r.stats;
+  const topD = Object.entries(s.byDistrict || {}).sort((a, b) => b[1] - a[1]).slice(0, 1).map(d => d[0] + ' (' + d[1] + ')').join('') || '—';
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><b>${s.total}</b><span>کل پروفائلز</span></div>
+    <div class="stat"><b>${s.male}</b><span>مرد</span></div>
+    <div class="stat"><b>${s.female}</b><span>خواتین</span></div>
+    <div class="stat"><b>${s.active}</b><span>فعال</span></div>
+    <div class="stat"><b>${s.married}</b><span>رشتہ طے</span></div>
+    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span>سب سے بڑا ضلع</span></div>`;
+}
+
+function filters() {
+  return {
+    q: gv('f-q'), gender: gv('f-gender'), ageMin: gv('f-ageMin'), ageMax: gv('f-ageMax'),
+    district: gv('f-district'), city: gv('f-city'), caste: gv('f-caste'), sect: gv('f-sect'),
+    education: gv('f-education'), maritalStatus: gv('f-marital'), status: gv('f-status')
+  };
+}
+function gv(id) { return document.getElementById(id).value.trim(); }
+function clearFilters() { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); search(); }
+
+async function search() {
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">⏳ لوڈ ہو رہا ہے…</td></tr>';
+  const r = await api('adminSearch', { filters: filters() });
+  if (!r.ok) return authFail(r);
+  ALL = r.profiles || [];
+  document.getElementById('rc').textContent = ALL.length;
+  document.getElementById('tbody').innerHTML = ALL.length ? ALL.map((p, i) => `
+    <tr>
+      <td class="mono"><b>${v(p.id)}</b></td><td>${v(p.fullName)}</td>
+      <td><span class="chip ${p.gender === 'male' ? 'm' : 'f'}">${G[p.gender] || '—'}</span></td>
+      <td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td>
+      <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
+      <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
+      <td><button class="btn btn-p btn-sm" onclick="openP(${i})">دیکھیں</button></td>
+    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">کوئی پروفائل نہیں ملی</td></tr>';
+}
+function authFail(r) {
+  if (r.error === 'AUTH') { logout(); }
+  else alert('Error: ' + r.error);
+}
+
+function openP(i) { showProfile(ALL[i]); }
+function showProfile(p) {
+  CUR = p;
+  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🖼️ تصویر</a>`).join(' ');
+  const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪 شناختی کارڈ ${i + 1}</a>`).join(' ');
+  document.getElementById('mbody').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h2 style="color:var(--green)">${v(p.fullName)}</h2>
+      <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
+      <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
+    </div>
+    <div class="sechead">ذاتی معلومات</div>
+    ${kv('جنس', G[p.gender])}${kv('عمر / پیدائش', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد', p.height)}
+    ${kv('ازدواجی حیثیت', MS[p.maritalStatus])}${kv('بچے', p.children)}${kv('شناختی کارڈ', p.cnic)}
+    <div class="sechead">مذہبی معلومات</div>
+    ${kv('مذہب / مسلک', v(p.religion) + ' / ' + v(p.sect))}${kv('ذات', p.caste)}
+    ${kv('حافظِ قرآن', YN[p.hafizQuran])}${kv('نماز', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ', YN[p.purdah]) : ''}
+    <div class="sechead">تعلیم و ملازمت</div>
+    ${kv('تعلیم', p.education)}${kv('پیشہ', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('آمدنی', p.income)}
+    <div class="sechead">رہائش</div>
+    ${kv('صوبہ / ضلع', v(p.province) + ' / ' + v(p.district))}${kv('شہر/گاؤں', p.city)}${kv('گھر', HT[p.houseType])}
+    <div class="sechead">خاندان</div>
+    ${kv('والد/سرپرست', p.guardianName)}${kv('والد کا پیشہ', p.fatherOccupation)}${kv('والدہ کا پیشہ', p.motherOccupation)}
+    ${kv('بھائی / بہنیں', v(p.brothers) + ' / ' + v(p.sisters))}
+    <div class="sechead">رابطہ</div>
+    ${kv('موبائل', p.mobile)}${kv('متبادل', p.altMobile)}${kv('رابطہ (تصدیق)', p.contact)}
+    <div class="sechead">مطلوبہ رشتہ</div>
+    ${kv('عمر / قد', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('تعلیم / شہر', v(p.prefEducation) + ' / ' + v(p.prefCity))}
+    ${kv('ذات / مسلک', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('دیگر شرائط', p.otherConditions)}
+    <div style="margin-top:8px">${imgs} ${cnic}</div>`;
+  document.getElementById('mstatus').value = p.status || 'Active';
+  document.getElementById('matches').innerHTML = '';
+  document.getElementById('modal').classList.remove('hidden');
+}
+function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+async function changeStatus() {
+  const s = document.getElementById('mstatus').value;
+  const r = await api('adminSetStatus', { profileId: CUR.id, status: s });
+  if (r.ok) { CUR.status = s; search(); loadStats(); }
+}
+
+function waShare() {
+  const p = CUR;
+  const t = `*البرکہ میرج بیورو — پروفائل ${p.id}*\n` +
+    `نام: ${v(p.fullName)}\nجنس: ${v(G[p.gender])} | عمر: ${v(p.age)} | قد: ${v(p.height)}\n` +
+    `ازدواجی حیثیت: ${v(MS[p.maritalStatus])}\nذات: ${v(p.caste)} | مسلک: ${v(p.sect)}\n` +
+    `تعلیم: ${v(p.education)} | پیشہ: ${v(p.profession)}\n` +
+    `شہر: ${v(p.city)} ضلع ${v(p.district)}\n` +
+    `مطلوبہ رشتہ: عمر ${v(p.prefAge)}، ${v(p.prefCity)}، ${v(p.prefCaste)}\n` +
+    `رابطہ: البرکہ میرج بیورو +${CONFIG.SUPPORT_WHATSAPP}`;
+  window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+}
+
+/* ---- matching ---- */
+async function findMatches() {
+  const p = CUR;
+  const box = document.getElementById('matches');
+  box.innerHTML = '<div class="sechead">💞 ممکنہ رشتے تلاش ہو رہے ہیں…</div>';
+  const r = await api('adminSearch', { filters: { gender: p.gender === 'male' ? 'female' : 'male', status: 'Active' } });
+  if (!r.ok) return authFail(r);
+  const scored = (r.profiles || []).map(c => {
+    let sc = 0, why = [];
+    const ar = String(p.prefAge || '').match(/(\d+)\D+(\d+)/);
+    if (ar && c.age && +c.age >= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push('عمر مطابق'); }
+    if (p.prefCity && (has(c.city, p.prefCity) || has(c.district, p.prefCity))) { sc += 20; why.push('شہر مطابق'); }
+    if (p.prefCaste && has(c.caste, p.prefCaste)) { sc += 20; why.push('ذات مطابق'); }
+    if (p.prefSect && has(c.sect, p.prefSect)) { sc += 15; why.push('مسلک مطابق'); }
+    else if (p.sect && c.sect === p.sect) { sc += 10; why.push('ایک مسلک'); }
+    if (p.prefEducation && has(c.education, p.prefEducation)) { sc += 15; why.push('تعلیم مطابق'); }
+    if (!p.prefCity && p.district && c.district === p.district) { sc += 10; why.push('ایک ضلع'); }
+    if (p.caste && c.caste && has(c.caste, p.caste)) { sc += 5; }
+    return { c, sc, why };
+  }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
+  box.innerHTML = '<div class="sechead">💞 ممکنہ رشتے (' + scored.length + ')</div>' +
+    (scored.length ? scored.map(x => `
+      <div class="kv"><b class="mono">${x.c.id}</b>
+        <span>${v(x.c.fullName)} — ${v(x.c.age)} سال، ${v(x.c.city || x.c.district)}، ${v(x.c.caste)}</span>
+        <span><span class="score">${x.sc}%</span>
+        <button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'>دیکھیں</button></span>
+      </div>
+      <div style="font-size:12.5px;color:var(--muted);margin:0 4px 6px">${x.why.join(' • ')}</div>`).join('')
+      : '<p style="text-align:center;color:var(--muted)">کوئی مناسب رشتہ نہیں ملا — فلٹر تبدیل کر کے دستی تلاش کریں</p>');
+}
+function has(a, b) { return String(a || '').toLowerCase().includes(String(b || '').toLowerCase()); }
+
+/* init */
+if (TOKEN) enter();
+</script>
+</body>
+</html>
