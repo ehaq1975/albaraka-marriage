@@ -6,7 +6,8 @@
 <title>البرکہ میرج بیورو — Al-Baraka Marriage Bureau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --green:#14532D; --green2:#1E6B3C; --gold:#C9A227; --gold2:#E3C766;
@@ -881,13 +882,22 @@ async function downloadPDF() {
   try {
     await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
     await new Promise(r => setTimeout(r, 400));
-    await html2pdf().set({
-      margin: 0, filename: (p.id || 'profile') + '_AlBaraka.pdf',
-      image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 900 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    }).from(t).save();
+    const canvas = await html2canvas(t, { scale: 2, useCORS: true, logging: false });
+    const img = canvas.toDataURL('image/jpeg', 0.93);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pw = 210, ph = 297;
+    const imgH = canvas.height * pw / canvas.width;
+    let heightLeft = imgH, pos = 0;
+    pdf.addImage(img, 'JPEG', 0, 0, pw, imgH);
+    heightLeft -= ph;
+    while (heightLeft > 0) {
+      pos -= ph;
+      pdf.addPage();
+      pdf.addImage(img, 'JPEG', 0, pos, pw, imgH);
+      heightLeft -= ph;
+    }
+    pdf.save((p.id || 'profile') + '_AlBaraka.pdf');
   } catch (e) { alert('PDF error: ' + e); }
   t.style.position = old.position; t.style.left = old.left; t.style.top = old.top; t.style.zIndex = old.zIndex;
   ov.remove();
