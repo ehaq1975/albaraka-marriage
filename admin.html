@@ -80,9 +80,12 @@ tr:hover td{background:#FFFDF5}
     <div class="stats" id="stats"></div>
 
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         <h2 style="color:var(--green)">🔎 پروفائل تلاش</h2>
-        <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں</button>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ نیا پروفائل شامل کریں</a>
+          <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں</button>
+        </div>
       </div>
       <div class="grid">
         <div><label>تلاش (نام/ID/موبائل)</label><input id="f-q" placeholder="نام یا ABM-0001"></div>
@@ -124,6 +127,7 @@ tr:hover td{background:#FFFDF5}
       <button class="btn btn-g btn-sm" onclick="waShare()">💚 واٹس ایپ شیئر</button>
       <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ پرنٹ / PDF</button>
       <button class="btn btn-o btn-sm" onclick="findMatches()">💞 رشتہ ملائیں</button>
+      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 پاس ورڈ ری سیٹ</button>
       <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
         <option value="Active">فعال</option><option value="Married">رشتہ طے ہوگیا</option><option value="Closed">بند</option>
       </select>
@@ -240,6 +244,8 @@ function showProfile(p) {
     <div class="sechead">خاندان</div>
     ${kv('والد/سرپرست', p.guardianName)}${kv('والد کا پیشہ', p.fatherOccupation)}${kv('والدہ کا پیشہ', p.motherOccupation)}
     ${kv('بھائی / بہنیں', v(p.brothers) + ' / ' + v(p.sisters))}
+    ${kv('شادی شدہ بھائی / بہنیں', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
+    ${kv('بہن بھائیوں میں نمبر', p.birthOrder)}
     <div class="sechead">رابطہ</div>
     ${kv('موبائل', p.mobile)}${kv('متبادل', p.altMobile)}${kv('رابطہ (تصدیق)', p.contact)}
     <div class="sechead">مطلوبہ رشتہ</div>
@@ -252,6 +258,14 @@ function showProfile(p) {
 }
 function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+async function resetPw() {
+  const p = prompt('پروفائل ' + CUR.id + ' کے لیے نیا پاس ورڈ لکھیں (کم از کم 4 حروف):');
+  if (!p) return;
+  if (p.length < 4) return alert('پاس ورڈ کم از کم 4 حروف کا ہونا چاہیے');
+  const r = await api('adminResetPassword', { profileId: CUR.id, newPassword: p });
+  alert(r.ok ? '✅ پاس ورڈ تبدیل ہوگیا — صارف کو نیا پاس ورڈ بتا دیں' : 'Error: ' + r.error);
+}
 
 async function changeStatus() {
   const s = document.getElementById('mstatus').value;

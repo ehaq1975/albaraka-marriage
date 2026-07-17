@@ -2,7 +2,7 @@
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>البرکہ میرج بیورو — Al-Baraka Marriage Bureau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -93,6 +93,24 @@ input:focus,select:focus,textarea:focus{outline:3px solid var(--gold2);border-co
 .kv b{color:var(--green)}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:20px 0}
 footer a{color:var(--green)}
+/* landing extras */
+.hiw{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:10px 0}
+.hiw div{background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 4px 14px rgba(31,41,55,.07);font-size:14.5px}
+.hiw .n{width:36px;height:36px;border-radius:50%;background:var(--gold2);color:#3B2F04;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;font-family:'Atkinson Hyperlegible'}
+.tst{background:#fff;border-radius:14px;padding:14px 18px;margin:10px 0;box-shadow:0 4px 14px rgba(31,41,55,.07);border-right:4px solid var(--gold)}
+.tst p{font-size:15px}
+.tst b{color:var(--green);font-size:13.5px}
+.tst .stars{color:var(--gold);font-size:14px}
+.sect-title{color:var(--green);font-size:20px;text-align:center;margin:18px 0 6px}
+/* mic */
+.micbtn{position:absolute;left:8px;top:50%;transform:translateY(-50%);background:#EAF4EE;border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;z-index:2}
+.micbtn.rec{background:#FEE2E2;animation:pulse 1s infinite}
+.micwrap{position:relative}
+.micwrap input,.micwrap textarea{padding-left:54px}
+/* pdf overlay */
+#pdfOv{position:fixed;inset:0;background:rgba(250,247,240,.96);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;font-size:18px;color:var(--green)}
+#pdfOv .sp{width:50px;height:50px;border:5px solid #E7E2D6;border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:480px){
   body{font-size:16px}
   .card{padding:16px}
@@ -101,7 +119,8 @@ footer a{color:var(--green)}
   .hero h2{font-size:21px}
 }
 /* PDF template (hidden on screen) */
-#pdfT{position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-size:15px;direction:rtl}
+#pdfT{position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-size:15px;direction:rtl;font-family:'Noto Nastaliq Urdu',serif}
+#pdfT .sec{page-break-inside:avoid}
 #pdfT .ph{background:linear-gradient(135deg,#14532D,#1E6B3C);color:#fff;padding:26px 30px;display:flex;justify-content:space-between;align-items:center}
 #pdfT .ph h2{color:#E3C766;font-size:26px}
 #pdfT .ph .pid{font-size:20px;font-weight:700;direction:ltr;background:rgba(255,255,255,.15);padding:4px 16px;border-radius:10px}
@@ -133,16 +152,37 @@ footer a{color:var(--green)}
          data-en="Al-Baraka Marriage Bureau is a respected and trusted institution helping families find suitable matches according to Islamic values. Our mission is to make the sacred bond of Nikah possible in an easy, safe and dignified way.">
       البرکہ میرج بیورو ایک باوقار اور بااعتماد ادارہ ہے جو شرعی اصولوں کے مطابق مناسب رشتے تلاش کرنے میں خاندانوں کی مدد کرتا ہے۔ ہمارا مقصد آسان، محفوظ اور عزت دار طریقے سے نکاح جیسے مقدس بندھن کو ممکن بنانا ہے۔</p>
     </div>
+    <div class="card" style="margin-top:14px">
+      <button class="btn btn-p" onclick="startRegister()" data-ur="✨ نیا رجسٹریشن شروع کریں" data-en="✨ Start New Registration">✨ نیا رجسٹریشن شروع کریں</button>
+      <div style="height:10px"></div>
+      <button class="btn btn-o" onclick="show('v-login')" data-ur="🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں (پروفائل میں ترمیم)" data-en="🔑 Already registered? Log in to edit profile">🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں (پروفائل میں ترمیم)</button>
+    </div>
     <div class="feat">
       <div><div class="ic">🔒</div><span data-ur="مکمل رازداری" data-en="Full privacy">مکمل رازداری</span></div>
       <div><div class="ic">✅</div><span data-ur="تصدیق شدہ پروفائلز" data-en="Verified profiles">تصدیق شدہ پروفائلز</span></div>
       <div><div class="ic">🤝</div><span data-ur="خاندانی اقدار" data-en="Family values">خاندانی اقدار</span></div>
       <div><div class="ic">📱</div><span data-ur="موبائل پر آسان" data-en="Mobile friendly">موبائل پر آسان</span></div>
     </div>
-    <div class="card">
-      <button class="btn btn-p" onclick="startRegister()" data-ur="✨ نیا رجسٹریشن شروع کریں" data-en="✨ Start New Registration">✨ نیا رجسٹریشن شروع کریں</button>
-      <div style="height:10px"></div>
-      <button class="btn btn-o" onclick="show('v-login')" data-ur="🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں" data-en="🔑 Already registered? Log in">🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں</button>
+    <h3 class="sect-title" data-ur="طریقہ کار — صرف 4 آسان مراحل" data-en="How it works — 4 easy steps">طریقہ کار — صرف 4 آسان مراحل</h3>
+    <div class="hiw">
+      <div><div class="n">1</div><span data-ur="واٹس ایپ یا ای میل سے تصدیق" data-en="Verify via WhatsApp or email">واٹس ایپ یا ای میل سے تصدیق</span></div>
+      <div><div class="n">2</div><span data-ur="فارم مکمل کریں (آواز سے بھی لکھ سکتے ہیں)" data-en="Fill the form (voice typing supported)">فارم مکمل کریں (آواز سے بھی لکھ سکتے ہیں)</span></div>
+      <div><div class="n">3</div><span data-ur="پروفائل آئی ڈی اور پاس ورڈ حاصل کریں" data-en="Get your Profile ID & password">پروفائل آئی ڈی اور پاس ورڈ حاصل کریں</span></div>
+      <div><div class="n">4</div><span data-ur="ہماری ٹیم مناسب رشتے تلاش کر کے رابطہ کرے گی" data-en="Our team finds matches & contacts you">ہماری ٹیم مناسب رشتے تلاش کر کے رابطہ کرے گی</span></div>
+    </div>
+    <h3 class="sect-title" data-ur="ہمارے بارے میں خاندانوں کی رائے" data-en="What families say about us">ہمارے بارے میں خاندانوں کی رائے</h3>
+    <div class="tst"><div class="stars">★★★★★</div>
+      <p data-ur="الحمدللہ البرکہ کے ذریعے ہماری بیٹی کا رشتہ نہایت شریف خاندان میں طے ہوا۔ پورا عمل باپردہ اور عزت دار تھا۔" data-en="Alhamdulillah, through Al-Baraka our daughter's rishta was settled in a very respectable family. The whole process was dignified and private.">الحمدللہ البرکہ کے ذریعے ہماری بیٹی کا رشتہ نہایت شریف خاندان میں طے ہوا۔ پورا عمل باپردہ اور عزت دار تھا۔</p>
+      <b>— م۔ احمد صاحب، لاہور</b></div>
+    <div class="tst"><div class="stars">★★★★★</div>
+      <p data-ur="رجسٹریشن بہت آسان تھی، موبائل پر ہی سب کچھ ہوگیا۔ ٹیم نے ہر مرحلے پر رہنمائی کی۔" data-en="Registration was very easy, everything was done on mobile. The team guided us at every step.">رجسٹریشن بہت آسان تھی، موبائل پر ہی سب کچھ ہوگیا۔ ٹیم نے ہر مرحلے پر رہنمائی کی۔</p>
+      <b>— بیگم ن۔ خان، فیصل آباد</b></div>
+    <div class="tst"><div class="stars">★★★★★</div>
+      <p data-ur="دوسری شادی کے لیے مناسب رشتہ ملنا مشکل تھا، مگر یہاں باعزت طریقے سے معاملہ طے ہوا۔ جزاک اللہ خیر۔" data-en="Finding a match for second marriage was difficult, but here it was settled respectfully. JazakAllah khair.">دوسری شادی کے لیے مناسب رشتہ ملنا مشکل تھا، مگر یہاں باعزت طریقے سے معاملہ طے ہوا۔ جزاک اللہ خیر۔</p>
+      <b>— ع۔ رحمٰن صاحب، کراچی</b></div>
+    <div class="card" style="text-align:center">
+      <p data-ur="آج ہی اپنا پروفائل بنائیں — مکمل مفت" data-en="Create your profile today — completely free">آج ہی اپنا پروفائل بنائیں — مکمل مفت</p>
+      <button class="btn btn-g" onclick="startRegister()" data-ur="✨ رجسٹریشن شروع کریں" data-en="✨ Start registration">✨ رجسٹریشن شروع کریں</button>
     </div>
   </div>
 
@@ -197,13 +237,8 @@ footer a{color:var(--green)}
       <h2 style="color:var(--green)" data-ur="تصدیق کریں" data-en="Verify yourself">تصدیق کریں</h2>
       <p data-ur="مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں" data-en="Choose how to receive your free 4-digit code">مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں</p>
       <div class="opts" id="chan">
-        <div class="opt" data-v="sms">📩 SMS</div>
         <div class="opt" data-v="whatsapp">💚 WhatsApp</div>
         <div class="opt" data-v="email">✉️ Email</div>
-      </div>
-      <div id="smsx" class="hidden">
-        <label data-ur="نیٹ ورک" data-en="Network">نیٹ ورک</label>
-        <select id="carrier"><option value="jazz">Jazz</option><option value="zong">Zong</option><option value="telenor">Telenor</option><option value="ufone">Ufone</option></select>
       </div>
       <label id="contactlbl" data-ur="موبائل نمبر / ای میل" data-en="Mobile / Email">موبائل نمبر / ای میل</label>
       <input id="contact" style="direction:ltr" inputmode="tel" placeholder="03xx xxxxxxx">
@@ -259,6 +294,7 @@ footer a{color:var(--green)}
         <div class="opt" data-v="single" data-ur="کنوارہ/کنواری" data-en="Single">کنوارہ/کنواری</div>
         <div class="opt" data-v="divorced" data-ur="طلاق یافتہ" data-en="Divorced">طلاق یافتہ</div>
         <div class="opt" data-v="widowed" data-ur="بیوہ/رنڈوا" data-en="Widowed">بیوہ/رنڈوا</div>
+        <div class="opt" data-v="second" data-ur="دوسری شادی کے خواہشمند" data-en="Seeking second marriage">دوسری شادی کے خواہشمند</div>
       </div>
       <div style="height:12px"></div>
       <button class="btn btn-p" onclick="next(3)" data-ur="اگلا مرحلہ ←" data-en="Next →">اگلا مرحلہ ←</button>
@@ -325,6 +361,12 @@ footer a{color:var(--green)}
         <div><label data-ur="بہنوں کی تعداد" data-en="Sisters">بہنوں کی تعداد</label><input id="f-sisters" inputmode="numeric"></div>
       </div>
       <div class="row">
+        <div><label data-ur="شادی شدہ بھائی" data-en="Married brothers">شادی شدہ بھائی</label><input id="f-marriedBrothers" inputmode="numeric"></div>
+        <div><label data-ur="شادی شدہ بہنیں" data-en="Married sisters">شادی شدہ بہنیں</label><input id="f-marriedSisters" inputmode="numeric"></div>
+      </div>
+      <label data-ur="بہن بھائیوں میں آپ کا نمبر" data-en="Your birth order among siblings">بہن بھائیوں میں آپ کا نمبر</label>
+      <select id="f-birthOrder"><option value="">—</option><option>پہلا نمبر</option><option>دوسرا نمبر</option><option>تیسرا نمبر</option><option>چوتھا نمبر</option><option>پانچواں نمبر</option><option>چھٹا یا اس کے بعد</option><option>سب سے آخری نمبر</option></select>
+      <div class="row">
         <div><label data-ur="موبائل نمبر" data-en="Mobile">موبائل نمبر</label><input id="f-mobile" style="direction:ltr" inputmode="tel"></div>
         <div><label data-ur="متبادل نمبر" data-en="Alternate">متبادل نمبر <small>اختیاری</small></label><input id="f-altMobile" style="direction:ltr" inputmode="tel"></div>
       </div>
@@ -339,7 +381,8 @@ footer a{color:var(--green)}
     <div class="card wstep hidden" id="s5">
       <h2 style="color:var(--green)" data-ur="سیکشن 4: مطلوبہ رشتہ" data-en="Section 4: Partner preferences">سیکشن 4: مطلوبہ رشتہ</h2>
       <div class="row">
-        <div><label data-ur="مطلوبہ عمر" data-en="Preferred age">مطلوبہ عمر <small>مثلاً 25–30</small></label><input id="f-prefAge" placeholder="25-30" style="direction:ltr;text-align:center"></div>
+        <div><label data-ur="مطلوبہ عمر" data-en="Preferred age">مطلوبہ عمر</label>
+        <select id="f-prefAge" style="direction:ltr;text-align:center"><option value="">—</option><option>18-23</option><option>20-25</option><option>25-30</option><option>30-35</option><option>35-40</option><option>40-50</option><option>50-60</option></select></div>
         <div><label data-ur="مطلوبہ قد" data-en="Preferred height">مطلوبہ قد</label><input id="f-prefHeight"></div>
       </div>
       <div class="row">
@@ -446,6 +489,8 @@ footer a{color:var(--green)}
     <tr><td>والد / سرپرست</td><td id="p-guardian"></td></tr>
     <tr><td>والد / والدہ کا پیشہ</td><td id="p-parents"></td></tr>
     <tr><td>بھائی / بہنیں</td><td id="p-sibs"></td></tr>
+    <tr><td>شادی شدہ بھائی / بہنیں</td><td id="p-msibs"></td></tr>
+    <tr><td>بہن بھائیوں میں نمبر</td><td id="p-border"></td></tr>
   </table></div>
   <div class="sec"><h3>رابطہ</h3><table>
     <tr><td>موبائل</td><td id="p-mobile" style="direction:ltr;text-align:right"></td></tr>
@@ -547,7 +592,6 @@ document.addEventListener('click', e => {
   o.classList.add('on');
   if (g.id === 'chan') {
     S.channel = o.dataset.v;
-    document.getElementById('smsx').classList.toggle('hidden', S.channel !== 'sms');
     const l = document.getElementById('contactlbl');
     l.textContent = S.channel === 'email' ? (S.lang === 'ur' ? 'ای میل' : 'Email') : (S.lang === 'ur' ? 'موبائل نمبر' : 'Mobile number');
     document.getElementById('contact').placeholder = S.channel === 'email' ? 'name@email.com' : '03xx xxxxxxx';
@@ -564,7 +608,7 @@ async function sendOtp() {
   if (!c) return toast(S.lang === 'ur' ? 'نمبر / ای میل لکھیں' : 'Enter contact');
   const b = document.getElementById('sendbtn'); b.disabled = true;
   try {
-    const r = await api('sendOtp', { channel: S.channel, contact: c, carrier: document.getElementById('carrier').value });
+    const r = await api('sendOtp', { channel: S.channel, contact: c });
     if (!r.ok) throw r.error;
     S.data.contact = c; S.data.otpChannel = S.channel;
     document.getElementById('otpArea').classList.remove('hidden');
@@ -596,7 +640,7 @@ async function verifyOtp() {
 }
 
 /* ------- fields ------- */
-const FIELDS = ['fullName','cnic','dob','age','height','children','religion','sect','caste','hafizQuran','prayerRegular','purdah','education','profession','company','income','province','district','city','houseType','guardianName','fatherOccupation','motherOccupation','brothers','sisters','mobile','altMobile','prefAge','prefHeight','prefEducation','prefCity','prefCaste','prefSect','otherConditions'];
+const FIELDS = ['fullName','cnic','dob','age','height','children','religion','sect','caste','hafizQuran','prayerRegular','purdah','education','profession','company','income','province','district','city','houseType','guardianName','fatherOccupation','motherOccupation','brothers','sisters','marriedBrothers','marriedSisters','birthOrder','mobile','altMobile','prefAge','prefHeight','prefEducation','prefCity','prefCaste','prefSect','otherConditions'];
 function collect() {
   FIELDS.forEach(f => { const el = document.getElementById('f-' + f); if (el) S.data[f] = el.value.trim(); });
   S.data.language = S.lang;
@@ -803,14 +847,16 @@ function logout() {
 }
 
 /* ------- PDF ------- */
-const MAP_MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ', widowed: 'بیوہ/رنڈوا' };
+const MAP_MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ', widowed: 'بیوہ/رنڈوا', second: 'دوسری شادی کے خواہشمند' };
 const MAP_G = { male: 'مرد', female: 'عورت' };
 const MAP_YN = { yes: 'ہاں', no: 'نہیں', always: 'ہمیشہ', sometimes: 'کبھی کبھار', rarely: 'کم' };
 const MAP_H = { owned: 'ذاتی', rented: 'کرایہ' };
 function v(x) { return (x == null || x === '') ? '—' : x; }
-function downloadPDF() {
+async function downloadPDF() {
   const p = S.profile || S.data; if (!p) return;
   const set = (id, val) => document.getElementById(id).textContent = v(val);
+  set('p-msibs', v(p.marriedBrothers) + ' بھائی / ' + v(p.marriedSisters) + ' بہنیں');
+  set('p-border', p.birthOrder);
   set('p-id', p.id); set('p-fullName', p.fullName); set('p-gender', MAP_G[p.gender] || p.gender);
   set('p-age', v(p.age) + (p.dob ? '  —  ' + p.dob : '')); set('p-height', p.height);
   set('p-marital', MAP_MS[p.maritalStatus] || p.maritalStatus); set('p-children', p.children);
@@ -824,14 +870,60 @@ function downloadPDF() {
   set('p-prefAge', v(p.prefAge) + ' / ' + v(p.prefHeight)); set('p-prefEdu', v(p.prefEducation) + ' / ' + v(p.prefCity));
   set('p-prefCaste', v(p.prefCaste) + ' / ' + v(p.prefSect)); set('p-prefOther', p.otherConditions);
   set('p-date', 'تاریخ اجراء: ' + new Date().toLocaleDateString('ur-PK'));
-  toast(S.lang === 'ur' ? '📄 PDF بن رہی ہے…' : '📄 Generating PDF…');
-  html2pdf().set({
-    margin: 0, filename: (p.id || 'profile') + '_AlBaraka.pdf',
-    image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css'] }
-  }).from(document.getElementById('pdfT')).save();
+  // show template on-screen under an overlay so html2canvas can render it
+  const ov = document.createElement('div'); ov.id = 'pdfOv';
+  ov.innerHTML = '<div class="sp"></div><div>📄 ' + (S.lang === 'ur' ? 'PDF بن رہی ہے، انتظار کریں…' : 'Generating PDF, please wait…') + '</div>';
+  document.body.appendChild(ov);
+  const t = document.getElementById('pdfT');
+  const old = { left: t.style.left, top: t.style.top, position: t.style.position, zIndex: t.style.zIndex };
+  t.style.position = 'absolute'; t.style.left = '0'; t.style.top = '0'; t.style.zIndex = '1';
+  window.scrollTo(0, 0);
+  try {
+    await (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve());
+    await new Promise(r => setTimeout(r, 400));
+    await html2pdf().set({
+      margin: 0, filename: (p.id || 'profile') + '_AlBaraka.pdf',
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 900 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    }).from(t).save();
+  } catch (e) { alert('PDF error: ' + e); }
+  t.style.position = old.position; t.style.left = old.left; t.style.top = old.top; t.style.zIndex = old.zIndex;
+  ov.remove();
+}
+
+/* ------- voice input (Web Speech API) ------- */
+const MIC_FIELDS = ['f-fullName','f-caste','f-profession','f-company','f-guardianName','f-fatherOccupation','f-motherOccupation','f-district','f-city','f-prefEducation','f-prefCity','f-prefCaste','f-otherConditions'];
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SR) {
+  MIC_FIELDS.forEach(id => {
+    const el = document.getElementById(id); if (!el) return;
+    const wrap = document.createElement('div'); wrap.className = 'micwrap';
+    el.parentNode.insertBefore(wrap, el); wrap.appendChild(el);
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'micbtn'; b.textContent = '🎤';
+    b.title = 'بول کر لکھیں';
+    b.onclick = () => startMic(el, b);
+    wrap.appendChild(b);
+  });
+}
+let activeRec = null;
+function startMic(el, btn) {
+  if (activeRec) { try { activeRec.stop(); } catch (e) {} activeRec = null; }
+  const rec = new SR();
+  rec.lang = S.lang === 'ur' ? 'ur-PK' : 'en-US';
+  rec.interimResults = false; rec.maxAlternatives = 1;
+  btn.classList.add('rec'); btn.textContent = '⏺';
+  toast(S.lang === 'ur' ? '🎤 بولیے…' : '🎤 Speak…');
+  rec.onresult = e => {
+    const txt = e.results[0][0].transcript;
+    el.value = (el.value ? el.value + ' ' : '') + txt;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  rec.onerror = e => { toast(S.lang === 'ur' ? 'آواز نہیں سنی گئی — دوبارہ کوشش کریں' : 'Could not hear — try again'); };
+  rec.onend = () => { btn.classList.remove('rec'); btn.textContent = '🎤'; activeRec = null; };
+  activeRec = rec; rec.start();
 }
 
 /* ------- misc ------- */
@@ -841,7 +933,14 @@ function waHelp() {
 
 /* ------- init ------- */
 applyLang(); drawSteps();
-if (S.token && S.profile) { show('v-dash'); fillDash(); }
+const BY_ADMIN = new URLSearchParams(location.search).has('byadmin');
+if (BY_ADMIN) {
+  // admin registering on behalf of someone: skip OTP step
+  S.editMode = false; S.step = 2; S.data = { verified: true, otpChannel: 'by_admin', contact: 'ایڈمن آفس' };
+  S.verified = true;
+  show('v-reg'); next(2);
+  toast('ایڈمن موڈ — تصدیق کے بغیر رجسٹریشن');
+} else if (S.token && S.profile) { show('v-dash'); fillDash(); }
 </script>
 </body>
 </html>
