@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>البرکہ میرج بیورو — Al-Baraka Marriage Bureau</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -62,12 +62,21 @@ input:focus,select:focus,textarea:focus{outline:3px solid var(--gold2);border-co
 .stp.done .dot{background:var(--gold);color:#3B2F04}
 @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(20,83,45,.15)}}
 /* landing */
-.hero{background:linear-gradient(150deg,var(--green) 0%,var(--green2) 60%,#2c7a4b);color:#fff;border-radius:20px;padding:30px 22px;text-align:center;box-shadow:0 10px 30px rgba(20,83,45,.35)}
-.hero h2{font-size:26px;color:var(--gold2);margin-bottom:8px}
-.hero p{font-size:16px;opacity:.95}
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#0E3B20 0%,#14532D 55%,#1E6B3C 100%);color:#fff;border-radius:14px;padding:44px 26px 40px;text-align:center;box-shadow:0 14px 40px rgba(14,59,32,.4);border-bottom:4px solid var(--gold)}
+.hero::before{content:'';position:absolute;inset:0;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23E3C766' stroke-width='1'%3E%3Cpath d='M40 4l10 16 18 2-12 14 4 18-20-8-20 8 4-18L12 22l18-2z'/%3E%3Ccircle cx='40' cy='40' r='36'/%3E%3C/g%3E%3C/svg%3E");background-size:80px}
+.hero>*{position:relative}
+.hero .bism{font-family:'Amiri',serif;font-size:30px;color:var(--gold2);margin-bottom:4px}
+.hero h2{font-size:24px;color:#fff;margin-bottom:8px;font-weight:600}
+.hero p{font-size:15.5px;opacity:.92;max-width:600px;margin:0 auto}
+.hero .tag{display:inline-block;border:1px solid var(--gold2);color:var(--gold2);border-radius:99px;padding:2px 18px;font-size:13px;margin-top:14px;letter-spacing:1px}
+.ayat{background:#FFFDF6;border:1px solid #EADFC0;border-radius:12px;padding:22px 24px;margin:14px 0;text-align:center;box-shadow:0 3px 14px rgba(31,41,55,.05)}
+.ayat .ar{font-family:'Amiri',serif;font-size:22px;line-height:2.1;color:#0E3B20;direction:rtl}
+.ayat .tr{font-size:15px;color:#4B5563;margin-top:6px}
+.ayat .ref{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--gold);border-top:1px solid #EADFC0;padding-top:6px;letter-spacing:.5px}
 .feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
-.feat div{background:#fff;border-radius:14px;padding:14px;text-align:center;box-shadow:0 4px 14px rgba(31,41,55,.07);font-size:15px}
-.feat .ic{font-size:26px}
+.feat div{background:#fff;border-radius:10px;padding:16px 12px;text-align:center;box-shadow:0 3px 12px rgba(31,41,55,.06);font-size:14.5px;border-top:3px solid var(--green)}
+.feat .ic{width:44px;height:44px;margin:0 auto 8px;border-radius:50%;background:#EAF4EE;display:flex;align-items:center;justify-content:center}
+.feat .ic svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* upload */
 .up{border:2.5px dashed var(--gold);border-radius:14px;background:#FFFDF5;padding:18px;text-align:center;cursor:pointer;min-height:110px;position:relative;overflow:hidden}
 .up img{max-width:100%;max-height:170px;border-radius:10px}
@@ -148,21 +157,33 @@ footer a{color:var(--green)}
   <!-- LANDING -->
   <div id="v-land">
     <div class="hero">
-      <h2 data-ur="بسم اللہ الرحمٰن الرحیم" data-en="In the name of Allah">بسم اللہ الرحمٰن الرحیم</h2>
-      <p data-ur="البرکہ میرج بیورو ایک باوقار اور بااعتماد ادارہ ہے جو شرعی اصولوں کے مطابق مناسب رشتے تلاش کرنے میں خاندانوں کی مدد کرتا ہے۔ ہمارا مقصد آسان، محفوظ اور عزت دار طریقے سے نکاح جیسے مقدس بندھن کو ممکن بنانا ہے۔"
-         data-en="Al-Baraka Marriage Bureau is a respected and trusted institution helping families find suitable matches according to Islamic values. Our mission is to make the sacred bond of Nikah possible in an easy, safe and dignified way.">
-      البرکہ میرج بیورو ایک باوقار اور بااعتماد ادارہ ہے جو شرعی اصولوں کے مطابق مناسب رشتے تلاش کرنے میں خاندانوں کی مدد کرتا ہے۔ ہمارا مقصد آسان، محفوظ اور عزت دار طریقے سے نکاح جیسے مقدس بندھن کو ممکن بنانا ہے۔</p>
+      <div class="bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+      <h2 data-ur="باوقار رشتے، شرعی اصولوں کے مطابق" data-en="Dignified matches, according to Islamic values">باوقار رشتے، شرعی اصولوں کے مطابق</h2>
+      <p data-ur="البرکہ میرج بیورو ایک بااعتماد ادارہ ہے جو خاندانوں کو عزت، رازداری اور دینی اقدار کے ساتھ مناسب رشتے تلاش کرنے میں مدد فراہم کرتا ہے۔"
+         data-en="Al-Baraka Marriage Bureau is a trusted institution helping families find suitable matches with dignity, privacy and Islamic values.">
+      البرکہ میرج بیورو ایک بااعتماد ادارہ ہے جو خاندانوں کو عزت، رازداری اور دینی اقدار کے ساتھ مناسب رشتے تلاش کرنے میں مدد فراہم کرتا ہے۔</p>
+      <div class="tag" data-ur="تصدیق شدہ • رازدارانہ • مفت رجسٹریشن" data-en="Verified • Confidential • Free registration">تصدیق شدہ • رازدارانہ • مفت رجسٹریشن</div>
+    </div>
+    <div class="ayat">
+      <div class="ar">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً</div>
+      <div class="tr" data-ur="اور اس کی نشانیوں میں سے ہے کہ اس نے تمہارے لیے تمہی میں سے جوڑے بنائے تاکہ تم ان سے سکون پاؤ اور تمہارے درمیان محبت اور رحمت رکھ دی" data-en="And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.">اور اس کی نشانیوں میں سے ہے کہ اس نے تمہارے لیے تمہی میں سے جوڑے بنائے تاکہ تم ان سے سکون پاؤ اور تمہارے درمیان محبت اور رحمت رکھ دی</div>
+      <span class="ref">سورۃ الروم — آیت 21</span>
+    </div>
+    <div class="ayat">
+      <div class="ar">النِّكَاحُ مِنْ سُنَّتِي فَمَنْ لَمْ يَعْمَلْ بِسُنَّتِي فَلَيْسَ مِنِّي</div>
+      <div class="tr" data-ur="نکاح میری سنت ہے، پس جس نے میری سنت پر عمل نہ کیا وہ مجھ سے نہیں (فرمانِ نبوی ﷺ)" data-en="Marriage is my Sunnah; whoever does not act upon my Sunnah is not of me. (Saying of the Prophet ﷺ)">نکاح میری سنت ہے، پس جس نے میری سنت پر عمل نہ کیا وہ مجھ سے نہیں (فرمانِ نبوی ﷺ)</div>
+      <span class="ref">سنن ابنِ ماجہ — حدیث 1846</span>
     </div>
     <div class="card" style="margin-top:14px">
-      <button class="btn btn-p" onclick="startRegister()" data-ur="✨ نیا رجسٹریشن شروع کریں" data-en="✨ Start New Registration">✨ نیا رجسٹریشن شروع کریں</button>
+      <button class="btn btn-p" onclick="startRegister()" data-ur="نیا رجسٹریشن شروع کریں" data-en="Start New Registration">نیا رجسٹریشن شروع کریں</button>
       <div style="height:10px"></div>
-      <button class="btn btn-o" onclick="show('v-login')" data-ur="🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں (پروفائل میں ترمیم)" data-en="🔑 Already registered? Log in to edit profile">🔑 پہلے سے رجسٹرڈ؟ لاگ ان کریں (پروفائل میں ترمیم)</button>
+      <button class="btn btn-o" onclick="show('v-login')" data-ur="پہلے سے رجسٹرڈ؟ لاگ ان کریں" data-en="Already registered? Log in">پہلے سے رجسٹرڈ؟ لاگ ان کریں</button>
     </div>
     <div class="feat">
-      <div><div class="ic">🔒</div><span data-ur="مکمل رازداری" data-en="Full privacy">مکمل رازداری</span></div>
-      <div><div class="ic">✅</div><span data-ur="تصدیق شدہ پروفائلز" data-en="Verified profiles">تصدیق شدہ پروفائلز</span></div>
-      <div><div class="ic">🤝</div><span data-ur="خاندانی اقدار" data-en="Family values">خاندانی اقدار</span></div>
-      <div><div class="ic">📱</div><span data-ur="موبائل پر آسان" data-en="Mobile friendly">موبائل پر آسان</span></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><span data-ur="مکمل رازداری" data-en="Full privacy">مکمل رازداری</span></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div><span data-ur="تصدیق شدہ پروفائلز" data-en="Verified profiles">تصدیق شدہ پروفائلز</span></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M4 19c0-3 2.2-5 5-5s5 2 5 5M13.5 14.5c2.5 0 4.5 1.8 4.5 4.5"/></svg></div><span data-ur="خاندانی اقدار" data-en="Family values">خاندانی اقدار</span></div>
+      <div><div class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><span data-ur="موبائل پر آسان" data-en="Mobile friendly">موبائل پر آسان</span></div>
     </div>
     <h3 class="sect-title" data-ur="طریقہ کار — صرف 4 آسان مراحل" data-en="How it works — 4 easy steps">طریقہ کار — صرف 4 آسان مراحل</h3>
     <div class="hiw">
@@ -183,7 +204,7 @@ footer a{color:var(--green)}
       <b>— ع۔ رحمٰن صاحب، کراچی</b></div>
     <div class="card" style="text-align:center">
       <p data-ur="آج ہی اپنا پروفائل بنائیں — مکمل مفت" data-en="Create your profile today — completely free">آج ہی اپنا پروفائل بنائیں — مکمل مفت</p>
-      <button class="btn btn-g" onclick="startRegister()" data-ur="✨ رجسٹریشن شروع کریں" data-en="✨ Start registration">✨ رجسٹریشن شروع کریں</button>
+      <button class="btn btn-g" onclick="startRegister()" data-ur="رجسٹریشن شروع کریں" data-en="Start registration">رجسٹریشن شروع کریں</button>
     </div>
   </div>
 
@@ -290,6 +311,12 @@ footer a{color:var(--green)}
         <div><label data-ur="بچوں کی تعداد" data-en="Children">بچوں کی تعداد</label>
         <input id="f-children" inputmode="numeric" value="0"></div>
       </div>
+      <div class="row">
+        <div><label data-ur="مادری زبان" data-en="Mother tongue">مادری زبان</label>
+        <select id="f-motherTongue"><option value="">—</option><option>اردو</option><option>پنجابی</option><option>سرائیکی</option><option>پشتو</option><option>سندھی</option><option>بلوچی</option><option>ہندکو</option><option>دیگر</option></select></div>
+        <div><label data-ur="رنگت" data-en="Complexion">رنگت</label>
+        <select id="f-complexion"><option value="">—</option><option>گوری</option><option>گندمی</option><option>سانولی</option></select></div>
+      </div>
       <label data-ur="ازدواجی حیثیت" data-en="Marital status">ازدواجی حیثیت</label>
       <div class="opts" data-f="maritalStatus">
         <div class="opt" data-v="single" data-ur="کنوارہ/کنواری" data-en="Single">کنوارہ/کنواری</div>
@@ -394,6 +421,8 @@ footer a{color:var(--green)}
         <div><label data-ur="مطلوبہ ذات" data-en="Preferred caste">مطلوبہ ذات</label><input id="f-prefCaste"></div>
         <div><label data-ur="مطلوبہ مسلک" data-en="Preferred sect">مطلوبہ مسلک</label><input id="f-prefSect"></div>
       </div>
+      <label data-ur="مطلوبہ ازدواجی حیثیت" data-en="Preferred marital status">مطلوبہ ازدواجی حیثیت</label>
+      <select id="f-prefMaritalStatus"><option value="">کوئی بھی</option><option value="single">کنوارہ/کنواری</option><option value="divorced">طلاق یافتہ</option><option value="widowed">بیوہ/رنڈوا</option><option value="second">دوسری شادی</option></select>
       <label data-ur="دیگر شرائط" data-en="Other conditions">دیگر شرائط</label>
       <textarea id="f-otherConditions"></textarea>
       <div style="height:12px"></div>
@@ -451,7 +480,7 @@ footer a{color:var(--green)}
   <footer>
     <span data-ur="مدد کے لیے واٹس ایپ" data-en="WhatsApp for help">مدد کے لیے واٹس ایپ</span>:
     <a href="#" onclick="waHelp();return false" style="direction:ltr">+92 315 4822167</a>
-    &nbsp;|&nbsp; <a href="admin.html" data-ur="ایڈمن" data-en="Admin">ایڈمن</a>
+    <br><span style="font-size:11.5px">© البرکہ میرج بیورو 2026</span>
   </footer>
 </div>
 
@@ -461,7 +490,10 @@ footer a{color:var(--green)}
 <div id="pdfT">
   <div class="ph">
     <div><h2>البرکہ میرج بیورو</h2><div style="font-size:13px;font-family:'Atkinson Hyperlegible'">Al-Baraka Marriage Bureau — Rishta Profile</div></div>
-    <div class="pid" id="p-id">ABM-0000</div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="pid" id="p-id">ABM-0000</div>
+      <img id="p-photo" style="width:95px;height:110px;object-fit:cover;border-radius:10px;border:3px solid #E3C766;display:none">
+    </div>
   </div>
   <div class="sec"><h3>ذاتی معلومات</h3><table>
     <tr><td>نام</td><td id="p-fullName"></td></tr>
@@ -470,6 +502,7 @@ footer a{color:var(--green)}
     <tr><td>قد</td><td id="p-height"></td></tr>
     <tr><td>ازدواجی حیثیت</td><td id="p-marital"></td></tr>
     <tr><td>بچے</td><td id="p-children"></td></tr>
+    <tr><td>مادری زبان / رنگت</td><td id="p-tongue"></td></tr>
   </table></div>
   <div class="sec"><h3>مذہبی معلومات</h3><table>
     <tr><td>مذہب / مسلک</td><td id="p-relig"></td></tr>
@@ -561,12 +594,12 @@ function toast(m) { const t = document.getElementById('toast'); t.textContent = 
 
 /* ------- wizard ------- */
 const STEPS = [
-  { n: 1, ur: 'تصدیق', en: 'Verify', ic: '📲' }, { n: 2, ur: 'شناخت', en: 'Identity', ic: '🪪' },
-  { n: 3, ur: 'دین و تعلیم', en: 'Deen & Edu', ic: '📖' }, { n: 4, ur: 'خاندان', en: 'Family', ic: '🏠' },
-  { n: 5, ur: 'رشتہ', en: 'Match', ic: '💚' }, { n: 6, ur: 'تصاویر', en: 'Photos', ic: '📷' }];
+  { n: 1, ur: 'تصدیق', en: 'Verify' }, { n: 2, ur: 'شناخت', en: 'Identity' },
+  { n: 3, ur: 'دین و تعلیم', en: 'Deen & Edu' }, { n: 4, ur: 'خاندان', en: 'Family' },
+  { n: 5, ur: 'رشتہ', en: 'Match' }, { n: 6, ur: 'تصاویر', en: 'Photos' }];
 function drawSteps() {
   document.getElementById('stepdots').innerHTML = STEPS.map(s =>
-    `<div class="stp ${s.n < S.step ? 'done' : ''} ${s.n === S.step ? 'on' : ''}"><div class="dot">${s.n < S.step ? '✓' : s.ic}</div>${S.lang === 'ur' ? s.ur : s.en}</div>`).join('');
+    `<div class="stp ${s.n < S.step ? 'done' : ''} ${s.n === S.step ? 'on' : ''}"><div class="dot">${s.n < S.step ? '✓' : s.n}</div>${S.lang === 'ur' ? s.ur : s.en}</div>`).join('');
   const pct = Math.round((S.step - 1) / 6 * 100);
   document.getElementById('pct').textContent = pct;
   document.getElementById('pfill').style.width = pct + '%';
@@ -641,7 +674,7 @@ async function verifyOtp() {
 }
 
 /* ------- fields ------- */
-const FIELDS = ['fullName','cnic','dob','age','height','children','religion','sect','caste','hafizQuran','prayerRegular','purdah','education','profession','company','income','province','district','city','houseType','guardianName','fatherOccupation','motherOccupation','brothers','sisters','marriedBrothers','marriedSisters','birthOrder','mobile','altMobile','prefAge','prefHeight','prefEducation','prefCity','prefCaste','prefSect','otherConditions'];
+const FIELDS = ['fullName','cnic','dob','age','height','children','motherTongue','complexion','religion','sect','caste','hafizQuran','prayerRegular','purdah','education','profession','company','income','province','district','city','houseType','guardianName','fatherOccupation','motherOccupation','brothers','sisters','marriedBrothers','marriedSisters','birthOrder','mobile','altMobile','prefAge','prefHeight','prefEducation','prefCity','prefCaste','prefSect','prefMaritalStatus','otherConditions'];
 function collect() {
   FIELDS.forEach(f => { const el = document.getElementById('f-' + f); if (el) S.data[f] = el.value.trim(); });
   S.data.language = S.lang;
@@ -780,6 +813,7 @@ async function finalize() {
       if (!r.ok) throw r.error;
       S.data.id = r.registrationId;
       S.profile = JSON.parse(JSON.stringify(S.data));
+      if (r.token) { S.token = r.token; localStorage.setItem('token', r.token); localStorage.setItem('profile', JSON.stringify(S.profile)); }
       document.getElementById('doneId').textContent = r.registrationId;
       next(7);
       confetti();
@@ -858,6 +892,16 @@ async function downloadPDF() {
   const set = (id, val) => document.getElementById(id).textContent = v(val);
   set('p-msibs', v(p.marriedBrothers) + ' بھائی / ' + v(p.marriedSisters) + ' بہنیں');
   set('p-border', p.birthOrder);
+  set('p-tongue', v(p.motherTongue) + ' / ' + v(p.complexion));
+  // embed profile photo via backend (Drive URLs are CORS-blocked for canvas)
+  const pimg = document.getElementById('p-photo');
+  pimg.style.display = 'none';
+  if (p.photo1Url && S.token) {
+    try {
+      const ph = await api('getPhoto', { token: S.token, url: p.photo1Url });
+      if (ph.ok) { pimg.src = 'data:' + ph.mime + ';base64,' + ph.b64; pimg.style.display = 'block'; }
+    } catch (e) {}
+  }
   set('p-id', p.id); set('p-fullName', p.fullName); set('p-gender', MAP_G[p.gender] || p.gender);
   set('p-age', v(p.age) + (p.dob ? '  —  ' + p.dob : '')); set('p-height', p.height);
   set('p-marital', MAP_MS[p.maritalStatus] || p.maritalStatus); set('p-children', p.children);

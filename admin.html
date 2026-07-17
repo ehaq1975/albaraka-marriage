@@ -234,6 +234,7 @@ function showProfile(p) {
     <div class="sechead">ذاتی معلومات</div>
     ${kv('جنس', G[p.gender])}${kv('عمر / پیدائش', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد', p.height)}
     ${kv('ازدواجی حیثیت', MS[p.maritalStatus])}${kv('بچے', p.children)}${kv('شناختی کارڈ', p.cnic)}
+    ${kv('مادری زبان', p.motherTongue)}${kv('رنگت', p.complexion)}
     <div class="sechead">مذہبی معلومات</div>
     ${kv('مذہب / مسلک', v(p.religion) + ' / ' + v(p.sect))}${kv('ذات', p.caste)}
     ${kv('حافظِ قرآن', YN[p.hafizQuran])}${kv('نماز', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ', YN[p.purdah]) : ''}
@@ -250,7 +251,7 @@ function showProfile(p) {
     ${kv('موبائل', p.mobile)}${kv('متبادل', p.altMobile)}${kv('رابطہ (تصدیق)', p.contact)}
     <div class="sechead">مطلوبہ رشتہ</div>
     ${kv('عمر / قد', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('تعلیم / شہر', v(p.prefEducation) + ' / ' + v(p.prefCity))}
-    ${kv('ذات / مسلک', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('دیگر شرائط', p.otherConditions)}
+    ${kv('ذات / مسلک', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('مطلوبہ ازدواجی حیثیت', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'کوئی بھی'))}${kv('دیگر شرائط', p.otherConditions)}
     <div style="margin-top:8px">${imgs} ${cnic}</div>`;
   document.getElementById('mstatus').value = p.status || 'Active';
   document.getElementById('matches').innerHTML = '';
