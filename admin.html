@@ -38,6 +38,7 @@ tr:hover td{background:#FFFDF5}
 .chip.Active{background:#EAF4EE;color:var(--ok)}
 .chip.Married{background:#FEF3C7;color:#92400E}
 .chip.Closed{background:#F3F4F6;color:#6B7280}
+.chip.Pending{background:#FDF6E3;color:#92700E;border:1px solid #C9A227}
 .chip.m{background:#DBEAFE;color:#1D4ED8}
 .chip.f{background:#FCE7F3;color:#BE185D}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:20px 8px}
@@ -98,7 +99,7 @@ tr:hover td{background:#FFFDF5}
         <div><label>مسلک / Sect</label><select id="f-sect"><option value="">سب / All</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
         <div><label>تعلیم / Education</label><input id="f-education" placeholder="ڈاکٹر، انجینئر… / Doctor, Engineer…"></div>
         <div><label>ازدواجی حیثیت / Marital Status</label><select id="f-marital"><option value="">سب / All</option><option value="single">کنوارہ/کنواری / Single</option><option value="divorced">طلاق یافتہ / Divorced</option><option value="widowed">بیوہ/رنڈوا / Widowed</option><option value="second">دوسری شادی / Second marriage</option></select></div>
-        <div><label>اسٹیٹس / Status</label><select id="f-status"><option value="">سب / All</option><option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option></select></div>
+        <div><label>اسٹیٹس / Status</label><select id="f-status"><option value="">سب / All</option><option value="Pending">زیرِ جائزہ / Pending</option><option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option></select></div>
       </div>
       <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()">صاف کریں / Clear</button></div>
     </div>
@@ -129,9 +130,10 @@ tr:hover td{background:#FFFDF5}
       <button class="btn btn-o btn-sm" onclick="findMatches()">💞 رشتہ ملائیں / Find Matches</button>
       <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 پاس ورڈ ری سیٹ / Reset Password</button>
       <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
-        <option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option>
+        <option value="Pending">زیرِ جائزہ / Pending</option><option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option>
       </select>
     </div>
+    <div class="noprint" id="pendActions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
     <div id="matches"></div>
   </div>
 </div>
@@ -148,7 +150,7 @@ const MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ
 const G = { male: 'مرد', female: 'عورت' };
 const YN = { yes: 'ہاں', no: 'نہیں', always: 'ہمیشہ', sometimes: 'کبھی کبھار', rarely: 'کم' };
 const HT = { owned: 'ذاتی', rented: 'کرایہ' };
-const ST = { Active: 'فعال Active', Married: 'رشتہ طے Married', Closed: 'بند Closed' };
+const ST = { Active: 'فعال Active', Married: 'رشتہ طے Married', Closed: 'بند Closed', Pending: 'زیرِ جائزہ Pending' };
 function v(x) { return (x == null || x === '') ? '—' : x; }
 
 async function api(action, payload) {
@@ -186,6 +188,7 @@ async function loadStats() {
     <div class="stat"><b>${s.female}</b><span>خواتین / Female</span></div>
     <div class="stat"><b>${s.active}</b><span>فعال / Active</span></div>
     <div class="stat"><b>${s.married}</b><span>رشتہ طے / Married</span></div>
+    <div class="stat" style="background:linear-gradient(150deg,#92700E,#C9A227)"><b>${s.pending || 0}</b><span>زیرِ جائزہ / Pending</span></div>
     <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span>سب سے بڑا ضلع / Top District</span></div>`;
 }
 
@@ -255,7 +258,43 @@ function showProfile(p) {
     <div style="margin-top:8px">${imgs} ${cnic}</div>`;
   document.getElementById('mstatus').value = p.status || 'Active';
   document.getElementById('matches').innerHTML = '';
+  const pa = document.getElementById('pendActions');
+  pa.innerHTML = '';
+  if (p.status === 'Pending') {
+    pa.innerHTML = '<button class="btn btn-p btn-sm" onclick="approveP()">✅ منظور کریں / Approve</button>' +
+      (!String(p.contact || '').includes('@')
+        ? '<button class="btn btn-o btn-sm" onclick="waNotice(\'review\')">📱 زیرِ جائزہ اطلاع واٹس ایپ / Send review notice</button>' : '');
+  }
+  pa.innerHTML += '<button class="btn btn-o btn-sm" onclick="unlockP()">🔓 اکاؤنٹ ان لاک / Unlock account</button>';
   document.getElementById('modal').classList.remove('hidden');
+}
+
+async function approveP() {
+  if (!confirm('پروفائل ' + CUR.id + ' کو منظور کریں؟ / Approve this profile?')) return;
+  const r = await api('adminApprove', { profileId: CUR.id });
+  if (!r.ok) return alert('Error: ' + r.error);
+  CUR.status = 'Active';
+  let msg = '✅ پروفائل منظور ہوگئی / Profile approved.';
+  if (r.emailed) msg += '\n📧 منظوری کی ای میل خودکار بھیج دی گئی / Approval email sent automatically.';
+  alert(msg);
+  if (r.whatsapp) {
+    if (confirm('یہ صارف واٹس ایپ سے رجسٹرڈ ہے — ایک کلک میں منظوری کا پیغام واٹس ایپ پر بھیجیں؟\nUser registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
+  }
+  search(); loadStats();
+}
+
+function waNotice(kind) {
+  const p = CUR;
+  const num = String(p.mobile || p.contact || '').replace(/\D/g, '').replace(/^0/, '92');
+  const txt = kind === 'approved'
+    ? '*البرکہ میرج بیورو*\n\nالسلام علیکم ' + (p.fullName || '') + ' صاحب/صاحبہ،\n\n🎉 مبارک ہو! آپ کی پروفائل *' + p.id + '* کا جائزہ مکمل ہوگیا ہے اور اسے *منظور* کرلیا گیا ہے۔ آپ کی پروفائل اب فعال ہے اور رشتہ تلاش کے عمل میں شامل ہوگئی ہے۔\n\nمناسب رشتہ سامنے آنے پر ہماری ٹیم آپ سے رابطہ کرے گی۔\n\nشکریہ،\nالبرکہ میرج بیورو'
+    : '*البرکہ میرج بیورو*\n\nالسلام علیکم ' + (p.fullName || '') + ' صاحب/صاحبہ،\n\nآپ کی رجسٹریشن موصول ہوگئی ہے۔ آپ کی پروفائل آئی ڈی *' + p.id + '* ہے۔\n\n🕒 آپ کی پروفائل اس وقت ہماری ٹیم کے *زیرِ جائزہ* ہے۔ جائزہ مکمل ہونے پر (عموماً 1 تا 2 کاروباری دن) آپ کو منظوری کی اطلاع دے دی جائے گی، ان شاء اللہ۔\n\nشکریہ،\nالبرکہ میرج بیورو';
+  window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(txt), '_blank');
+}
+
+async function unlockP() {
+  const r = await api('adminUnlock', { profileId: CUR.id });
+  alert(r.ok ? '🔓 اکاؤنٹ ان لاک ہوگیا — صارف اب دوبارہ لاگ ان کرسکتا ہے / Account unlocked — the user can log in again.' : 'Error: ' + r.error);
 }
 function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }

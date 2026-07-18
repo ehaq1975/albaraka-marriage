@@ -99,6 +99,7 @@ input:focus,select:focus,textarea:focus{outline:3px solid var(--gold2);border-co
 .chip.Active{background:#EAF4EE;color:var(--ok)}
 .chip.Married{background:#FEF3C7;color:#92400E}
 .chip.Closed{background:#F3F4F6;color:#6B7280}
+.chip.Pending{background:#FDF6E3;color:#92700E}
 .kv{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #E5E1D5;padding:7px 2px;font-size:15.5px}
 .kv b{color:var(--green)}
 footer{text-align:center;color:var(--muted);font-size:13px;padding:20px 0}
@@ -117,6 +118,12 @@ footer a{color:var(--green)}
 .micbtn.rec{background:#FEE2E2;animation:pulse 1s infinite}
 .micwrap{position:relative}
 .micwrap input,.micwrap textarea{padding-left:54px}
+/* popup modal */
+#pop{position:fixed;inset:0;background:rgba(14,59,32,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+#pop .pc{background:#fff;border-radius:18px;max-width:440px;width:100%;padding:28px 24px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);border-top:5px solid var(--gold)}
+#pop .pic{font-size:46px;margin-bottom:6px}
+#pop h3{color:var(--green);font-size:20px;margin-bottom:8px}
+#pop p{font-size:15.5px;color:#4B5563}
 /* pdf overlay */
 #pdfOv{position:fixed;inset:0;background:rgba(250,247,240,.96);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;font-size:18px;color:var(--green)}
 #pdfOv .sp{width:50px;height:50px;border:5px solid #E7E2D6;border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
@@ -507,6 +514,17 @@ footer a{color:var(--green)}
 
 <div id="toast"></div>
 
+<!-- POPUP -->
+<div id="pop" class="hidden" onclick="if(event.target===this)hidePop()">
+  <div class="pc">
+    <div class="pic" id="pop-ic">🕒</div>
+    <h3 id="pop-t"></h3>
+    <p id="pop-m"></p>
+    <div style="height:14px"></div>
+    <button class="btn btn-p" onclick="hidePop()" data-ur="ٹھیک ہے" data-en="OK">ٹھیک ہے</button>
+  </div>
+</div>
+
 <!-- PDF TEMPLATE -->
 <div id="pdfT">
   <div class="ph">
@@ -612,6 +630,22 @@ function show(id) {
   window.scrollTo(0, 0);
 }
 function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2200); }
+function showPop(ic, title, msg) {
+  document.getElementById('pop-ic').textContent = ic;
+  document.getElementById('pop-t').textContent = title;
+  document.getElementById('pop-m').textContent = msg;
+  document.getElementById('pop').classList.remove('hidden');
+}
+function hidePop() { document.getElementById('pop').classList.add('hidden'); }
+function lockedMsg(r) {
+  const ur = S.lang === 'ur';
+  if (r.level >= 2) return ur
+    ? '🚫 حفاظتی وجوہات کی بنا پر یہ پروفائل 24 گھنٹے کے لیے بند کردی گئی ہے۔ ایڈمن کو اطلاع دے دی گئی ہے — بحالی کے لیے واٹس ایپ پر رابطہ کریں۔'
+    : '🚫 For security this profile is blocked for 24 hours. The admin has been alerted — contact us on WhatsApp to restore access.';
+  return ur
+    ? '⛔ بہت زیادہ غلط کوششیں — حفاظتی وجوہات کی بنا پر ' + (r.minutes || 60) + ' منٹ کے لیے بند۔ ایڈمن کو اطلاع دے دی گئی ہے۔'
+    : '⛔ Too many wrong attempts — blocked for ' + (r.minutes || 60) + ' minutes for security. The admin has been notified.';
+}
 
 /* ------- wizard ------- */
 const STEPS = [
@@ -835,9 +869,15 @@ async function finalize() {
       S.data.id = r.registrationId;
       S.profile = JSON.parse(JSON.stringify(S.data));
       if (r.token) { S.token = r.token; localStorage.setItem('token', r.token); localStorage.setItem('profile', JSON.stringify(S.profile)); }
+      S.profile.status = 'Pending';
       document.getElementById('doneId').textContent = r.registrationId;
       next(7);
       confetti();
+      setTimeout(() => showPop('🕒',
+        S.lang === 'ur' ? 'پروفائل زیرِ جائزہ ہے' : 'Profile under review',
+        S.lang === 'ur'
+          ? 'آپ کی رجسٹریشن موصول ہوگئی ہے۔ ہماری ٹیم عموماً 1 تا 2 کاروباری دنوں میں جائزہ مکمل کرتی ہے — منظوری کی اطلاع آپ کو بھیج دی جائے گی، ان شاء اللہ۔'
+          : 'Your registration has been received. Our team usually completes the review within 1–2 working days — you will be notified once approved, In sha Allah.'), 1200);
     }
   } catch (e) { bad('Error: ' + e); }
   b.disabled = false;
@@ -860,6 +900,7 @@ async function doLogin() {
   try {
     const r = await api('login', { profileId: id, password: pw });
     if (!r.ok) {
+      if (r.error === 'LOCKED') { err.textContent = lockedMsg(r); err.classList.remove('hidden'); return; }
       err.textContent = r.error === 'PROFILE_NOT_FOUND' ? (S.lang === 'ur' ? 'پروفائل نہیں ملی' : 'Profile not found')
         : r.error === 'WRONG_PASSWORD' ? (S.lang === 'ur' ? 'غلط پاس ورڈ' : 'Wrong password') : r.error;
       err.classList.remove('hidden'); return;
@@ -867,6 +908,20 @@ async function doLogin() {
     S.token = r.token; S.profile = r.profile;
     localStorage.setItem('token', S.token); localStorage.setItem('profile', JSON.stringify(r.profile));
     show('v-dash'); fillDash();
+    const p = r.profile;
+    if (p.status === 'Pending') {
+      showPop('🕒', S.lang === 'ur' ? 'پروفائل زیرِ جائزہ ہے' : 'Profile under review',
+        S.lang === 'ur'
+          ? 'آپ کی پروفائل ابھی ہماری ٹیم کے زیرِ جائزہ ہے۔ جائزہ مکمل ہوتے ہی آپ کو اطلاع دے دی جائے گی۔'
+          : 'Your profile is currently under review by our team. You will be notified as soon as the review is complete.');
+    } else if (p.status === 'Active' && p.approvedAt && !localStorage.getItem('apn_' + p.id)) {
+      localStorage.setItem('apn_' + p.id, '1');
+      confetti();
+      showPop('🎉', S.lang === 'ur' ? 'مبارک ہو — پروفائل منظور ہوگئی!' : 'Congratulations — profile approved!',
+        S.lang === 'ur'
+          ? 'آپ کی پروفائل کا جائزہ مکمل ہوگیا ہے اور اسے منظور کرلیا گیا ہے۔ آپ کی پروفائل اب فعال ہے اور رشتہ تلاش کے عمل میں شامل ہے۔'
+          : 'Your profile review is complete and it has been approved. Your profile is now active in the match-making process.');
+    }
   } catch (e) { err.textContent = 'Error: ' + e; err.classList.remove('hidden'); }
 }
 function fillDash() {
@@ -874,7 +929,10 @@ function fillDash() {
   document.getElementById('d-name').textContent = p.fullName || '—';
   document.getElementById('d-id').textContent = p.id || '—';
   const st = document.getElementById('d-status');
-  st.textContent = p.status === 'Married' ? (S.lang === 'ur' ? '💍 شادی شدہ' : '💍 Married') : p.status === 'Closed' ? (S.lang === 'ur' ? 'بند' : 'Closed') : (S.lang === 'ur' ? '🟢 فعال' : '🟢 Active');
+  st.textContent = p.status === 'Married' ? (S.lang === 'ur' ? '💍 شادی شدہ' : '💍 Married')
+    : p.status === 'Closed' ? (S.lang === 'ur' ? 'بند' : 'Closed')
+    : p.status === 'Pending' ? (S.lang === 'ur' ? '🕒 زیرِ جائزہ' : '🕒 Under review')
+    : (S.lang === 'ur' ? '🟢 فعال' : '🟢 Active');
   st.className = 'chip ' + (p.status || 'Active');
   document.getElementById('d-married').classList.toggle('hidden', p.status === 'Married');
   const rows = [
@@ -903,8 +961,9 @@ function logout() {
 }
 
 /* ------- automated password reset ------- */
-function fpErrMsg(e) {
+function fpErrMsg(e, r) {
   const ur = S.lang === 'ur';
+  if (e === 'LOCKED') return lockedMsg(r || {});
   if (e === 'PROFILE_NOT_FOUND') return ur ? 'پروفائل نہیں ملی — آئی ڈی چیک کریں' : 'Profile not found — check the ID';
   if (e === 'TOO_MANY_TRIES') return ur ? 'بہت زیادہ کوششیں — ایک گھنٹے بعد دوبارہ کوشش کریں' : 'Too many attempts — try again in 1 hour';
   if (e === 'VERIFY_FAILED') return ur ? 'معلومات درست نہیں — دوبارہ چیک کریں' : 'Details did not match — check again';
@@ -917,7 +976,7 @@ async function fpStart() {
   if (!id) { err.textContent = S.lang === 'ur' ? 'پہلے اوپر پروفائل آئی ڈی لکھیں' : 'Enter your Profile ID above first'; err.classList.remove('hidden'); return; }
   try {
     const r = await api('forgotStart', { profileId: id });
-    if (!r.ok) { err.textContent = fpErrMsg(r.error); err.classList.remove('hidden'); return; }
+    if (!r.ok) { err.textContent = fpErrMsg(r.error, r); err.classList.remove('hidden'); return; }
     S.fpMethod = r.method;
     document.getElementById('fpBox').classList.remove('hidden');
     document.getElementById('fpEmail').classList.toggle('hidden', r.method !== 'email');
@@ -939,7 +998,7 @@ async function fpDo() {
   else { payload.cnic = document.getElementById('fp-cnic').value; payload.dob = document.getElementById('fp-dob').value; }
   try {
     const r = await api('forgotReset', payload);
-    if (!r.ok) return bad(fpErrMsg(r.error));
+    if (!r.ok) return bad(fpErrMsg(r.error, r));
     document.getElementById('fpBox').classList.add('hidden');
     document.getElementById('li-pw').value = '';
     toast(S.lang === 'ur' ? '✅ پاس ورڈ تبدیل ہوگیا — اب نئے پاس ورڈ سے لاگ ان کریں' : '✅ Password changed — log in with the new password');
