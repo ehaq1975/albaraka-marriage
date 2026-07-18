@@ -219,6 +219,27 @@ footer a{color:var(--green)}
       <div id="li-err" class="badge err hidden"></div>
       <div style="height:12px"></div>
       <button class="btn btn-p" onclick="doLogin()" data-ur="لاگ ان کریں" data-en="Log in">لاگ ان کریں</button>
+      <div style="text-align:center;margin-top:10px">
+        <a href="#" onclick="fpStart();return false" style="color:var(--green);font-size:15px" data-ur="پاس ورڈ بھول گئے؟" data-en="Forgot password?">پاس ورڈ بھول گئے؟</a>
+      </div>
+      <div id="fpBox" class="hidden" style="border-top:2px dashed #E7E2D6;margin-top:14px;padding-top:6px">
+        <div id="fpEmail" class="hidden">
+          <label data-ur="ای میل پر بھیجا گیا 4 ہندسوں کا کوڈ" data-en="4-digit code sent to your email">ای میل پر بھیجا گیا 4 ہندسوں کا کوڈ</label>
+          <input id="fp-code" inputmode="numeric" maxlength="4" style="direction:ltr;text-align:center;letter-spacing:8px;font-size:22px">
+        </div>
+        <div id="fpIdent" class="hidden">
+          <label data-ur="شناختی کارڈ نمبر" data-en="CNIC number">شناختی کارڈ نمبر</label>
+          <input id="fp-cnic" inputmode="numeric" style="direction:ltr;text-align:center" placeholder="xxxxx-xxxxxxx-x">
+          <label data-ur="تاریخ پیدائش" data-en="Date of birth">تاریخ پیدائش</label>
+          <input id="fp-dob" type="date" style="direction:ltr">
+        </div>
+        <label data-ur="نیا پاس ورڈ" data-en="New password">نیا پاس ورڈ</label>
+        <input id="fp-pw1" type="password" style="direction:ltr">
+        <label data-ur="نیا پاس ورڈ دوبارہ" data-en="Confirm new password">نیا پاس ورڈ دوبارہ</label>
+        <input id="fp-pw2" type="password" style="direction:ltr">
+        <div style="height:10px"></div>
+        <button class="btn btn-g" onclick="fpDo()" data-ur="پاس ورڈ تبدیل کریں" data-en="Change password">پاس ورڈ تبدیل کریں</button>
+      </div>
       <div style="height:8px"></div>
       <button class="btn btn-o btn-sm" onclick="show('v-land')" data-ur="← واپس" data-en="← Back">← واپس</button>
     </div>
@@ -879,6 +900,50 @@ function logout() {
   S.token = ''; S.profile = null;
   localStorage.removeItem('token'); localStorage.removeItem('profile');
   show('v-land');
+}
+
+/* ------- automated password reset ------- */
+function fpErrMsg(e) {
+  const ur = S.lang === 'ur';
+  if (e === 'PROFILE_NOT_FOUND') return ur ? 'پروفائل نہیں ملی — آئی ڈی چیک کریں' : 'Profile not found — check the ID';
+  if (e === 'TOO_MANY_TRIES') return ur ? 'بہت زیادہ کوششیں — ایک گھنٹے بعد دوبارہ کوشش کریں' : 'Too many attempts — try again in 1 hour';
+  if (e === 'VERIFY_FAILED') return ur ? 'معلومات درست نہیں — دوبارہ چیک کریں' : 'Details did not match — check again';
+  if (e === 'BAD_PASSWORD') return ur ? 'پاس ورڈ کم از کم 4 حروف' : 'Password min 4 chars';
+  return 'Error: ' + e;
+}
+async function fpStart() {
+  const id = document.getElementById('li-id').value.trim();
+  const err = document.getElementById('li-err'); err.classList.add('hidden');
+  if (!id) { err.textContent = S.lang === 'ur' ? 'پہلے اوپر پروفائل آئی ڈی لکھیں' : 'Enter your Profile ID above first'; err.classList.remove('hidden'); return; }
+  try {
+    const r = await api('forgotStart', { profileId: id });
+    if (!r.ok) { err.textContent = fpErrMsg(r.error); err.classList.remove('hidden'); return; }
+    S.fpMethod = r.method;
+    document.getElementById('fpBox').classList.remove('hidden');
+    document.getElementById('fpEmail').classList.toggle('hidden', r.method !== 'email');
+    document.getElementById('fpIdent').classList.toggle('hidden', r.method !== 'identity');
+    toast(r.method === 'email'
+      ? (S.lang === 'ur' ? '📧 کوڈ بھیج دیا گیا: ' : '📧 Code sent to: ') + (r.masked || '')
+      : (S.lang === 'ur' ? '🪪 شناختی معلومات سے تصدیق کریں' : '🪪 Verify with your identity details'));
+  } catch (e) { err.textContent = 'Error: ' + e; err.classList.remove('hidden'); }
+}
+async function fpDo() {
+  const id = document.getElementById('li-id').value.trim();
+  const pw1 = document.getElementById('fp-pw1').value, pw2 = document.getElementById('fp-pw2').value;
+  const err = document.getElementById('li-err'); err.classList.add('hidden');
+  function bad(m) { err.textContent = m; err.classList.remove('hidden'); }
+  if (pw1.length < 4) return bad(fpErrMsg('BAD_PASSWORD'));
+  if (pw1 !== pw2) return bad(S.lang === 'ur' ? 'پاس ورڈ ایک جیسے نہیں' : 'Passwords do not match');
+  const payload = { profileId: id, newPassword: pw1 };
+  if (S.fpMethod === 'email') payload.code = document.getElementById('fp-code').value.trim();
+  else { payload.cnic = document.getElementById('fp-cnic').value; payload.dob = document.getElementById('fp-dob').value; }
+  try {
+    const r = await api('forgotReset', payload);
+    if (!r.ok) return bad(fpErrMsg(r.error));
+    document.getElementById('fpBox').classList.add('hidden');
+    document.getElementById('li-pw').value = '';
+    toast(S.lang === 'ur' ? '✅ پاس ورڈ تبدیل ہوگیا — اب نئے پاس ورڈ سے لاگ ان کریں' : '✅ Password changed — log in with the new password');
+  } catch (e) { bad('Error: ' + e); }
 }
 
 /* ------- PDF ------- */

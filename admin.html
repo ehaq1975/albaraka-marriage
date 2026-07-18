@@ -59,20 +59,20 @@ tr:hover td{background:#FFFDF5}
     <div class="brand"><div class="logo">🕌</div>
       <div><h1>البرکہ میرج بیورو — ایڈمن پینل</h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
     </div>
-    <div><a href="index.html" class="btn btn-o btn-sm">🏠 مین سائٹ</a>
-    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">لاگ آؤٹ</button></div>
+    <div><a href="index.html" class="btn btn-o btn-sm">🏠 مین سائٹ / Main Site</a>
+    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">لاگ آؤٹ / Logout</button></div>
   </div>
 
   <!-- LOGIN -->
   <div id="v-login" class="card" style="max-width:420px;margin:30px auto">
-    <h2 style="color:var(--green)">ایڈمن لاگ ان</h2>
+    <h2 style="color:var(--green)">ایڈمن لاگ ان / Admin Login</h2>
     <label>صارف نام / Username</label>
     <input id="au" class="mono" autocomplete="username">
     <label>پاس ورڈ / Password</label>
     <input id="ap" type="password" class="mono" autocomplete="current-password">
     <div id="aerr" class="badge hidden"></div>
     <div style="height:12px"></div>
-    <button class="btn btn-p" style="width:100%" onclick="adminLogin()">لاگ ان کریں</button>
+    <button class="btn btn-p" style="width:100%" onclick="adminLogin()">لاگ ان کریں / Log in</button>
   </div>
 
   <!-- PANEL -->
@@ -81,36 +81,36 @@ tr:hover td{background:#FFFDF5}
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <h2 style="color:var(--green)">🔎 پروفائل تلاش</h2>
+        <h2 style="color:var(--green)">🔎 پروفائل تلاش / Search Profiles</h2>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ نیا پروفائل شامل کریں</a>
-          <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں</button>
+          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ نیا پروفائل / Add Profile</a>
+          <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں / Search</button>
         </div>
       </div>
       <div class="grid">
-        <div><label>تلاش (نام/ID/موبائل)</label><input id="f-q" placeholder="نام یا ABM-0001"></div>
-        <div><label>جنس</label><select id="f-gender"><option value="">سب</option><option value="male">مرد</option><option value="female">عورت</option></select></div>
-        <div><label>عمر (کم از کم)</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
-        <div><label>عمر (زیادہ سے زیادہ)</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
-        <div><label>ضلع</label><input id="f-district" placeholder="لاہور"></div>
-        <div><label>شہر</label><input id="f-city"></div>
-        <div><label>ذات</label><input id="f-caste" placeholder="جٹ، آرائیں…"></div>
-        <div><label>مسلک</label><select id="f-sect"><option value="">سب</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
-        <div><label>تعلیم</label><input id="f-education" placeholder="ڈاکٹر، انجینئر…"></div>
-        <div><label>ازدواجی حیثیت</label><select id="f-marital"><option value="">سب</option><option value="single">کنوارہ/کنواری</option><option value="divorced">طلاق یافتہ</option><option value="widowed">بیوہ/رنڈوا</option></select></div>
-        <div><label>اسٹیٹس</label><select id="f-status"><option value="">سب</option><option value="Active">فعال</option><option value="Married">رشتہ طے ہوگیا</option><option value="Closed">بند</option></select></div>
+        <div><label>تلاش / Search (Name/ID/Mobile)</label><input id="f-q" placeholder="نام یا ABM-0001"></div>
+        <div><label>جنس / Gender</label><select id="f-gender"><option value="">سب / All</option><option value="male">مرد / Male</option><option value="female">عورت / Female</option></select></div>
+        <div><label>عمر کم از کم / Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
+        <div><label>عمر زیادہ سے زیادہ / Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
+        <div><label>ضلع / District</label><input id="f-district" placeholder="لاہور / Lahore"></div>
+        <div><label>شہر / City</label><input id="f-city"></div>
+        <div><label>ذات / Caste</label><input id="f-caste" placeholder="جٹ، آرائیں… / Jutt, Arain…"></div>
+        <div><label>مسلک / Sect</label><select id="f-sect"><option value="">سب / All</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
+        <div><label>تعلیم / Education</label><input id="f-education" placeholder="ڈاکٹر، انجینئر… / Doctor, Engineer…"></div>
+        <div><label>ازدواجی حیثیت / Marital Status</label><select id="f-marital"><option value="">سب / All</option><option value="single">کنوارہ/کنواری / Single</option><option value="divorced">طلاق یافتہ / Divorced</option><option value="widowed">بیوہ/رنڈوا / Widowed</option><option value="second">دوسری شادی / Second marriage</option></select></div>
+        <div><label>اسٹیٹس / Status</label><select id="f-status"><option value="">سب / All</option><option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option></select></div>
       </div>
-      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()">صاف کریں</button></div>
+      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()">صاف کریں / Clear</button></div>
     </div>
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 style="color:var(--green)">نتائج <span id="rc" class="score">0</span></h2>
-        <button class="btn btn-o btn-sm" onclick="search()">🔄 تازہ کریں</button>
+        <h2 style="color:var(--green)">نتائج / Results <span id="rc" class="score">0</span></h2>
+        <button class="btn btn-o btn-sm" onclick="search()">🔄 تازہ کریں / Refresh</button>
       </div>
       <div class="tblwrap">
         <table id="tbl">
-          <thead><tr><th>ID</th><th>نام</th><th>جنس</th><th>عمر</th><th>قد</th><th>شہر</th><th>ذات</th><th>مسلک</th><th>تعلیم</th><th>اسٹیٹس</th><th></th></tr></thead>
+          <thead><tr><th>ID</th><th>نام<br><small>Name</small></th><th>جنس<br><small>Gender</small></th><th>عمر<br><small>Age</small></th><th>قد<br><small>Height</small></th><th>شہر<br><small>City</small></th><th>ذات<br><small>Caste</small></th><th>مسلک<br><small>Sect</small></th><th>تعلیم<br><small>Education</small></th><th>اسٹیٹس<br><small>Status</small></th><th></th></tr></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
@@ -124,12 +124,12 @@ tr:hover td{background:#FFFDF5}
     <button class="mclose noprint" onclick="closeModal()">✖</button>
     <div id="mbody"></div>
     <div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-g btn-sm" onclick="waShare()">💚 واٹس ایپ شیئر</button>
-      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ پرنٹ / PDF</button>
-      <button class="btn btn-o btn-sm" onclick="findMatches()">💞 رشتہ ملائیں</button>
-      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 پاس ورڈ ری سیٹ</button>
+      <button class="btn btn-g btn-sm" onclick="waShare()">💚 واٹس ایپ شیئر / Share</button>
+      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ پرنٹ / Print PDF</button>
+      <button class="btn btn-o btn-sm" onclick="findMatches()">💞 رشتہ ملائیں / Find Matches</button>
+      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 پاس ورڈ ری سیٹ / Reset Password</button>
       <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
-        <option value="Active">فعال</option><option value="Married">رشتہ طے ہوگیا</option><option value="Closed">بند</option>
+        <option value="Active">فعال / Active</option><option value="Married">رشتہ طے ہوگیا / Married</option><option value="Closed">بند / Closed</option>
       </select>
     </div>
     <div id="matches"></div>
@@ -148,7 +148,7 @@ const MS = { single: 'کنوارہ/کنواری', divorced: 'طلاق یافتہ
 const G = { male: 'مرد', female: 'عورت' };
 const YN = { yes: 'ہاں', no: 'نہیں', always: 'ہمیشہ', sometimes: 'کبھی کبھار', rarely: 'کم' };
 const HT = { owned: 'ذاتی', rented: 'کرایہ' };
-const ST = { Active: 'فعال', Married: 'رشتہ طے ہوگیا', Closed: 'بند' };
+const ST = { Active: 'فعال Active', Married: 'رشتہ طے Married', Closed: 'بند Closed' };
 function v(x) { return (x == null || x === '') ? '—' : x; }
 
 async function api(action, payload) {
@@ -181,12 +181,12 @@ async function loadStats() {
   const s = r.stats;
   const topD = Object.entries(s.byDistrict || {}).sort((a, b) => b[1] - a[1]).slice(0, 1).map(d => d[0] + ' (' + d[1] + ')').join('') || '—';
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><b>${s.total}</b><span>کل پروفائلز</span></div>
-    <div class="stat"><b>${s.male}</b><span>مرد</span></div>
-    <div class="stat"><b>${s.female}</b><span>خواتین</span></div>
-    <div class="stat"><b>${s.active}</b><span>فعال</span></div>
-    <div class="stat"><b>${s.married}</b><span>رشتہ طے</span></div>
-    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span>سب سے بڑا ضلع</span></div>`;
+    <div class="stat"><b>${s.total}</b><span>کل پروفائلز / Total</span></div>
+    <div class="stat"><b>${s.male}</b><span>مرد / Male</span></div>
+    <div class="stat"><b>${s.female}</b><span>خواتین / Female</span></div>
+    <div class="stat"><b>${s.active}</b><span>فعال / Active</span></div>
+    <div class="stat"><b>${s.married}</b><span>رشتہ طے / Married</span></div>
+    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span>سب سے بڑا ضلع / Top District</span></div>`;
 }
 
 function filters() {
@@ -212,8 +212,8 @@ async function search() {
       <td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td>
       <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
       <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
-      <td><button class="btn btn-p btn-sm" onclick="openP(${i})">دیکھیں</button></td>
-    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">کوئی پروفائل نہیں ملی</td></tr>';
+      <td><button class="btn btn-p btn-sm" onclick="openP(${i})">دیکھیں View</button></td>
+    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">کوئی پروفائل نہیں ملی / No profiles found</td></tr>';
 }
 function authFail(r) {
   if (r.error === 'AUTH') { logout(); }
@@ -231,27 +231,27 @@ function showProfile(p) {
       <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
       <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
     </div>
-    <div class="sechead">ذاتی معلومات</div>
-    ${kv('جنس', G[p.gender])}${kv('عمر / پیدائش', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد', p.height)}
-    ${kv('ازدواجی حیثیت', MS[p.maritalStatus])}${kv('بچے', p.children)}${kv('شناختی کارڈ', p.cnic)}
-    ${kv('مادری زبان', p.motherTongue)}${kv('رنگت', p.complexion)}
-    <div class="sechead">مذہبی معلومات</div>
-    ${kv('مذہب / مسلک', v(p.religion) + ' / ' + v(p.sect))}${kv('ذات', p.caste)}
-    ${kv('حافظِ قرآن', YN[p.hafizQuran])}${kv('نماز', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ', YN[p.purdah]) : ''}
-    <div class="sechead">تعلیم و ملازمت</div>
-    ${kv('تعلیم', p.education)}${kv('پیشہ', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('آمدنی', p.income)}
-    <div class="sechead">رہائش</div>
-    ${kv('صوبہ / ضلع', v(p.province) + ' / ' + v(p.district))}${kv('شہر/گاؤں', p.city)}${kv('گھر', HT[p.houseType])}
-    <div class="sechead">خاندان</div>
-    ${kv('والد/سرپرست', p.guardianName)}${kv('والد کا پیشہ', p.fatherOccupation)}${kv('والدہ کا پیشہ', p.motherOccupation)}
-    ${kv('بھائی / بہنیں', v(p.brothers) + ' / ' + v(p.sisters))}
-    ${kv('شادی شدہ بھائی / بہنیں', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
-    ${kv('بہن بھائیوں میں نمبر', p.birthOrder)}
-    <div class="sechead">رابطہ</div>
-    ${kv('موبائل', p.mobile)}${kv('متبادل', p.altMobile)}${kv('رابطہ (تصدیق)', p.contact)}
-    <div class="sechead">مطلوبہ رشتہ</div>
-    ${kv('عمر / قد', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('تعلیم / شہر', v(p.prefEducation) + ' / ' + v(p.prefCity))}
-    ${kv('ذات / مسلک', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('مطلوبہ ازدواجی حیثیت', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'کوئی بھی'))}${kv('دیگر شرائط', p.otherConditions)}
+    <div class="sechead">ذاتی معلومات / Personal Information</div>
+    ${kv('جنس / Gender', G[p.gender])}${kv('عمر، پیدائش / Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد / Height', p.height)}
+    ${kv('ازدواجی حیثیت / Marital Status', MS[p.maritalStatus])}${kv('بچے / Children', p.children)}${kv('شناختی کارڈ / CNIC', p.cnic)}
+    ${kv('مادری زبان / Mother Tongue', p.motherTongue)}${kv('رنگت / Complexion', p.complexion)}
+    <div class="sechead">مذہبی معلومات / Religious Information</div>
+    ${kv('مذہب، مسلک / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}${kv('ذات / Caste', p.caste)}
+    ${kv('حافظِ قرآن / Hafiz-e-Quran', YN[p.hafizQuran])}${kv('نماز / Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ / Purdah', YN[p.purdah]) : ''}
+    <div class="sechead">تعلیم و ملازمت / Education & Work</div>
+    ${kv('تعلیم / Education', p.education)}${kv('پیشہ / Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('آمدنی / Income', p.income)}
+    <div class="sechead">رہائش / Residence</div>
+    ${kv('صوبہ، ضلع / Province, District', v(p.province) + ' / ' + v(p.district))}${kv('شہر/گاؤں / City/Village', p.city)}${kv('گھر / House', HT[p.houseType])}
+    <div class="sechead">خاندان / Family</div>
+    ${kv('والد/سرپرست / Guardian', p.guardianName)}${kv('والد کا پیشہ / Father\'s Occupation', p.fatherOccupation)}${kv('والدہ کا پیشہ / Mother\'s Occupation', p.motherOccupation)}
+    ${kv('بھائی، بہنیں / Brothers, Sisters', v(p.brothers) + ' / ' + v(p.sisters))}
+    ${kv('شادی شدہ بھائی، بہنیں / Married Brothers, Sisters', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
+    ${kv('بہن بھائیوں میں نمبر / Birth Order', p.birthOrder)}
+    <div class="sechead">رابطہ / Contact</div>
+    ${kv('موبائل / Mobile', p.mobile)}${kv('متبادل / Alternate', p.altMobile)}${kv('رابطہ (تصدیق) / Verified Contact', p.contact)}
+    <div class="sechead">مطلوبہ رشتہ / Partner Preferences</div>
+    ${kv('عمر، قد / Age, Height', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('تعلیم، شہر / Education, City', v(p.prefEducation) + ' / ' + v(p.prefCity))}
+    ${kv('ذات، مسلک / Caste, Sect', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('مطلوبہ ازدواجی حیثیت / Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'کوئی بھی / Any'))}${kv('دیگر شرائط / Other Conditions', p.otherConditions)}
     <div style="margin-top:8px">${imgs} ${cnic}</div>`;
   document.getElementById('mstatus').value = p.status || 'Active';
   document.getElementById('matches').innerHTML = '';
@@ -306,7 +306,7 @@ async function findMatches() {
     if (p.caste && c.caste && has(c.caste, p.caste)) { sc += 5; }
     return { c, sc, why };
   }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
-  box.innerHTML = '<div class="sechead">💞 ممکنہ رشتے (' + scored.length + ')</div>' +
+  box.innerHTML = '<div class="sechead">💞 ممکنہ رشتے / Possible Matches (' + scored.length + ')</div>' +
     (scored.length ? scored.map(x => `
       <div class="kv"><b class="mono">${x.c.id}</b>
         <span>${v(x.c.fullName)} — ${v(x.c.age)} سال، ${v(x.c.city || x.c.district)}، ${v(x.c.caste)}</span>
