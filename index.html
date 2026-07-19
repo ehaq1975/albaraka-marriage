@@ -625,7 +625,7 @@ function toggleLang() { S.lang = S.lang === 'ur' ? 'en' : 'ur'; localStorage.set
 
 /* ------- navigation ------- */
 function show(id) {
-  ['v-land', 'v-login', 'v-dash', 'v-reg', 'v-services'].forEach(v => document.getElementById(v).classList.add('hidden'));
+  ['v-land', 'v-login', 'v-dash', 'v-reg'].forEach(v => document.getElementById(v).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -1207,7 +1207,7 @@ if (BY_ADMIN) {
     if(r&&r.ok){ if(typeof toast==='function')toast('✅ درخواست بھیج دی گئی — زیرِ جائزہ / Request sent — under review'); setView('requests'); }
     else { alert('Error: '+((r&&r.error)||'failed')); }
   }
-  function boot(){ try{ ensureView(); ensureDash(); }catch(e){} }
+  function boot(){ try{ ensureView(); ensureDash(); if(!window.__abwrap && typeof window.show==='function'){ window.__abwrap=1; var _s=window.show; window.show=function(id){ var vs=document.getElementById('v-services'); if(vs&&id!=='v-services')vs.classList.add('hidden'); return _s.apply(this,arguments); }; } }catch(e){} }
   if(document.readyState!=='loading') boot(); else document.addEventListener('DOMContentLoaded', boot);
   setInterval(function(){ try{ ensureDash(); }catch(e){} }, 1500);
 })();
