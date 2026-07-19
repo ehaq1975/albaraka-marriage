@@ -42,7 +42,7 @@ tr:hover td{background:#FFFDF5}
 .chip.m{background:#DBEAFE;color:#1D4ED8}
 .chip.f{background:#FCE7F3;color:#BE185D}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:20px 8px}
-#modal .mcard{background:#fff;border-radius:18px;max-width:720px;width:100%;padding:22px;position:relative}
+#modal .mcard{background:#fff;border-radius:18px;max-width:720px;width:100%;padding:22px;position:relative;max-height:92vh;overflow-y:auto}
 .mclose{position:absolute;top:10px;left:14px;background:#F3F4F6;border:none;border-radius:99px;width:38px;height:38px;font-size:17px;cursor:pointer}
 .kv{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #E5E1D5;padding:5px 2px;font-size:15px}
 .kv b{color:var(--green);white-space:nowrap}
@@ -79,6 +79,19 @@ tr:hover td{background:#FFFDF5}
   <!-- PANEL -->
   <div id="v-panel" class="hidden">
     <div class="stats" id="stats"></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+<h2 style="color:var(--green)">💳 ادائیگی کی درخواستیں / Payment Requests <span id="payc" class="score">0</span></h2>
+<button class="btn btn-o btn-sm" onclick="loadPayments()">🔄 تازہ / Refresh</button>
+</div>
+<div id="payList"><p style="color:var(--muted)">لوڈ ہو رہا ہے… / Loading…</p></div>
+</div>
+<div class="card">
+<h2 style="color:var(--green)">⚙️ قیمتیں و ادائیگی اکاؤنٹس / Pricing & Payment Accounts</h2>
+<p style="color:var(--muted);font-size:14px">ہر سروس کی فیس اور اپنے اکاؤنٹ نمبر یہاں سے تبدیل کریں / Edit each fee and your payment accounts here.</p>
+<div id="pricingBox"></div>
+<button class="btn btn-p btn-sm" onclick="svcSavePricing()" style="margin-top:8px">💾 محفوظ کریں / Save</button>
+</div>
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
@@ -174,7 +187,7 @@ async function enter() {
   document.getElementById('v-login').classList.add('hidden');
   document.getElementById('v-panel').classList.remove('hidden');
   document.getElementById('lo').classList.remove('hidden');
-  loadStats(); search();
+  loadStats(); search(); loadPayments(); loadPricing();
 }
 
 async function loadStats() {
@@ -356,6 +369,40 @@ async function findMatches() {
       : '<p style="text-align:center;color:var(--muted)">کوئی مناسب رشتہ نہیں ملا — فلٹر تبدیل کر کے دستی تلاش کریں</p>');
 }
 function has(a, b) { return String(a || '').toLowerCase().includes(String(b || '').toLowerCase()); }
+
+
+/* ===== v7 commercial services (admin) ===== */
+var SVC_PRICE_FIELDS=[['unlock','پروفائل کھولنا / Profile unlock'],['boost1','بوسٹ 1 ماہ / Boost 1mo'],['boost3','بوسٹ 3 ماہ / Boost 3mo'],['boost6','بوسٹ 6 ماہ / Boost 6mo'],['med3','ثالث 3 ماہ / Mediator 3mo'],['med6','ثالث 6 ماہ / Mediator 6mo'],['med12','ثالث سالانہ / Mediator yr'],['medLump','ثالث یکمشت / Mediator lump'],['verJob','تصدیق سرکاری نوکری / Verify Govt'],['verBiz','تصدیق کاروبار / Verify Business'],['verNadra','تصدیق نادرا / Verify NADRA'],['memberMonthly','ممبرشپ ماہانہ / Membership'],['refCheck','ریفرنس چیک / Reference check'],['nikahPack','نکاح پیکج / Nikah pack']];
+var SVC_PRICING={}, SVC_PAYTO={};
+function svcTypeLabel(r){ if(r.type==='unlock')return '🔒 Unlock '+(r.target||''); if(r.type==='boost')return '⭐ Boost '+(r.tier||''); if(r.type==='mediator')return '🤝 Mediator '+(r.tier||''); if(r.type==='verify')return '🔍 Verify '+(r.vtype||'')+' '+(r.target||''); return r.type; }
+async function loadPayments(){
+  var box=document.getElementById('payList'); if(!box)return;
+  var r=await api('svcListRequests');
+  if(!r.ok){ box.innerHTML='<p style="color:var(--err)">'+(r.error||'error')+'</p>'; return; }
+  var reqs=(r.requests||[]).slice().reverse();
+  var pend=reqs.filter(function(x){return x.status==='pending';}).length;
+  var pc=document.getElementById('payc'); if(pc)pc.textContent=pend;
+  if(!reqs.length){ box.innerHTML='<p style="color:var(--muted)">کوئی درخواست نہیں / No requests yet</p>'; return; }
+  box.innerHTML=reqs.map(function(x){
+    var proof=x.proofUrl?('<a href="'+x.proofUrl+'" target="_blank" class="btn btn-o btn-sm">🧾 ثبوت / Proof</a>'):'<span style="color:var(--muted);font-size:13px">— no proof —</span>';
+    var act=x.status==='pending' ? '<button class="btn btn-p btn-sm" onclick="svcApprovePay(\''+x.rid+'\')">✅ منظور / Approve</button> <button class="btn btn-o btn-sm" style="border-color:var(--err);color:var(--err)" onclick="svcRejectPay(\''+x.rid+'\')">✖ مسترد / Reject</button>' : '<span class="chip '+x.status+'">'+x.status+'</span>';
+    return '<div style="border:1px solid #F1EDE0;border-radius:10px;padding:10px;margin:6px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b>'+svcTypeLabel(x)+'</b><br><small class="mono" style="color:var(--muted)">'+x.rid+' · '+x.user+' · PKR '+x.fee+'</small></div><div>'+proof+'</div></div><div style="margin-top:6px">'+act+'</div></div>';
+  }).join('');
+}
+async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments(); if(typeof loadStats==='function')loadStats(); } else alert('Error: '+r.error); }
+async function svcRejectPay(rid){ if(!confirm('درخواست مسترد کریں؟ / Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments(); else alert('Error: '+r.error); }
+async function loadPricing(){
+  var r=await api('svcGetPricing'); if(!r.ok)return; SVC_PRICING=r.pricing||{}; SVC_PAYTO=r.payto||{};
+  var box=document.getElementById('pricingBox'); if(!box)return;
+  var inp=SVC_PRICE_FIELDS.map(function(f){return '<div><label>'+f[1]+'</label><input type="number" id="pr_'+f[0]+'" value="'+(SVC_PRICING[f[0]]||0)+'"></div>';}).join('');
+  box.innerHTML='<div class="grid">'+inp+'</div><div class="grid" style="margin-top:8px"><div><label>JazzCash</label><input id="pt_jazzcash" value="'+(SVC_PAYTO.jazzcash||'')+'"></div><div><label>EasyPaisa</label><input id="pt_easypaisa" value="'+(SVC_PAYTO.easypaisa||'')+'"></div><div><label>بینک / Bank</label><input id="pt_bank" value="'+(SVC_PAYTO.bank||'')+'"></div></div>';
+}
+async function svcSavePricing(){
+  var pricing={}; SVC_PRICE_FIELDS.forEach(function(f){var e=document.getElementById('pr_'+f[0]); if(e) pricing[f[0]]=Number(e.value)||0;});
+  var g=function(id){var e=document.getElementById(id);return e?e.value:'';};
+  var r=await api('svcSetPricing',{pricing:pricing,payto:{jazzcash:g('pt_jazzcash'),easypaisa:g('pt_easypaisa'),bank:g('pt_bank')}});
+  alert(r.ok?'💾 محفوظ ہوگیا / Saved':'Error: '+r.error);
+}
 
 /* init */
 if (TOKEN) enter();
