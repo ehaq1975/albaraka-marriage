@@ -625,7 +625,7 @@ function toggleLang() { S.lang = S.lang === 'ur' ? 'en' : 'ur'; localStorage.set
 
 /* ------- navigation ------- */
 function show(id) {
-  ['v-land', 'v-login', 'v-dash', 'v-reg'].forEach(v => document.getElementById(v).classList.add('hidden'));
+  ['v-land', 'v-login', 'v-dash', 'v-reg', 'v-services'].forEach(v => document.getElementById(v).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -1119,6 +1119,98 @@ if (BY_ADMIN) {
   show('v-reg'); next(2);
   toast('ایڈمن موڈ — تصدیق کے بغیر رجسٹریشن');
 } else if (S.token && S.profile) { show('v-dash'); fillDash(); }
+</script>
+
+<style>
+.ab-trust{background:#EAF4EE;border:1px solid #CDE6D6;border-inline-start:5px solid var(--green);border-radius:12px;padding:12px 14px;margin:10px 0;font-size:14px;color:#2f5d43}
+.ab-mask{letter-spacing:2px;color:#6B7280;background:#F3F1E9;border-radius:6px;padding:0 8px;font-family:'Atkinson Hyperlegible'}
+.ab-pill{display:inline-block;background:#EAF4EE;color:var(--green);border-radius:99px;padding:2px 12px;font-size:12.5px;margin:2px}
+.ab-tabs{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
+.ab-tab{flex:1;text-align:center;padding:9px;border-radius:10px;background:#fff;border:2px solid #E5E2D8;font-weight:700;font-size:13px;cursor:pointer;color:#6B7280;min-width:88px}
+.ab-tab.on{border-color:var(--green);background:#EAF4EE;color:var(--green)}
+.ab-pkg{border:2px solid #E5E2D8;border-radius:14px;padding:12px;text-align:center;cursor:pointer;background:#fff}
+.ab-pkg:hover{border-color:var(--gold)}
+.ab-price{font-size:19px;font-weight:800;color:var(--green);direction:ltr}
+.ab-ov{position:fixed;inset:0;background:rgba(15,30,20,.55);display:flex;align-items:flex-start;justify-content:center;padding:18px 10px;z-index:9999;overflow-y:auto}
+.ab-modal{background:#fff;border-radius:16px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);margin:auto}
+.ab-mh{position:sticky;top:0;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.ab-acct{background:#F3F1E9;border-radius:10px;padding:10px 12px;font-family:'Atkinson Hyperlegible';font-size:14px;direction:ltr;text-align:left}
+.ab-acct div{display:flex;justify-content:space-between;padding:2px 0}
+.ab-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ab-grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+</style>
+<script>
+(function(){
+  var PR=null, PAY=null, VIEW='matches', MATCHES=null, MYB=null, PENDING=null;
+  function L(u,e){ return (document.documentElement.lang==='en')? e : u; }
+  function money(n){ return 'PKR '+Number(n||0).toLocaleString('en-PK'); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function host(){ return document.querySelector('.wrap')||document.body; }
+  function ensureView(){ if(document.getElementById('v-services'))return; var d=document.createElement('div'); d.id='v-services'; d.className='hidden'; host().appendChild(d); }
+  function ensureDash(){ var dash=document.getElementById('v-dash'); if(!dash||dash.__ab)return; dash.__ab=1;
+    var t=document.createElement('div'); t.className='ab-trust'; t.innerHTML='🛡️ <b>حفاظتی تصدیق / Security Verification</b><br>جعلی پروفائلز کو روکنے اور آپ کا ڈیٹا محفوظ رکھنے کے لیے ہر رکن کی موبائل یا ای میل سے تصدیق کی جاتی ہے۔ کسی کے رابطہ نمبر صرف تصدیق شدہ درخواست کے بعد ظاہر کیے جاتے ہیں۔ / Every member is verified; contact details are shown only after a confirmed request.';
+    dash.appendChild(t);
+    var b=document.createElement('button'); b.className='btn btn-g'; b.style.width='100%'; b.style.marginTop='8px'; b.innerHTML='🔍 رشتے و خدمات دیکھیں / Browse Matches & Services'; b.onclick=function(){ AB.open(); };
+    dash.appendChild(b);
+  }
+  async function ensurePricing(){ if(PR)return; try{ var r=await api('svcGetPricing'); if(r&&r.ok){PR=r.pricing;PAY=r.payto;} }catch(e){} }
+  function feeFor(type,meta){ if(!PR)return 0; if(type==='unlock')return PR.unlock; if(type==='boost')return PR[meta.tier]; if(type==='mediator')return PR[meta.tier]; if(type==='verify')return ({job:PR.verJob,biz:PR.verBiz,nadra:PR.verNadra})[meta.vtype]; return 0; }
+
+  async function open(){ ensureView(); await ensurePricing(); if(typeof show==='function') show('v-services'); else { document.getElementById('v-services').classList.remove('hidden'); } VIEW='matches'; render(); loadMatches(); }
+  function setView(v){ VIEW=v; render(); if(v==='matches')loadMatches(); if(v==='requests')loadRequests(); }
+  window.AB={ open:open, setView:setView, pay:openPay, submit:submitPay, close:closeModal, back:function(){ if(typeof show==='function')show('v-dash'); } };
+  window.openServices=open;
+
+  function tabsHtml(){ var t=[['matches','💚 رشتے'],['boost','⭐ بوسٹ'],['mediator','🤝 ثالث'],['verify','🔍 تصدیق'],['requests','📋 درخواستیں']];
+    return '<div class="ab-tabs">'+t.map(function(x){return '<div class="ab-tab '+(VIEW===x[0]?'on':'')+'" onclick="AB.setView(\''+x[0]+'\')">'+x[1]+'</div>';}).join('')+'</div>'; }
+  function shell(inner){ return '<div class="card"><button class="btn btn-o btn-sm" style="width:auto" onclick="AB.back()">← واپس ڈیش بورڈ / Back</button></div>'+tabsHtml()+inner; }
+  function render(){ var v=document.getElementById('v-services'); if(!v)return; var inner='';
+    if(VIEW==='boost')inner=boostHtml(); else if(VIEW==='mediator')inner=medHtml(); else if(VIEW==='verify')inner=verifyHtml(); else if(VIEW==='requests')inner='<div class="card" id="ab-reqbox">…</div>'; else inner='<div class="card" id="ab-matchbox">لوڈ ہو رہا ہے… / Loading…</div>';
+    v.innerHTML=shell(inner);
+  }
+  async function loadMatches(){ var box=function(){return document.getElementById('ab-matchbox');}; var r=await api('svcMatches'); if(!r||!r.ok){ if(box())box().innerHTML='<p style="color:var(--muted)">'+((r&&r.error)||'error')+'</p>'; return; } MATCHES=r.matches||[]; MYB=r.myBoost; if(r.pricing){PR=r.pricing;PAY=r.payto;} if(!box())return;
+    if(!MATCHES.length){ box().innerHTML='<p style="color:var(--muted)">ابھی کوئی مناسب رشتہ نہیں / No matches yet</p>'; return; }
+    box().innerHTML='<h3 style="color:var(--green)">💚 مناسب رشتے / Suggested Matches</h3><div class="note" style="background:#FFFDF5;border:1px dashed var(--gold);border-radius:10px;padding:8px 10px;font-size:13.5px;color:#6b5a12">ابتدائی پروفائل مفت۔ مکمل رابطہ دیکھنے کے لیے ایک بار کی فیس۔ / Initial profile free. One-time fee to see full contact.</div>'+MATCHES.map(function(p){
+      var head='<div style="display:flex;justify-content:space-between;gap:6px"><b style="color:var(--green)">'+esc(p.name)+(p.boosted?' <span class="chip" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#3B2F04">⭐</span>':'')+'</b><small style="color:var(--muted)">'+esc(p.age)+' · '+esc(p.city)+'</small></div>';
+      var pills='<div style="margin:4px 0"><span class="ab-pill">'+esc(p.edu)+'</span><span class="ab-pill">'+esc(p.prof)+'</span><span class="ab-pill">'+esc(p.marital)+'</span></div>';
+      var body; if(p.unlocked){ body='<div class="kv"><span>موبائل / Mobile</span><b>'+esc(p.mobile||'')+'</b></div>'+(p.email?'<div class="kv"><span>ای میل</span><b>'+esc(p.email)+'</b></div>':'')+'<div class="chip Active" style="margin-top:4px">✅ رابطہ کھل گیا / Unlocked</div>'; }
+      else { body='<div class="kv"><span>موبائل / Mobile</span><span class="ab-mask">03•• ••• ••••</span></div><button class="btn btn-g btn-sm" style="width:100%;margin-top:6px" onclick="AB.pay(\'unlock\',{target:\''+p.id+'\'})">🔒 مکمل پروفائل کھولیں / Unlock — '+money(PR?PR.unlock:0)+'</button>'; }
+      return '<div class="card" style="border:1px solid #EEE;margin:8px 0">'+head+pills+body+'</div>';
+    }).join('');
+  }
+  function boostHtml(){ if(!PR)return '<div class="card">…</div>'; var cur=(MYB?'<span class="chip Active">⭐ فعال / Active</span>':'<span class="chip" style="background:#FEF3C7;color:#92600A">غیر فعال / Not active</span>');
+    var pk=[['boost1','1 ماہ / 1mo',PR.boost1],['boost3','3 ماہ / 3mo',PR.boost3],['boost6','6 ماہ / 6mo',PR.boost6]];
+    return '<div class="card"><h3 style="color:var(--green)">⭐ پروفائل بوسٹ / Profile Boost</h3><p>بوسٹ کے دوران آپ کی پروفائل دوسرے ارکان کی فہرست میں سب سے اوپر اور نمایاں دکھتی ہے۔ / Boosted profiles appear at the top of others\' match lists.</p><div style="margin:6px 0">حیثیت / Status: '+cur+'</div><div class="ab-grid3">'+pk.map(function(k){return '<div class="ab-pkg" onclick="AB.pay(\'boost\',{tier:\''+k[0]+'\'})"><b>'+k[1]+'</b><div class="ab-price">'+money(k[2])+'</div></div>';}).join('')+'</div></div>'; }
+  function medHtml(){ if(!PR)return '<div class="card">…</div>'; var pk=[['med3','3 ماہ / 3mo',PR.med3],['med6','6 ماہ / 6mo',PR.med6],['med12','سالانہ / Yearly',PR.med12],['medLump','یکمشت / Lump sum',PR.medLump]];
+    return '<div class="card"><h3 style="color:var(--green)">🤝 ثالث سروس / Mediator Service</h3><p>ہماری ٹیم آپ کی طرف سے بہترین رشتہ تلاش کرتی ہے، دونوں خاندانوں سے بات کرتی ہے، اور دونوں کی رضامندی تک اصل معلومات خفیہ رکھتی ہے۔ / We find and negotiate the best match on your behalf; identities stay hidden until both sides agree.</p><div class="ab-grid2">'+pk.map(function(k){return '<div class="ab-pkg" onclick="AB.pay(\'mediator\',{tier:\''+k[0]+'\'})"><b>'+k[1]+'</b><div class="ab-price">'+money(k[2])+'</div></div>';}).join('')+'</div></div>'; }
+  function verifyHtml(){ if(!PR)return '<div class="card">…</div>'; var opts=(MATCHES||[]).map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+' ('+p.id+')</option>';}).join('');
+    return '<div class="card"><h3 style="color:var(--green)">🔍 تصدیقی سروس / Verification</h3><p>سرکاری نوکری، ذاتی کاروبار، یا نادرا سے شناختی کارڈ کے ذریعے ازدواجی حیثیت کی ایک بار تصدیق۔ / One-time verification of govt job, business, or marital status via NADRA CNIC.</p><label>پروفائل / Profile</label><select id="ab-vt">'+opts+'</select><div class="ab-grid3" style="margin-top:8px"><div class="ab-pkg" onclick="AB.pay(\'verify\',{vtype:\'job\'})">🏛️ سرکاری<div class="ab-price">'+money(PR.verJob)+'</div></div><div class="ab-pkg" onclick="AB.pay(\'verify\',{vtype:\'biz\'})">🏢 کاروبار<div class="ab-price">'+money(PR.verBiz)+'</div></div><div class="ab-pkg" onclick="AB.pay(\'verify\',{vtype:\'nadra\'})">🆔 نادرا<div class="ab-price">'+money(PR.verNadra)+'</div></div></div></div>'; }
+  async function loadRequests(){ var r=await api('svcMyRequests'); var box=document.getElementById('ab-reqbox'); if(!box)return; if(!r||!r.ok){box.innerHTML='<p>'+((r&&r.error)||'error')+'</p>';return;} var reqs=(r.requests||[]).slice().reverse(); if(!reqs.length){box.innerHTML='<p style="color:var(--muted)">ابھی کوئی درخواست نہیں / No requests yet</p>';return;}
+    box.innerHTML='<h3 style="color:var(--green)">📋 میری درخواستیں / My Requests</h3>'+reqs.map(function(x){ var st={pending:'زیرِ جائزہ / Pending',approved:'منظور / Approved',rejected:'مسترد / Rejected'}[x.status]||x.status; var chip='<span class="chip '+(x.status==='approved'?'Active':(x.status==='pending'?'Pending':''))+'" style="'+(x.status==='rejected'?'background:#FEE2E2;color:#B91C1C':'')+'">'+st+'</span>'; return '<div class="card" style="border:1px solid #EEE;margin:6px 0"><div style="display:flex;justify-content:space-between"><b>'+esc(x.type)+' '+esc(x.target||x.tier||x.vtype||'')+'</b>'+chip+'</div><small style="color:var(--muted)">'+esc(x.rid)+' · '+money(x.fee)+'</small></div>'; }).join(''); }
+
+  function openPay(type,meta){ meta=meta||{}; if(type==='verify'){ var s=document.getElementById('ab-vt'); meta.target=s?s.value:((MATCHES&&MATCHES[0])?MATCHES[0].id:''); } PENDING={type:type,meta:meta,fee:feeFor(type,meta)};
+    var title={unlock:'مکمل پروفائل کھولیں / Unlock',boost:'پروفائل بوسٹ / Boost',mediator:'ثالث سروس / Mediator',verify:'تصدیق / Verification'}[type];
+    var acct='<div class="ab-acct"><div><span>JazzCash</span><b>'+esc(PAY.jazzcash||'')+'</b></div><div><span>EasyPaisa</span><b>'+esc(PAY.easypaisa||'')+'</b></div>'+(PAY.bank?'<div><span>Bank</span><b>'+esc(PAY.bank)+'</b></div>':'')+'</div>';
+    var h='<div class="ab-ov" onclick="if(event.target===this)AB.close()"><div class="ab-modal"><div class="ab-mh"><b>💳 '+title+'</b><button onclick="AB.close()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer">×</button></div><div style="padding:14px">'
+      +'<div class="kv"><span>قابلِ ادائیگی فیس / Fee</span><b class="ab-price">'+money(PENDING.fee)+'</b></div>'
+      +'<label>کسی بھی طریقے سے ادائیگی کریں / Pay by any method</label>'+acct
+      +'<div style="background:#FFFDF5;border:1px dashed var(--gold);border-radius:10px;padding:8px 10px;font-size:13px;color:#6b5a12;margin-top:8px">ادائیگی کے بعد نیچے ٹرانزیکشن/سینڈر نمبر لکھ کر درخواست بھیجیں۔ ایڈمن تصدیق کے بعد سروس فعال ہو جائے گی۔ / After paying, enter your transaction/sender number below and submit. Service activates after admin confirms.</div>'
+      +'<label>ٹرانزیکشن آئی ڈی / بھیجنے والا نمبر (Payment reference)</label><input id="ab-ref" placeholder="TID / 03xx-xxxxxxx">'
+      +'<button class="btn btn-p" style="width:100%;margin-top:10px" onclick="AB.submit()">درخواست بھیجیں / Send request</button>'
+      +'<button class="btn btn-o btn-sm" style="width:100%" onclick="AB.close()">منسوخ / Cancel</button></div></div></div>';
+    var w=document.createElement('div'); w.id='ab-modalroot'; w.innerHTML=h; document.body.appendChild(w);
+  }
+  function closeModal(){ var m=document.getElementById('ab-modalroot'); if(m)m.remove(); }
+  async function submitPay(){ if(!PENDING)return; var ref=(document.getElementById('ab-ref')||{}).value||''; var m=PENDING.meta;
+    var payload={type:PENDING.type,fee:PENDING.fee,note:ref}; if(m.target)payload.target=m.target; if(m.tier)payload.tier=m.tier; if(m.vtype)payload.vtype=m.vtype;
+    var r=await api('svcCreateRequest',payload); closeModal();
+    if(r&&r.ok){ if(typeof toast==='function')toast('✅ درخواست بھیج دی گئی — زیرِ جائزہ / Request sent — under review'); setView('requests'); }
+    else { alert('Error: '+((r&&r.error)||'failed')); }
+  }
+  function boot(){ try{ ensureView(); ensureDash(); }catch(e){} }
+  if(document.readyState!=='loading') boot(); else document.addEventListener('DOMContentLoaded', boot);
+  setInterval(function(){ try{ ensureDash(); }catch(e){} }, 1500);
+})();
 </script>
 </body>
 </html>
