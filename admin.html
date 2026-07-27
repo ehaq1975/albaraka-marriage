@@ -102,7 +102,7 @@ tr:hover td{background:#FFFDF5}
         </div>
       </div>
       <div class="grid">
-        <div><label>تلاش / Search (Name/ID/Mobile)</label><input id="f-q" placeholder="نام یا ABM-0001"></div>
+        <div><label>پروفائل آئی ڈی / موبائل — Profile ID / Mobile</label><input id="f-q" placeholder="ABM-0001 یا 03xx-xxxxxxx"></div>
         <div><label>جنس / Gender</label><select id="f-gender"><option value="">سب / All</option><option value="male">مرد / Male</option><option value="female">عورت / Female</option></select></div>
         <div><label>عمر کم از کم / Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
         <div><label>عمر زیادہ سے زیادہ / Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
@@ -187,7 +187,7 @@ async function enter() {
   document.getElementById('v-login').classList.add('hidden');
   document.getElementById('v-panel').classList.remove('hidden');
   document.getElementById('lo').classList.remove('hidden');
-  loadStats(); search(); loadPayments(); loadPricing();
+  loadStats(); var __adminDefaults=1; try{var _fs=document.getElementById('f-status'); if(_fs)_fs.value='Pending';}catch(e){} search(); loadPayments(); loadPricing();
 }
 
 async function loadStats() {
