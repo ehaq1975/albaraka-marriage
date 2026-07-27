@@ -187,7 +187,7 @@ async function enter() {
   document.getElementById('v-login').classList.add('hidden');
   document.getElementById('v-panel').classList.remove('hidden');
   document.getElementById('lo').classList.remove('hidden');
-  loadStats(); var __adminDefaults=1; try{var _fs=document.getElementById('f-status'); if(_fs)_fs.value='Pending';}catch(e){} search(); loadPayments(); loadPricing();
+  loadStats(); search(); loadPayments(); loadPricing();
 }
 
 async function loadStats() {
