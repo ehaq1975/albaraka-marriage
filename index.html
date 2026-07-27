@@ -194,7 +194,7 @@ footer a{color:var(--green)}
     </div>
     <h3 class="sect-title" data-ur="طریقہ کار — صرف 4 آسان مراحل" data-en="How it works — 4 easy steps">طریقہ کار — صرف 4 آسان مراحل</h3>
     <div class="hiw">
-      <div><div class="n">1</div><span data-ur="واٹس ایپ یا ای میل سے تصدیق" data-en="Verify via WhatsApp or email">واٹس ایپ یا ای میل سے تصدیق</span></div>
+      <div><div class="n">1</div><span data-ur="ای میل سے تصدیق" data-en="Verify via email">ای میل سے تصدیق</span></div>
       <div><div class="n">2</div><span data-ur="فارم مکمل کریں (آواز سے بھی لکھ سکتے ہیں)" data-en="Fill the form (voice typing supported)">فارم مکمل کریں (آواز سے بھی لکھ سکتے ہیں)</span></div>
       <div><div class="n">3</div><span data-ur="پروفائل آئی ڈی اور پاس ورڈ حاصل کریں" data-en="Get your Profile ID & password">پروفائل آئی ڈی اور پاس ورڈ حاصل کریں</span></div>
       <div><div class="n">4</div><span data-ur="ہماری ٹیم مناسب رشتے تلاش کر کے رابطہ کرے گی" data-en="Our team finds matches & contacts you">ہماری ٹیم مناسب رشتے تلاش کر کے رابطہ کرے گی</span></div>
@@ -287,11 +287,10 @@ footer a{color:var(--green)}
       <h2 style="color:var(--green)" data-ur="تصدیق کریں" data-en="Verify yourself">تصدیق کریں</h2>
       <p data-ur="مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں" data-en="Choose how to receive your free 4-digit code">مفت 4 ہندسوں کا کوڈ حاصل کرنے کا طریقہ چنیں</p>
       <div class="opts" id="chan">
-        <div class="opt" data-v="whatsapp">💚 WhatsApp</div>
         <div class="opt" data-v="email">✉️ Email</div>
       </div>
-      <label id="contactlbl" data-ur="موبائل نمبر / ای میل" data-en="Mobile / Email">موبائل نمبر / ای میل</label>
-      <input id="contact" style="direction:ltr" inputmode="tel" placeholder="03xx xxxxxxx">
+      <label id="contactlbl" data-ur="ای میل" data-en="Email">ای میل</label>
+      <input id="contact" style="direction:ltr" inputmode="email" placeholder="name@email.com">
       <div style="height:10px"></div>
       <button class="btn btn-p" onclick="sendOtp()" id="sendbtn" data-ur="کوڈ بھیجیں" data-en="Send code">کوڈ بھیجیں</button>
       <div id="otpArea" class="hidden" style="margin-top:16px">
@@ -701,12 +700,7 @@ async function sendOtp() {
     if (!r.ok) throw r.error;
     S.data.contact = c; S.data.otpChannel = S.channel;
     document.getElementById('otpArea').classList.remove('hidden');
-    if (r.mode === 'whatsapp') {
-      window.open('https://wa.me/' + r.number + '?text=' + encodeURIComponent('AL-BARAKA CODE: ' + r.code), '_blank');
-      document.getElementById('demoOtp').textContent = (S.lang === 'ur' ? 'واٹس ایپ کھلا — کوڈ: ' : 'WhatsApp opened — code: ') + r.code;
-      document.getElementById('demoOtp').classList.remove('hidden');
-      S.demoOtp = r.code;
-    } else if (r.mode === 'demo') {
+    if (r.mode === 'demo') {
       document.getElementById('demoOtp').textContent = 'DEMO code: 1234';
       document.getElementById('demoOtp').classList.remove('hidden');
     }
