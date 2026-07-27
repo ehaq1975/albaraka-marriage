@@ -1132,9 +1132,10 @@ if (BY_ADMIN) {
     w.innerHTML='<b style="color:var(--green);font-size:16px">آپ کی پروفائل فعال ہے / Your profile is active</b><br><span style="color:var(--muted)">ہماری تجربہ کار ٹیم آپ کے لیے مناسب اور باوقار رشتے تلاش کر کے خود آپ سے رابطہ کرے گی، اِن شاء اللہ۔ آپ کو کچھ کرنے کی ضرورت نہیں۔ / Our experienced team will find suitable, dignified matches for you and contact you directly, InshaAllah. Nothing more is required from you.</span>';
     dash.appendChild(w);
   }
-  function boot(){ try{ ensureLanding(); ensureDash(); }catch(e){} }
+  function ensureUploadNote(){ var step=document.getElementById('s2'); if(!step||step.__abu)return; step.__abu=1; var n=document.createElement('div'); n.className='ab-trust'; n.innerHTML='<b>اختیاری / Optional</b><br>آپ چاہیں تو تصویر اور شناختی کارڈ ابھی چھوڑ کر <b>اگلا مرحلہ</b> دبائیں اور بعد میں شامل کریں۔ یہ معلومات مکمل طور پر خفیہ ہیں، صرف تصدیق کے لیے، کسی دوسرے رکن کو نہیں دکھائی جاتیں۔ / You may skip the photo &amp; CNIC for now (press Next) and add them later. This information is strictly confidential, used only for verification, and never shown to other members.'; step.insertBefore(n, step.firstChild); }
+  function boot(){ try{ ensureLanding(); ensureDash(); ensureUploadNote(); }catch(e){} }
   if(document.readyState!=='loading')boot(); else document.addEventListener('DOMContentLoaded',boot);
-  setInterval(function(){ try{ ensureLanding(); ensureDash(); }catch(e){} },1500);
+  setInterval(function(){ try{ ensureLanding(); ensureDash(); ensureUploadNote(); }catch(e){} },1500);
 })();
 </script>
 
