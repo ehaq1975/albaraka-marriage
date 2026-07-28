@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>البرکہ — رجسٹریشن فلو v3 (Prototype)</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--bg:#FBFAF7;--card:#fff;--ink:#22303C;--muted:#6B7280;--line:#E4E0D5;--ok:#15803D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif;background:var(--bg);color:var(--ink);line-height:2}
+.demo{background:#3B2F04;color:var(--gold2);text-align:center;font-size:12px;padding:6px;font-family:'Atkinson Hyperlegible'}
+.wrap{max-width:640px;margin:0 auto;padding:14px 16px 44px}
+.head{display:flex;align-items:center;gap:10px;margin:8px 0 4px}
+.logo{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;color:var(--gold2);font-size:19px}
+.head h1{font-size:18px;color:var(--green)}
+.head small{display:block;font-family:'Atkinson Hyperlegible';font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.save{margin-inline-start:auto;font-family:'Atkinson Hyperlegible';font-size:11.5px;color:var(--ok);opacity:0;transition:.3s}
+.save.on{opacity:1}
+.bar{height:7px;background:#EDEAE0;border-radius:99px;overflow:hidden;margin:12px 0 4px}
+.fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green2));width:0;transition:.4s}
+.pcap{text-align:center;font-family:'Atkinson Hyperlegible';font-size:12px;color:var(--muted);margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 18px;box-shadow:0 1px 3px rgba(20,40,30,.05),0 10px 26px rgba(20,40,30,.04);min-height:330px;display:flex;flex-direction:column}
+.q{font-size:19px;color:var(--green);margin-bottom:4px;font-weight:700}
+.qsub{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.7}
+label{display:block;font-size:14.5px;font-weight:700;color:var(--green);margin:12px 0 4px}
+label .en{font-family:'Atkinson Hyperlegible';font-weight:400;color:var(--muted);font-size:11px}
+input,select{width:100%;min-height:52px;border:2px solid #D9D5C8;border-radius:12px;padding:8px 14px;font-size:16px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:3px solid var(--gold2);border-color:var(--gold)}
+.other{margin-top:8px;border-style:dashed;border-color:var(--gold)}
+.opts{display:grid;gap:10px}
+.opt{border:2px solid #D9D5C8;border-radius:14px;padding:15px;cursor:pointer;text-align:center;font-size:16px;transition:.12s;background:#fff}
+.opt:hover{border-color:var(--gold)}
+.opt.on{border-color:var(--green);background:#EAF4EE;color:var(--green);font-weight:700;box-shadow:0 0 0 2px var(--green) inset}
+.opt small{display:block;font-family:'Atkinson Hyperlegible';font-size:11px;color:var(--muted);margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nav{display:flex;gap:10px;margin-top:auto;padding-top:18px}
+.btn{flex:1;border:none;border-radius:13px;padding:14px;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.btn-p{background:var(--green);color:#fff}.btn-o{background:#fff;color:var(--green);border:2px solid #CFE0D6}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hint{background:#FFFDF5;border:1px dashed var(--gold);border-radius:12px;padding:10px 12px;font-size:12.5px;color:#6b5a12;margin-top:10px;line-height:1.7}
+.readonly{background:#F3F1E9!important;color:var(--green)!important;font-weight:700}
+.kv{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:6px 0;font-size:13.5px}.kv b{color:var(--green)}
+.otpbox{display:flex;gap:8px;justify-content:center;direction:ltr;margin:14px 0}
+.otpbox input{width:52px;text-align:center;font-size:22px;font-family:'Atkinson Hyperlegible'}
+.hidden{display:none}
+.done{text-align:center;padding:14px 0}
+.ring{width:84px;height:84px;border-radius:50%;border:5px solid var(--ok);display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--ok);margin:6px auto 10px}
+.expert{background:#EAF4EE;border-inline-start:4px solid var(--green);border-radius:10px;padding:8px 12px;font-size:12px;color:#2f5d43;margin-top:10px;line-height:1.7}
+.opt2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tag{display:inline-block;background:#EAF4EE;color:var(--green);border-radius:99px;padding:1px 10px;font-size:11.5px;margin:2px;font-family:'Atkinson Hyperlegible'}
+</style>
+</head>
+<body>
+<div class="demo">🧪 PROTOTYPE v3 / نمونہ — سینئر میچ میکر لاجک + ہر ڈراپ ڈاؤن میں "دیگر"</div>
+<div class="wrap">
+  <div class="head"><div class="logo">﷽</div><div><h1>البرکہ میرج بیورو</h1><small>Al-Baraka Marriage Bureau</small></div><div class="save" id="save">✓ خودکار محفوظ</div></div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="pcap" id="pcap"></div>
+  <div class="card" id="card"></div>
+</div>
+<script>
+var S={};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function flash(){var s=document.getElementById('save');s.classList.add('on');setTimeout(function(){s.classList.remove('on');},1100);}
+function set(k,v){S[k]=v;flash();}
+function setSel(k,v){S[k]=v;flash();render();}
+function val(k){return S[k]==='__other'?(S[k+'_o']||''):(S[k]||'');}
+/* reusable dropdown WITH "دیگر / Others" + conditional custom input */
+function dd(k,opts){
+  var cur=S[k]||'',isOther=cur==='__other';
+  var o='<option value="">— منتخب کریں —</option>'
+    +opts.map(function(x){return '<option value="'+esc(x)+'" '+(cur===x?'selected':'')+'>'+x+'</option>';}).join('')
+    +'<option value="__other" '+(isOther?'selected':'')+'>دیگر — اپنا لکھیں…</option>';
+  var custom=isOther?'<input class="other" placeholder="اپنا جواب لکھیں…" value="'+esc(S[k+'_o']||'')+'" oninput="S[\''+k+'_o\']=this.value;flash()">':'';
+  return '<select onchange="setSel(\''+k+'\',this.value)">'+o+'</select>'+custom;
+}
+function lbl(u,e){return '<label>'+u+' <span class="en">/ '+e+'</span></label>';}
+
+var step=0,STEPS=[];
+function isF(){return S.gender==='female';}
+function calcAge(){if(!S.dob)return '';var d=new Date(S.dob);if(isNaN(d))return '';var t=new Date(),a=t.getFullYear()-d.getFullYear(),m=t.getMonth()-d.getMonth();if(m<0||(m===0&&t.getDate()<d.getDate()))a--;return a>0&&a<120?a:'';}
+function youPoss(){return S.forWhom==='son'?'بیٹے کی':S.forWhom==='daughter'?'بیٹی کی':S.forWhom==='relative'?'اُن کی':'آپ کی';}
+
+function buildSteps(){
+  STEPS=['who','marital'];
+  if(S.marital&&S.marital!=='single')STEPS.push('children');
+  STEPS.push('personal','religious','work','family','prefs','verify','done');
+}
+function pct(){return Math.round(step/(STEPS.length-1)*100);}
+function render(){
+  buildSteps(); if(step>=STEPS.length)step=STEPS.length-1;
+  document.getElementById('fill').style.width=pct()+'%';
+  document.getElementById('pcap').textContent='مرحلہ '+(step+1)+' / '+STEPS.length+'  ·  '+pct()+'%';
+  var v=STEPS[step],f={who:sWho,marital:sMarital,children:sChildren,personal:sPersonal,religious:sReligious,work:sWork,family:sFamily,prefs:sPrefs,verify:sVerify,done:sDone}[v];
+  document.getElementById('card').innerHTML=f();
+}
+function next(){if(step<STEPS.length-1){step++;render();}}
+function back(){if(step>0){step--;render();}}
+function nav(ok){return '<div class="nav">'+(step>0?'<button class="btn btn-o" onclick="back()">← پچھلا</button>':'')+'<button class="btn btn-p" onclick="next()" '+(ok?'':'disabled')+'>اگلا →</button></div>';}
+
+function sWho(){
+  var wf=[['self','اپنے لیے','For myself'],['son','اپنے بیٹے کے لیے','For my son'],['daughter','اپنی بیٹی کے لیے','For my daughter'],['relative','کسی رشتہ دار کے لیے','For a relative']];
+  if(S.forWhom==='son')S.gender='male'; if(S.forWhom==='daughter')S.gender='female';
+  var g=''; if(S.forWhom==='self'||S.forWhom==='relative'){g=lbl('جنس','Gender')+'<div class="grid2"><div class="opt '+(S.gender==='male'?'on':'')+'" onclick="set(\'gender\',\'male\');render()">مرد / لڑکا</div><div class="opt '+(S.gender==='female'?'on':'')+'" onclick="set(\'gender\',\'female\');render()">عورت / لڑکی</div></div>';}
+  return '<div class="q">السلام علیکم! آئیے شروع کریں</div><div class="qsub">یہ رجسٹریشن کس کے لیے ہے؟ اسی کے مطابق سوالات ترتیب پائیں گے۔</div>'
+    +'<div class="opts">'+wf.map(function(o){return '<div class="opt '+(S.forWhom===o[0]?'on':'')+'" onclick="set(\'forWhom\',\''+o[0]+'\');render()">'+o[1]+'<small>'+o[2]+'</small></div>';}).join('')+'</div>'+g
+    +'<div class="expert">👳 سینئر میچ میکر: مقصد اور جنس پہلے معلوم کرنے سے لڑکوں اور لڑکیوں کے لیے الگ، مختصر اور بامعنی سوالات آتے ہیں۔</div>'+nav(!!S.forWhom&&!!S.gender);
+}
+function pickMarital(x){ S.maritalTxt=x; S.marital=(x=='کنوارہ'||x=='کنواری')?'single':'notsingle'; render(); }
+function sMarital(){
+  var o=isF()?['کنواری','طلاق یافتہ','بیوہ','دوسری شادی کی خواہشمند','خلع یافتہ']:['کنوارہ','طلاق یافتہ','رنڈوا','دوسری شادی کے خواہشمند'];
+  return '<div class="q">'+youPoss()+' ازدواجی حیثیت؟</div><div class="qsub">سب سے اہم فلٹر۔ اگر پہلی شادی ہے تو ہم اولاد کے بارے میں نہیں پوچھیں گے۔</div>'
+    +'<div class="opts">'+o.map(function(x){return '<div class="opt '+(S.maritalTxt===x?'on':'')+'" onclick="pickMarital(\''+x+'\')">'+x+'</div>';}).join('')+'</div>'
+    +'<div class="expert">👳 میچ میکر: کنوارے، طلاق یافتہ/خلع، بیوہ/رنڈوا اور دوسری شادی — چار الگ پول ہیں۔ کبھی بھی ان کو آپس میں بغیر رضامندی نہیں ملایا جاتا۔</div>'+nav(!!S.marital);
+}
+function sChildren(){
+  var cb=S.hasChildren==='yes'?(lbl('اولاد کی تعداد','No. of children')+'<input type="number" min="1" value="'+esc(S.children||'')+'" oninput="set(\'children\',this.value)">'
+    +lbl('اولاد کس کے پاس رہتی ہے؟','Children live with')+dd('childrenWith',['میرے/اُن کے پاس','سابقہ شریکِ حیات کے پاس','خاندان کے پاس','مشترکہ'])
+    +lbl('کیا مزید اولاد چاہتے ہیں؟','Want more children?')+dd('wantMore',['جی ہاں','نہیں','فیصلہ نہیں کیا'])):'';
+  return '<div class="q">پچھلی شادی کی تفصیل</div><div class="qsub">یہ صرف اس لیے کہ حیثیت پہلی شادی نہیں ہے۔</div>'
+    +lbl('کیا اولاد ہے؟','Any children?')+'<div class="grid2"><div class="opt '+(S.hasChildren==='no'?'on':'')+'" onclick="set(\'hasChildren\',\'no\');set(\'children\',\'0\');render()">نہیں</div><div class="opt '+(S.hasChildren==='yes'?'on':'')+'" onclick="set(\'hasChildren\',\'yes\');render()">ہاں</div></div>'+cb
+    +lbl('پچھلی شادی ختم ہونے کی مختصر وجہ (اختیاری)','Reason (optional)')+dd('reason',['طبیعت/مزاج کی ناہمواری','بے اولادی','خاندانی مسائل','شریکِ حیات کا انتقال','دیگر'])
+    +'<div class="expert">👳 میچ میکر: اولاد کی موجودگی، اُن کی کفالت، اور "مزید اولاد" کی خواہش — یہ تینوں دوسری شادی کے رشتوں میں فیصلہ کن ہیں۔</div>'+nav(!!S.hasChildren);
+}
+function sPersonal(){
+  var age=calcAge(); if(age)S.age=age;
+  return '<div class="q">ذاتی معلومات</div><div class="qsub">تاریخِ پیدائش سے عمر خودکار نکل آئے گی۔</div>'
+    +lbl('تاریخِ پیدائش','Date of birth')+'<input type="date" value="'+esc(S.dob||'')+'" oninput="set(\'dob\',this.value);document.getElementById(\'ageF\').value=calcAge()?calcAge()+\' سال\':\'\'">'
+    +lbl('عمر (خودکار)','Age (auto)')+'<input id="ageF" class="readonly" readonly value="'+(age?age+' سال':'')+'">'
+    +lbl('قد','Height')+dd('height',['4ft 8in','4ft 10in','5ft 0in','5ft 2in','5ft 4in','5ft 6in','5ft 8in','5ft 10in','6ft 0in','6ft 2in'])
+    +lbl('رنگت','Complexion')+dd('complexion',['گورا','گندمی','سانولا'])
+    +lbl('ذات / برادری','Caste')+dd('caste',['جٹ','آرائیں','راجپوت','شیخ','ملک/اعوان','گجر','مغل','سید','انصاری','کشمیری','بلوچ','پٹھان','میمن','ملک'])
+    +'<div class="hint">💡 ہر فہرست میں "دیگر" موجود ہے — منتخب کرتے ہی نیچے اپنا جواب لکھنے کا خانہ کھل جاتا ہے۔</div>'+nav(!!S.dob&&!!age);
+}
+function sReligious(){
+  var extra=isF()?lbl('پردہ','Purdah')+dd('purdah',['مکمل پردہ (نقاب)','حجاب/اسکارف','نہیں'])
+    :lbl('داڑھی','Beard')+dd('beard',['سنت داڑھی','ٹرمڈ داڑھی','بغیر داڑھی']);
+  return '<div class="q">دینی معلومات</div><div class="qsub">اسلام کے تحت مسلک، دینی تعلیم اور عبادات۔</div>'
+    +lbl('مسلک','Sect')+dd('sect',['سنی','اہلحدیث','دیوبندی','بریلوی','شیعہ'])
+    +lbl('دینی تعلیم','Religious education')+dd('deeni',['ناظرہ قرآن','حافظِ قرآن','عالم/عالمہ','بنیادی دینی تعلیم','دینی مدرسہ'])
+    +lbl('نماز کی پابندی','Prayers')+dd('prayer',['باقاعدہ (پانچ وقت)','اکثر','کبھی کبھار'])+extra
+    +'<div class="expert">👳 میچ میکر: مسلک اور عملی دینداری کی سطح کا میل رشتے کی مضبوطی کی بنیاد ہے — خاندان اسی کو سب سے پہلے دیکھتے ہیں۔</div>'+nav(!!S.sect);
+}
+function sWork(){
+  var f=isF()?lbl('شادی کے بعد ملازمت؟','Work after marriage?')+dd('workAfter',['جی ہاں','نہیں','شریکِ حیات کی رضامندی سے']):'';
+  return '<div class="q">تعلیم و پیشہ</div><div class="qsub"> </div>'
+    +lbl('تعلیم','Education')+dd('education',['میٹرک','ایف اے/ایف ایس سی','گریجویٹ','ماسٹرز','ایم فل/پی ایچ ڈی','ڈاکٹر (MBBS)','انجینئر','سی اے/اے سی سی اے','حافظ/عالم'])
+    +lbl('پیشہ','Profession')+dd('profession',['سرکاری ملازمت','نجی ملازمت','اپنا کاروبار','ڈاکٹر','انجینئر','استاد/ٹیچر','بیرون ملک ملازمت','طالبعلم','گھریلو'])
+    +lbl('ماہانہ آمدنی','Monthly income')+dd('income',['25,000 سے کم','25,000 – 50,000','50,000 – 1 لاکھ','1 – 2 لاکھ','2 لاکھ سے زیادہ'])+f
+    +lbl('شہر','City')+dd('city',['لاہور','کراچی','اسلام آباد','راولپنڈی','فیصل آباد','ملتان','گوجرانوالہ','شیخوپورہ','پشاور','کوئٹہ','سیالکوٹ','بہاولپور'])
+    +nav(!!S.education);
+}
+function sFamily(){
+  return '<div class="q">خاندان و طرزِ زندگی</div><div class="qsub">یہ معلومات موزوں خاندان تلاش کرنے میں بہت مدد دیتی ہیں۔</div>'
+    +lbl('خاندانی نظام','Family system')+dd('family',['مشترکہ خاندان','الگ گھر','کوئی ترجیح نہیں'])
+    +lbl('رہائش','Housing')+dd('housing',['ذاتی گھر','کرایہ کا گھر','آبائی گھر'])
+    +lbl('مقام','Residency')+dd('overseas',['پاکستان میں مقیم','بیرون ملک مقیم','دوہری شہریت'])
+    +lbl('سگریٹ نوشی','Smoking')+dd('smoking',['نہیں','کبھی کبھار','ہاں'])
+    +lbl('صحت','Health')+dd('health',['مکمل صحتمند','معمولی/قابلِ علاج مسئلہ','خصوصی فرد (معذوری)'])
+    +lbl('تھیلیسیمیا ٹیسٹ','Thalassemia test')+dd('thal',['ہو چکا (منفی)','نہیں ہوا','معلوم نہیں'])
+    +'<div class="expert">👳 میچ میکر: خاندانی نظام (مشترکہ/الگ)، بیرون ملک، اور صحت/تھیلیسیمیا — یہ اکثر رشتہ بننے یا ٹوٹنے کی اصل وجوہات ہوتی ہیں، اس لیے شروع میں واضح کرنا بہتر ہے۔</div>'+nav(true);
+}
+function sPrefs(){
+  var ac=(S.marital==='single')?lbl('کیا اولاد والے رشتے کو قبول کریں گے؟','Accept partner with children?')+dd('prefAcceptChildren',['جی ہاں','نہیں','حالات کے مطابق']):'';
+  return '<div class="q">مطلوبہ رشتہ</div><div class="qsub">'+youPoss()+' ترجیحات — انہی کی بنیاد پر موزوں رشتے دکھائے جائیں گے۔</div>'
+    +lbl('مطلوبہ عمر','Preferred age')+'<input value="'+esc(S.prefAge||'')+'" placeholder="مثلاً 25 تا 32" oninput="set(\'prefAge\',this.value)">'
+    +lbl('ذات کی ترجیح','Caste preference')+dd('prefCaste',['اپنی ذات لازمی','ذات ترجیح، لازمی نہیں','کوئی قید نہیں'])
+    +lbl('خاندان میں رشتہ؟','Within family?')+dd('cousin',['خاندان میں ترجیح','خاندان سے باہر','کوئی قید نہیں'])
+    +lbl('مقام کی ترجیح','Location preference')+dd('locPref',['اسی شہر میں','منتقلی قابلِ قبول','بیرون ملک قابلِ قبول'])
+    +lbl('جہیز کے بارے میں','On dowry')+dd('dowry',['سادگی — جہیز کے بغیر','روایتی','کوئی قید نہیں'])+ac
+    +lbl('کتنے عرصے میں رشتہ مطلوب؟','Timeline')+dd('urgency',['جلد (اگلے 3 ماہ)','6 ماہ میں','سال بھر میں','کوئی جلدی نہیں'])
+    +lbl('کوئی خاص شرط/جو ناقابلِ قبول ہو (اختیاری)','Deal-breaker (optional)')+'<input value="'+esc(S.dealBreaker||'')+'" placeholder="مثلاً سگریٹ نوشی قبول نہیں…" oninput="set(\'dealBreaker\',this.value)">'
+    +'<div class="expert">👳 میچ میکر: ترجیحات (عمر بینڈ، ذات، خاندان میں/باہر، مقام، جہیز، اولاد قبول) رشتہ ملانے کا انجن ہیں — تاکہ صرف واقعی موزوں لوگ سامنے آئیں۔ یہی فلٹر ایڈمن پینل کے میچ اسکور میں لگتا ہے۔</div>'+nav(true);
+}
+function sVerify(){
+  return '<div class="q">تصدیق — آخری مرحلہ</div><div class="qsub">تمام معلومات محفوظ ہو چکی ہیں۔ اب صرف موبائل نمبر کی ایک بار تصدیق باقی ہے۔ (شناختی کارڈ اسکین کی ضرورت نہیں)</div>'
+    +lbl('رابطہ کس سے کیا جائے؟','Contact / guardian')+dd('guardian',['والد','بھائی','والدہ','خود (بالغ)','چچا/ماموں'])
+    +lbl('موبائل نمبر','Mobile')+'<input inputmode="numeric" value="'+esc(S.mobile||'')+'" placeholder="03xx-xxxxxxx" oninput="set(\'mobile\',this.value);render()">'
+    +((S.mobile&&S.mobile.length>=10)?'<button class="btn btn-o" style="margin-top:10px" onclick="document.getElementById(\'oa\').classList.remove(\'hidden\')">کوڈ بھیجیں (نمونہ: 1234)</button>':'')
+    +'<div id="oa" class="hidden">'+lbl('4 ہندسوں کا کوڈ','4-digit code')+'<div class="otpbox"><input maxlength="1" oninput="om(this,0)"><input maxlength="1" oninput="om(this,1)"><input maxlength="1" oninput="om(this,2)"><input maxlength="1" oninput="om(this,3)"></div><div id="om" style="text-align:center;font-size:13px"></div></div>'
+    +'<div class="hint">✅ خودکار محفوظ: پورا فارم بھرتے وقت ہر جواب فوراً محفوظ ہوتا رہا۔ OTP صرف اب، بالکل آخر میں۔</div>'
+    +'<div class="nav"><button class="btn btn-o" onclick="back()">← پچھلا</button><button class="btn btn-p" id="fb" onclick="next()" '+(S.otpOk?'':'disabled')+'>مکمل کریں ✓</button></div>';
+}
+var otp=['','','',''];
+function om(el,i){otp[i]=el.value;if(el.value&&el.nextElementSibling)el.nextElementSibling.focus();var c=otp.join(''),m=document.getElementById('om');if(c.length===4){if(c==='1234'){S.otpOk=true;m.textContent='✅ تصدیق ہوگئی';m.style.color='var(--ok)';document.getElementById('fb').disabled=false;}else{m.textContent='کوڈ غلط ہے';m.style.color='#B91C1C';}}}
+function sDone(){
+  var age=calcAge();
+  var rows=[['کس کے لیے',{self:'اپنے لیے',son:'بیٹے',daughter:'بیٹی',relative:'رشتہ دار'}[S.forWhom]||'—'],['جنس',isF()?'عورت/لڑکی':'مرد/لڑکا'],['ازدواجی حیثیت',S.maritalTxt||'—'],
+    ['اولاد',S.marital==='single'?'لاگو نہیں':(S.hasChildren==='yes'?(S.children||'')+' — '+val('childrenWith'):'نہیں')],['عمر',age?age+' سال':'—'],['قد',val('height')||'—'],['ذات',val('caste')||'—'],['مسلک',val('sect')||'—'],
+    ['تعلیم',val('education')||'—'],['پیشہ',val('profession')||'—'],['شہر',val('city')||'—'],['خاندانی نظام',val('family')||'—'],['مقام',val('overseas')||'—'],['رابطہ',val('guardian')||'—'],['موبائل',S.mobile||'—']];
+  var cat=[isF()?'خاتون':'مرد',S.maritalTxt||'',age?age+'سال':'',val('caste'),val('sect'),val('city'),val('overseas')].filter(Boolean);
+  return '<div class="done"><div class="ring">✓</div><div class="q">مبارک ہو! رجسٹریشن مکمل</div><div class="qsub">آپ کی پروفائل زیرِ جائزہ ہے۔ ٹیم موزوں رشتے تلاش کر کے رابطہ کرے گی۔</div></div>'
+    +'<div>'+rows.map(function(r){return '<div class="kv"><span>'+r[0]+'</span><b>'+esc(r[1])+'</b></div>';}).join('')+'</div>'
+    +'<div class="expert" style="margin-top:12px">🎯 میچ میکنگ زمرہ: '+cat.map(function(c){return '<span class="tag">'+esc(c)+'</span>';}).join('')+'<br>انہی ساختہ فیلڈز پر ایڈمن پینل خودکار میچ اسکور لگائے گا (حیثیت کی مطابقت، عمر بینڈ، ذات/مسلک ترجیح، مقام، اولاد قبول)۔</div>'
+    +'<div class="nav"><button class="btn btn-o" onclick="S={};step=0;render()">↻ دوبارہ آزمائیں</button></div>';
+}
+render();
+</script>
+</body>
+</html>
