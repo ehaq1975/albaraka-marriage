@@ -1122,18 +1122,23 @@ if (BY_ADMIN) {
 </style>
 <script>
 (function(){
+  function apply(){ if(typeof applyLang==='function'){ try{ applyLang(); }catch(e){} } }
   function ensureLanding(){ var land=document.getElementById('v-land'); if(!land||land.__abt)return; land.__abt=1;
     var t=document.createElement('div'); t.className='ab-trust';
-    t.innerHTML='<b>تصدیق شدہ و رازدارانہ / Verified &amp; Confidential</b><br>ہر رکن کی موبائل یا ای میل سے تصدیق کی جاتی ہے، اور آپ کی تمام معلومات مکمل رازداری سے محفوظ رکھی جاتی ہیں۔ رجسٹریشن بالکل مفت ہے۔ / Every member is verified by mobile or email, and all your information is kept strictly confidential. Registration is completely free.';
-    land.insertBefore(t, land.firstChild);
+    t.innerHTML='<b data-ur="تصدیق شدہ و رازدارانہ" data-en="Verified and Confidential">تصدیق شدہ و رازدارانہ</b><br><span data-ur="ہر رکن کی موبائل یا ای میل سے تصدیق کی جاتی ہے، اور آپ کی تمام معلومات مکمل رازداری سے محفوظ رکھی جاتی ہیں۔ رجسٹریشن بالکل مفت ہے۔" data-en="Every member is verified by mobile or email, and all your information is kept strictly confidential. Registration is completely free.">ہر رکن کی موبائل یا ای میل سے تصدیق کی جاتی ہے۔</span>';
+    land.insertBefore(t, land.firstChild); apply();
   }
   function ensureDash(){ var dash=document.getElementById('v-dash'); if(!dash||dash.__absvc)return; dash.__absvc=1;
     var w=document.createElement('div'); w.className='ab-note';
-    w.innerHTML='<b style="color:var(--green);font-size:16px">آپ کی پروفائل فعال ہے / Your profile is active</b><br><span style="color:var(--muted)">ہماری تجربہ کار ٹیم آپ کے لیے مناسب اور باوقار رشتے تلاش کر کے خود آپ سے رابطہ کرے گی، اِن شاء اللہ۔ آپ کو کچھ کرنے کی ضرورت نہیں۔ / Our experienced team will find suitable, dignified matches for you and contact you directly, InshaAllah. Nothing more is required from you.</span>';
-    dash.appendChild(w);
+    w.innerHTML='<b data-ur="آپ کی پروفائل فعال ہے" data-en="Your profile is active" style="color:var(--green);font-size:16px">آپ کی پروفائل فعال ہے</b><br><span data-ur="ہماری تجربہ کار ٹیم آپ کے لیے مناسب اور باوقار رشتے تلاش کر کے خود آپ سے رابطہ کرے گی، اِن شاء اللہ۔ آپ کو کچھ کرنے کی ضرورت نہیں۔" data-en="Our experienced team will find suitable, dignified matches for you and contact you directly, InshaAllah. Nothing more is required from you." style="color:var(--muted)">ہماری ٹیم آپ سے رابطہ کرے گی۔</span>';
+    dash.appendChild(w); apply();
   }
-  function ensureUploadNote(){ var step=document.getElementById('s2'); if(!step||step.__abu)return; step.__abu=1; var n=document.createElement('div'); n.className='ab-trust'; n.innerHTML='<b>اختیاری / Optional</b><br>آپ چاہیں تو تصویر اور شناختی کارڈ ابھی چھوڑ کر <b>اگلا مرحلہ</b> دبائیں اور بعد میں شامل کریں۔ یہ معلومات مکمل طور پر خفیہ ہیں، صرف تصدیق کے لیے، کسی دوسرے رکن کو نہیں دکھائی جاتیں۔ / You may skip the photo &amp; CNIC for now (press Next) and add them later. This information is strictly confidential, used only for verification, and never shown to other members.'; step.insertBefore(n, step.firstChild); }
-  function boot(){ try{ ensureLanding(); ensureDash(); ensureUploadNote(); }catch(e){} }
+  function ensureUploadNote(){ var step=document.getElementById('s2'); if(!step||step.__abu)return; step.__abu=1;
+    var n=document.createElement('div'); n.className='ab-trust';
+    n.innerHTML='<b data-ur="اختیاری" data-en="Optional">اختیاری</b><br><span data-ur="آپ چاہیں تو تصویر اور شناختی کارڈ ابھی چھوڑ کر اگلا مرحلہ دبائیں اور بعد میں شامل کریں۔ یہ معلومات مکمل طور پر خفیہ ہیں، صرف تصدیق کے لیے، کسی دوسرے رکن کو نہیں دکھائی جاتیں۔" data-en="You may skip the photo and CNIC for now (press Next) and add them later. This information is strictly confidential, used only for verification, and never shown to other members.">آپ چاہیں تو تصویر اور شناختی کارڈ ابھی چھوڑ کر بعد میں شامل کریں۔</span>';
+    step.insertBefore(n, step.firstChild); apply();
+  }
+  function boot(){ try{ ensureLanding(); ensureDash(); ensureUploadNote(); apply(); }catch(e){} }
   if(document.readyState!=='loading')boot(); else document.addEventListener('DOMContentLoaded',boot);
   setInterval(function(){ try{ ensureLanding(); ensureDash(); ensureUploadNote(); }catch(e){} },1500);
 })();
