@@ -250,9 +250,9 @@ function showProfile(p) {
     <div class="sechead">ذاتی معلومات / Personal Information</div>
     ${kv('جنس / Gender', G[p.gender])}${kv('عمر، پیدائش / Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد / Height', p.height)}
     ${kv('ازدواجی حیثیت / Marital Status', MS[p.maritalStatus])}${kv('بچے / Children', p.children)}${kv('شناختی کارڈ / CNIC', p.cnic)}
-    ${kv('مادری زبان / Mother Tongue', p.motherTongue)}${kv('رنگت / Complexion', p.complexion)}
+    ${kv('ذات / Caste', p.caste)}${kv('مادری زبان / Mother Tongue', p.motherTongue)}${kv('رنگت / Complexion', p.complexion)}
     <div class="sechead">مذہبی معلومات / Religious Information</div>
-    ${kv('مذہب، مسلک / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}${kv('ذات / Caste', p.caste)}
+    ${kv('مذہب، مسلک / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}
     ${kv('حافظِ قرآن / Hafiz-e-Quran', YN[p.hafizQuran])}${kv('نماز / Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ / Purdah', YN[p.purdah]) : ''}
     <div class="sechead">تعلیم و ملازمت / Education & Work</div>
     ${kv('تعلیم / Education', p.education)}${kv('پیشہ / Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('آمدنی / Income', p.income)}
@@ -407,5 +407,6 @@ async function svcSavePricing(){
 /* init */
 if (TOKEN) enter();
 </script>
+<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
 </body>
 </html>
