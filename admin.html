@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ایڈمن پینل — البرکہ میرج بیورو</title>
+<title>Al-Baraka Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--cream:#FAF7F0;--ink:#1F2937;--muted:#6B7280;--err:#B91C1C;--ok:#15803D}
@@ -52,6 +52,14 @@ tr:hover td{background:#FFFDF5}
 .mono{direction:ltr;font-family:'Atkinson Hyperlegible';text-align:left}
 @media(max-width:640px){ .tblwrap{overflow-x:auto} h1{font-size:17px} }
 @media print{ body *{visibility:hidden} #modal,#modal *{visibility:visible} #modal{position:absolute;background:#fff} .noprint{display:none!important} }
+
+.admin-sticky{position:sticky;top:0;z-index:50;background:#fff;padding:12px 16px;border-bottom:2px solid #E3C766;box-shadow:0 4px 16px rgba(0,0,0,.1);border-radius:0 0 12px 12px;margin:-22px -22px 14px;width:calc(100% + 44px)}
+.admin-sticky .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.admin-sticky .btn{min-height:42px;padding:8px 14px;font-size:14px;width:auto;flex:1;min-width:120px}
+.profile-photo-frame{width:160px;height:190px;object-fit:cover;border-radius:14px;border:4px solid #C9A227;box-shadow:0 8px 28px rgba(20,83,45,.25),0 0 0 2px #14532D;filter:brightness(1.08) contrast(1.05) saturate(1.12);display:block;margin:10px auto}
+.profile-photo-wrap{text-align:center;padding:14px 0;background:linear-gradient(135deg,#f8f6f0,#fff);border-radius:14px;margin-bottom:12px;border:2px solid #E3C766}
+.btn-pdf{background:linear-gradient(135deg,#C9A227,#E3C766);color:#3B2F04;border:none;border-radius:12px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px;display:inline-flex;align-items:center;gap:6px}
+@media print{.noprint{display:none!important}}
 </style>
 </head>
 <body>
@@ -61,15 +69,15 @@ tr:hover td{background:#FFFDF5}
       <div><h1>البرکہ میرج بیورو — ایڈمن پینل</h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
     </div>
     <div><a href="index.html" class="btn btn-o btn-sm">🏠 مین سائٹ / Main Site</a>
-    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">لاگ آؤٹ / Logout</button></div>
+    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">Logout</button></div>
   </div>
 
   <!-- LOGIN -->
   <div id="v-login" class="card" style="max-width:420px;margin:30px auto">
-    <h2 style="color:var(--green)">ایڈمن لاگ ان / Admin Login</h2>
-    <label>صارف نام / Username</label>
+    <h2 style="color:var(--green)">Admin Login</h2>
+    <label>Username</label>
     <input id="au" class="mono" autocomplete="username">
-    <label>پاس ورڈ / Password</label>
+    <label>Password</label>
     <input id="ap" type="password" class="mono" autocomplete="current-password">
     <div id="aerr" class="badge hidden"></div>
     <div style="height:12px"></div>
@@ -98,7 +106,7 @@ tr:hover td{background:#FFFDF5}
         <h2 style="color:var(--green)">🔎 پروفائل تلاش / Search Profiles</h2>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ نیا پروفائل / Add Profile</a>
-          <button class="btn btn-g btn-sm" onclick="search()">تلاش کریں / Search</button>
+          <button class="btn btn-g btn-sm" onclick="search()">Search</button>
         </div>
       </div>
       <div class="grid">
@@ -151,6 +159,7 @@ tr:hover td{background:#FFFDF5}
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
@@ -237,65 +246,47 @@ function authFail(r) {
 }
 
 function openP(i) { showProfile(ALL[i]); }
-function showProfile(p) {
-  CUR = p;
-  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🖼️ تصویر</a>`).join(' ');
-  const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪 شناختی کارڈ ${i + 1}</a>`).join(' ');
-  document.getElementById('mbody').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-      <h2 style="color:var(--green)">${v(p.fullName)}</h2>
-      <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
-      <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
-    </div>
-    <div class="sechead">ذاتی معلومات / Personal Information</div>
-    ${kv('جنس / Gender', G[p.gender])}${kv('عمر، پیدائش / Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('قد / Height', p.height)}
-    ${kv('ازدواجی حیثیت / Marital Status', MS[p.maritalStatus])}${kv('بچے / Children', p.children)}${kv('شناختی کارڈ / CNIC', p.cnic)}
-    ${kv('ذات / Caste', p.caste)}${kv('مادری زبان / Mother Tongue', p.motherTongue)}${kv('رنگت / Complexion', p.complexion)}
-    <div class="sechead">مذہبی معلومات / Religious Information</div>
-    ${kv('مذہب، مسلک / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}
-    ${kv('حافظِ قرآن / Hafiz-e-Quran', YN[p.hafizQuran])}${kv('نماز / Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv('پردہ / Purdah', YN[p.purdah]) : ''}
-    <div class="sechead">تعلیم و ملازمت / Education & Work</div>
-    ${kv('تعلیم / Education', p.education)}${kv('پیشہ / Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('آمدنی / Income', p.income)}
-    <div class="sechead">رہائش / Residence</div>
-    ${kv('صوبہ، ضلع / Province, District', v(p.province) + ' / ' + v(p.district))}${kv('شہر/گاؤں / City/Village', p.city)}${kv('گھر / House', HT[p.houseType])}
-    <div class="sechead">خاندان / Family</div>
-    ${kv('والد/سرپرست / Guardian', p.guardianName)}${kv('والد کا پیشہ / Father\'s Occupation', p.fatherOccupation)}${kv('والدہ کا پیشہ / Mother\'s Occupation', p.motherOccupation)}
-    ${kv('بھائی، بہنیں / Brothers, Sisters', v(p.brothers) + ' / ' + v(p.sisters))}
-    ${kv('شادی شدہ بھائی، بہنیں / Married Brothers, Sisters', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
-    ${kv('بہن بھائیوں میں نمبر / Birth Order', p.birthOrder)}
-    <div class="sechead">رابطہ / Contact</div>
-    ${kv('موبائل / Mobile', p.mobile)}${kv('متبادل / Alternate', p.altMobile)}${kv('رابطہ (تصدیق) / Verified Contact', p.contact)}
-    <div class="sechead">مطلوبہ رشتہ / Partner Preferences</div>
-    ${kv('عمر، قد / Age, Height', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('تعلیم، شہر / Education, City', v(p.prefEducation) + ' / ' + v(p.prefCity))}
-    ${kv('ذات، مسلک / Caste, Sect', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('مطلوبہ ازدواجی حیثیت / Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'کوئی بھی / Any'))}${kv('دیگر شرائط / Other Conditions', p.otherConditions)}
-    <div style="margin-top:8px">${imgs} ${cnic}</div>`;
-  document.getElementById('mstatus').value = p.status || 'Active';
-  document.getElementById('matches').innerHTML = '';
-  const pa = document.getElementById('pendActions');
-  pa.innerHTML = '';
-  if (p.status === 'Pending') {
-    pa.innerHTML = '<button class="btn btn-p btn-sm" onclick="approveP()">✅ منظور کریں / Approve</button>' +
-      (!String(p.contact || '').includes('@')
-        ? '<button class="btn btn-o btn-sm" onclick="waNotice(\'review\')">📱 زیرِ جائزہ اطلاع واٹس ایپ / Send review notice</button>' : '');
-  }
-  pa.innerHTML += '<button class="btn btn-o btn-sm" onclick="unlockP()">🔓 اکاؤنٹ ان لاک / Unlock account</button>';
-  document.getElementById('modal').classList.remove('hidden');
+function showProfile(p){
+  if(!p)return;window._currentProfile=p;
+  var h='<div class="admin-sticky"><div class="row">';
+  h+='<button class="btn btn-pdf" onclick="download1PagePDF()">1-Page PDF</button>';
+  h+='<button class="btn btn-p" style="background:#15803D" onclick="approveP()">Approve</button>';
+  h+='<button class="btn btn-o" onclick="waNotice()">WhatsApp</button>';
+  h+='<button class="btn btn-o" onclick="unlockP()">Unlock</button>';
+  h+='<select id="mstatus" style="min-height:42px;border-radius:12px;border:2px solid #D6D3C8;padding:4px 10px;font-size:14px" onchange="changeStatus(this.value)">';
+  h+='<option value="">Change Status</option><option value="Active">Active</option><option value="Pending">Pending</option><option value="Married">Married</option><option value="Closed">Closed</option></select>';
+  h+='</div></div>';
+  if(p.photo1Url){h+='<div class="profile-photo-wrap"><img class="profile-photo-frame" src="'+p.photo1Url+'"><div style="margin-top:6px;font-weight:700;color:#14532D">'+v(p.fullName)+'</div><div style="color:#6B7280;font-size:13px">'+v(p.id)+'</div></div>';}
+  h+='<div class="sec"><h4>Personal Details</h4>';
+  h+=kv("Name",p.fullName)+kv("Gender",p.gender)+kv("Age / DOB",v(p.age)+(p.dob?" - "+p.dob:""));
+  h+=kv("Height",p.height)+kv("Marital Status",p.maritalStatus)+kv("Children",p.children);
+  h+=kv("Mother Tongue",p.motherTongue)+kv("Complexion",p.complexion)+'</div>';
+  h+='<div class="sec"><h4>Religion</h4>';
+  h+=kv("Religion / Sect",v(p.religion)+" / "+v(p.sect))+kv("Caste",p.caste);
+  h+=kv("Hafiz Quran",p.hafizQuran)+kv("Prayer",p.prayerRegular);
+  if(p.gender==="female")h+=kv("Purdah",p.purdah);h+='</div>';
+  h+='<div class="sec"><h4>Education & Work</h4>';
+  h+=kv("Education",p.education)+kv("Specialization",p.specialization||"--");
+  h+=kv("Profession",p.profession)+kv("Company",p.company)+kv("Income",p.income)+'</div>';
+  h+='<div class="sec"><h4>Residence</h4>';
+  h+=kv("Province / District",v(p.province)+" / "+v(p.district))+kv("City",p.city)+kv("House",p.houseType)+'</div>';
+  h+='<div class="sec"><h4>Family</h4>';
+  h+=kv("Father / Guardian",p.guardianName)+kv("Father Occ.",p.fatherOccupation);
+  h+=kv("Mother Occ.",p.motherOccupation)+kv("Brothers",p.brothers)+kv("Sisters",p.sisters);
+  h+=kv("Married Bros",p.marriedBrothers)+kv("Married Sis",p.marriedSisters)+kv("Birth Order",p.birthOrder)+'</div>';
+  h+='<div class="sec"><h4>Contact</h4>';
+  h+=kv("Mobile",p.mobile)+kv("Alt Mobile",p.altMobile)+kv("Email",p.email||p.contact)+'</div>';
+  h+='<div class="sec"><h4>Partner Preferences</h4>';
+  h+=kv("Pref Age",p.prefAge)+kv("Pref Height",p.prefHeight)+kv("Pref Education",p.prefEducation);
+  h+=kv("Pref City",p.prefCity)+kv("Pref Caste",p.prefCaste)+kv("Pref Sect",p.prefSect);
+  h+=kv("Pref Marital",p.prefMaritalStatus)+kv("Other",p.otherConditions)+'</div>';
+  h+='<div class="sec noprint"><h4>Admin</h4>';
+  h+=kv("Status",p.status)+kv("Registered",p.createdAt)+kv("Approved",p.approvedAt||"--")+'</div>';
+  document.getElementById("mbody").innerHTML=h;
+  if(document.getElementById("mstatus"))document.getElementById("mstatus").value=p.status||"";
+  document.getElementById("pendActions").innerHTML="";
+  document.getElementById("modal").classList.remove("hidden");
 }
-
-async function approveP() {
-  if (!confirm('پروفائل ' + CUR.id + ' کو منظور کریں؟ / Approve this profile?')) return;
-  const r = await api('adminApprove', { profileId: CUR.id });
-  if (!r.ok) return alert('Error: ' + r.error);
-  CUR.status = 'Active';
-  let msg = '✅ پروفائل منظور ہوگئی / Profile approved.';
-  if (r.emailed) msg += '\n📧 منظوری کی ای میل خودکار بھیج دی گئی / Approval email sent automatically.';
-  alert(msg);
-  if (r.whatsapp) {
-    if (confirm('یہ صارف واٹس ایپ سے رجسٹرڈ ہے — ایک کلک میں منظوری کا پیغام واٹس ایپ پر بھیجیں؟\nUser registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
-  }
-  search(); loadStats();
-}
-
 function waNotice(kind) {
   const p = CUR;
   const num = String(p.mobile || p.contact || '').replace(/\D/g, '').replace(/^0/, '92');
@@ -407,6 +398,16 @@ async function svcSavePricing(){
 /* init */
 if (TOKEN) enter();
 </script>
-<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
+<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();
+function download1PagePDF(){if(!window._currentProfile)return;var p=window._currentProfile;var J=window.jspdf.jsPDF;var d=new J("p","mm","a4");var w=210;d.setFillColor(20,83,45);d.rect(0,0,w,38,"F");d.setTextColor(227,199,102);d.setFontSize(22);d.text("Al-Baraka Marriage Bureau",w/2,16,{align:"center"});d.setFontSize(11);d.setTextColor(255,255,255);d.text("Rishta Profile",w/2,24,{align:"center"});d.setFillColor(255,255,255);d.roundedRect(15,28,40,8,2,2,"F");d.setTextColor(20,83,45);d.setFontSize(13);d.text(v(p.id),35,34,{align:"center"});var y=48;function sec(t,f){d.setFillColor(253,246,227);d.rect(12,y-1,w-24,7,"F");d.setTextColor(20,83,45);d.setFontSize(11);d.setFont(undefined,"bold");d.text(t,15,y+4);y+=9;d.setFont(undefined,"normal");d.setFontSize(10);for(var i=0;i<f.length;i++){if(y>282){d.addPage();y=15;}d.setTextColor(20,83,45);d.text(f[i][0],16,y);d.setTextColor(31,41,55);d.text(String(v(f[i][1])).substring(0,60),80,y);y+=6;}y+=3;}
+sec("Personal",[["Name",p.fullName],["Gender",p.gender],["Age/DOB",v(p.age)+(p.dob?" - "+p.dob:"")],["Height",p.height],["Marital",p.maritalStatus],["Children",p.children],["Lang/Tone",v(p.motherTongue)+"/"+v(p.complexion)]]);
+sec("Religion",[["Religion/Sect",v(p.religion)+"/"+v(p.sect)],["Caste",p.caste],["Hafiz/Prayer",(p.hafizQuran||"--")+"/"+(p.prayerRegular||"--")]]);
+sec("Education",[["Education",p.education],["Profession",v(p.profession)+(p.company?" - "+p.company:"")],["Income",p.income]]);
+sec("Residence",[["Province/District",v(p.province)+"/"+v(p.district)],["City",p.city],["House",p.houseType]]);
+sec("Family",[["Father",p.guardianName],["Parents",v(p.fatherOccupation)+"/"+v(p.motherOccupation)],["Bros/Sis",v(p.brothers)+"/"+v(p.sisters)],["Married",v(p.marriedBrothers)+"/"+v(p.marriedSisters)]]);
+sec("Contact",[["Mobile",p.mobile]]);
+sec("Preferences",[["Age/Height",v(p.prefAge)+"/"+v(p.prefHeight)],["Edu/City",v(p.prefEducation)+"/"+v(p.prefCity)],["Caste/Sect",v(p.prefCaste)+"/"+v(p.prefSect)],["Other",p.otherConditions]]);
+d.setTextColor(150);d.setFontSize(8);d.text("Al-Baraka | +92 315 4822167 | "+new Date().toLocaleDateString(),w/2,289,{align:"center"});d.save((p.id||"profile")+"_1page.pdf");}
+</script>
 </body>
 </html>
