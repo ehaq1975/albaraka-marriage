@@ -250,7 +250,7 @@ function authFail(r) {
 function openP(i) { showProfile(ALL[i]); }
 function showProfile(p) {
   CUR = p;
-  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🖼️ Photo</a>`).join(' ');
+  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank"><img src="${u}" style="width:120px;height:140px;object-fit:cover;border-radius:10px;border:3px solid #C9A227;margin:4px"></a>`).join(' ');
   const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪  ${i + 1}</a>`).join(' ');
   document.getElementById('mbody').innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
