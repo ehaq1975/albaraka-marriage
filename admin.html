@@ -1,4 +1,11 @@
-<!DOCTYPE html><html lang="ur" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Al-Baraka Admin Panel</title><link href="https:/fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet"><style>
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> — </title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
 :root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--cream:#FAF7F0;--ink:#1F2937;--muted:#6B7280;--err:#B91C1C;--ok:#15803D}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.9}
@@ -44,14 +51,6 @@ tr:hover td{background:#FFFDF5}
 .score{background:var(--gold2);color:#3B2F04;font-weight:700;border-radius:99px;padding:1px 12px;font-size:13px;font-family:'Atkinson Hyperlegible'}
 .mono{direction:ltr;font-family:'Atkinson Hyperlegible';text-align:left}
 @media(max-width:640px){ .tblwrap{overflow-x:auto} h1{font-size:17px} }
-@media print{ body *{visibility:hidden} #modal,#modal *{visibility:visible} #modal{position:absolute;background:#fff} .noprint{display:none!important} }
-
-.admin-sticky{position:sticky;top:0;z-index:50;background:#fff;padding:12px 16px;border-bottom:2px solid #E3C766;box-shadow:0 4px 16px rgba(0,0,0,.1);border-radius:0 0 12px 12px;margin:-22px -22px 14px;width:calc(100% + 44px)}
-.admin-sticky .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.admin-sticky .btn{min-height:42px;padding:8px 14px;font-size:14px;width:auto;flex:1;min-width:120px}
-.profile-photo-frame{width:160px;height:190px;object-fit:cover;border-radius:14px;border:4px solid #C9A227;box-shadow:0 8px 28px rgba(20,83,45,.25),0 0 0 2px #14532D;filter:brightness(1.08) contrast(1.05) saturate(1.12);display:block;margin:10px auto}
-.profile-photo-wrap{text-align:center;padding:14px 0;background:linear-gradient(135deg,#f8f6f0,#fff);border-radius:14px;margin-bottom:12px;border:2px solid #E3C766}
-.btn-pdf{background:linear-gradient(135deg,#C9A227,#E3C766);color:#3B2F04;border:none;border-radius:12px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;min-height:42px;display:inline-flex;align-items:center;gap:6px}
 @media print{
 .noprint{display:none!important}
 body>*:not(#modal){display:none!important}
@@ -59,20 +58,120 @@ body>*:not(#modal){display:none!important}
 #modal>div{position:static!important;max-height:none!important;overflow:visible!important;box-shadow:none!important;margin:0!important;padding:10px!important;max-width:100%!important}
 .admin-sticky{position:static!important;display:none!important}
 .btn,.btn-pdf{display:none!important}
-.profile-photo-frame{width:120px!important;height:140px!important}
 *{font-size:11px!important;line-height:1.3!important}
 h3{font-size:14px!important}
 table{page-break-inside:avoid}
 }
-</style></head><body><div class="wrap"><div class="top"><div class="brand"><div class="logo">🕌</div><div><h1> — </h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div></div><div><a href="index.html" class="btn btn-o btn-sm">🏠  / Main Site</a><button class="btn btn-o btn-sm hidden" id="lo" onclick="logout">Logout</button></div></div><!-- LOGIN --><div id="v-login" class="card" style="max-width:420px;margin:30px auto"><h2 style="color:var(--green)">Admin Login</h2><label>Username</label><input id="au" class="mono" autocomplete="username"><label>Password</label><input id="ap" type="password" class="mono" autocomplete="current-password"><div id="aerr" class="badge hidden"></div><div style="height:12px"></div><button class="btn btn-p" style="width:100%" onclick="adminLogin">Log in</button></div><!-- PANEL --><div id="v-panel" class="hidden"><div class="stats" id="stats"></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><h2 style="color:var(--green)">💳  / Payment Requests <span id="payc" class="score">0</span></h2><button class="btn btn-o btn-sm" onclick="loadPayments">🔄  / Refresh</button></div><div id="payList"><p style="color:var(--muted)">… / Loading…</p></div></div><div class="card"><h2 style="color:var(--green)">⚙️  / Pricing & Payment Accounts</h2><p style="color:var(--muted);font-size:14px"> / Edit each fee and your payment accounts here.</p><div id="pricingBox"></div><button class="btn btn-p btn-sm" onclick="svcSavePricing" style="margin-top:8px">💾  / Save</button></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><h2 style="color:var(--green)">🔎 Search Profiles</h2><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ Add Profile</a><button class="btn btn-g btn-sm" onclick="search">Search</button></div></div><div class="grid"><div><label>— Profile ID / Mobile</label><input id="f-q" placeholder="ABM-0001  03xx-xxxxxxx"></div><div><label>Gender</label><select id="f-gender"><option value=""> / All</option><option value="male">Male</option><option value="female"> / Female</option></select></div><div><label>Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div><div><label>Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div><div><label>District</label><input id="f-district" placeholder=" / Lahore"></div><div><label>City</label><input id="f-city"></div><div><label>Caste</label><input id="f-caste" placeholder="… / Jutt, Arain…"></div><div><label>Sect</label><select id="f-sect"><option value=""> / All</option><option></option><option></option><option></option><option></option><option></option><option></option></select></div><div><label>Education</label><input id="f-education" placeholder="… / Doctor, Engineer…"></div><div><label>Marital Status</label><select id="f-marital"><option value=""> / All</option><option value="single">/ Single</option><option value="divorced"> / Divorced</option><option value="widowed">/ Widowed</option><option value="second"> / Second marriage</option></select></div><div><label>Status</label><select id="f-status"><option value=""> / All</option><option value="Pending"> / Pending</option><option value="Active">Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option></select></div></div><div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters">Clear</button></div></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="color:var(--green)">Results <span id="rc" class="score">0</span></h2><button class="btn btn-o btn-sm" onclick="search">🔄 Refresh</button></div><div class="tblwrap"><table id="tbl"><thead><tr><th>ID</th><th><br><small>Name</small></th><th><br><small>Gender</small></th><th><br><small>Age</small></th><th><br><small>Height</small></th><th><br><small>City</small></th><th><br><small>Caste</small></th><th><br><small>Sect</small></th><th><br><small>Education</small></th><th><br><small>Status</small></th><th></th></tr></thead><tbody id="tbody"></tbody></table></div></div></div></div><!-- DETAIL MODAL --><div id="modal" class="hidden" onclick="if(event.target===this)closeModal"><div class="mcard"><button class="mclose noprint" onclick="closeModal">✖</button><div id="mbody"></div><div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-g btn-sm" onclick="waShare">💚  / Share</button><button class="btn btn-p btn-sm" onclick="window.print">🖨️  / Print PDF</button><button class="btn btn-o btn-sm" onclick="findMatches">💞  / Find Matches</button><button class="btn btn-o btn-sm" onclick="resetPw">🔑  / Reset Password</button><select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus"><option value="Pending"> / Pending</option><option value="Active">Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option></select></div><div class="noprint" id="pendActions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div><div id="matches"></div></div></div><script src="https:/cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script>
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><div class="logo">🕌</div>
+      <div><h1> — </h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
+    </div>
+    <div><a href="index.html" class="btn btn-o btn-sm">🏠  / Main Site</a>
+    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()"> / Logout</button></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="v-login" class="card" style="max-width:420px;margin:30px auto">
+    <h2 style="color:var(--green)"> / Admin Login</h2>
+    <label> / Username</label>
+    <input id="au" class="mono" autocomplete="username">
+    <label> / Password</label>
+    <input id="ap" type="password" class="mono" autocomplete="current-password">
+    <div id="aerr" class="badge hidden"></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-p" style="width:100%" onclick="adminLogin()"> / Log in</button>
+  </div>
+
+  <!-- PANEL -->
+  <div id="v-panel" class="hidden">
+    <div class="stats" id="stats"></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+<h2 style="color:var(--green)">💳  / Payment Requests <span id="payc" class="score">0</span></h2>
+<button class="btn btn-o btn-sm" onclick="loadPayments()">🔄  / Refresh</button>
+</div>
+<div id="payList"><p style="color:var(--muted)">… / Loading…</p></div>
+</div>
+<div class="card">
+<h2 style="color:var(--green)">⚙️  / Pricing & Payment Accounts</h2>
+<p style="color:var(--muted);font-size:14px"> / Edit each fee and your payment accounts here.</p>
+<div id="pricingBox"></div>
+<button class="btn btn-p btn-sm" onclick="svcSavePricing()" style="margin-top:8px">💾  / Save</button>
+</div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <h2 style="color:var(--green)">🔎  / Search Profiles</h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕  / Add Profile</a>
+          <button class="btn btn-g btn-sm" onclick="search()"> / Search</button>
+        </div>
+      </div>
+      <div class="grid">
+        <div><label> — Profile ID / Mobile</label><input id="f-q" placeholder="ABM-0001  03xx-xxxxxxx"></div>
+        <div><label> / Gender</label><select id="f-gender"><option value=""> / All</option><option value="male"> / Male</option><option value="female"> / Female</option></select></div>
+        <div><label> / Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
+        <div><label> / Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
+        <div><label> / District</label><input id="f-district" placeholder=" / Lahore"></div>
+        <div><label> / City</label><input id="f-city"></div>
+        <div><label> / Caste</label><input id="f-caste" placeholder="… / Jutt, Arain…"></div>
+        <div><label> / Sect</label><select id="f-sect"><option value=""> / All</option><option></option><option></option><option></option><option></option><option></option><option></option></select></div>
+        <div><label> / Education</label><input id="f-education" placeholder="… / Doctor, Engineer…"></div>
+        <div><label> / Marital Status</label><select id="f-marital"><option value=""> / All</option><option value="single"> / Single</option><option value="divorced"> / Divorced</option><option value="widowed"> / Widowed</option><option value="second"> / Second marriage</option></select></div>
+        <div><label> / Status</label><select id="f-status"><option value=""> / All</option><option value="Pending"> / Pending</option><option value="Active"> / Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option></select></div>
+      </div>
+      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()"> / Clear</button></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="color:var(--green)"> / Results <span id="rc" class="score">0</span></h2>
+        <button class="btn btn-o btn-sm" onclick="search()">🔄  / Refresh</button>
+      </div>
+      <div class="tblwrap">
+        <table id="tbl">
+          <thead><tr><th>ID</th><th><br><small>Name</small></th><th><br><small>Gender</small></th><th><br><small>Age</small></th><th><br><small>Height</small></th><th><br><small>City</small></th><th><br><small>Caste</small></th><th><br><small>Sect</small></th><th><br><small>Education</small></th><th><br><small>Status</small></th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="modal" class="hidden" onclick="if(event.target===this)closeModal()">
+  <div class="mcard">
+    <button class="mclose noprint" onclick="closeModal()">✖</button>
+    <div id="mbody"></div>
+    <div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-g btn-sm" onclick="waShare()">💚  / Share</button>
+      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️  / Print PDF</button>
+      <button class="btn btn-o btn-sm" onclick="findMatches()">💞  / Find Matches</button>
+      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑  / Reset Password</button>
+      <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
+        <option value="Pending"> / Pending</option><option value="Active"> / Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option>
+      </select>
+    </div>
+    <div class="noprint" id="pendActions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div id="matches"></div>
+  </div>
+</div>
+
+<script>
 const CONFIG = {
-  API_URL: 'https:/script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbyiwXhESs14FwefGa6tMOTCed7U-P4BJaIR4UYTOiGrsFwSm1wuCP2NRS1id0tD1aJPUg/exec',
   SUPPORT_WHATSAPP: '923154822167'
 };
 let TOKEN = sessionStorage.getItem('admToken') || '';
 let ALL = [], CUR = null;
 
-const MS = { single: '/', divorced: '', widowed: '/' };
+const MS = { single: '', divorced: '', widowed: '' };
 const G = { male: '', female: '' };
 const YN = { yes: '', no: '', always: '', sometimes: '', rarely: '' };
 const HT = { owned: '', rented: '' };
@@ -84,55 +183,68 @@ async function api(action, payload) {
     method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(Object.assign({ action, token: TOKEN }, payload || {}))
   });
-  return res.json;
+  return res.json();
 }
 
-async function adminLogin {
+async function adminLogin() {
   const err = document.getElementById('aerr'); err.classList.add('hidden');
-  const r = await api('adminLogin', { username: document.getElementById('au').value.trim, password: document.getElementById('ap').value });
+  const r = await api('adminLogin', { username: document.getElementById('au').value.trim(), password: document.getElementById('ap').value });
   if (!r.ok) { err.textContent = ''; err.classList.remove('hidden'); return; }
   TOKEN = r.token; sessionStorage.setItem('admToken', TOKEN);
-  enter;
+  enter();
 }
-function logout { TOKEN = ''; sessionStorage.removeItem('admToken'); location.reload; }
+function logout() { TOKEN = ''; sessionStorage.removeItem('admToken'); location.reload(); }
 
-async function enter {
+async function enter() {
   document.getElementById('v-login').classList.add('hidden');
   document.getElementById('v-panel').classList.remove('hidden');
   document.getElementById('lo').classList.remove('hidden');
-  loadStats; search; loadPayments; loadPricing;
+  loadStats(); search(); loadPayments(); loadPricing();
 }
 
-async function loadStats {
+async function loadStats() {
   const r = await api('adminStats');
   if (!r.ok) return authFail(r);
   const s = r.stats;
   const topD = Object.entries(s.byDistrict || {}).sort((a, b) => b[1] - a[1]).slice(0, 1).map(d => d[0] + ' (' + d[1] + ')').join('') || '—';
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><b>${s.total}</b><span>Total</span></div><div class="stat"><b>${s.male}</b><span>Male</span></div><div class="stat"><b>${s.female}</b><span>Female</span></div><div class="stat"><b>${s.active}</b><span>Active</span></div><div class="stat"><b>${s.married}</b><span> / Married</span></div><div class="stat" style="background:linear-gradient(150deg,#92700E,#C9A227)"><b>${s.pending || 0}</b><span> / Pending</span></div><div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span> Top District</span></div>`;
+    <div class="stat"><b>${s.total}</b><span> / Total</span></div>
+    <div class="stat"><b>${s.male}</b><span> / Male</span></div>
+    <div class="stat"><b>${s.female}</b><span> / Female</span></div>
+    <div class="stat"><b>${s.active}</b><span> / Active</span></div>
+    <div class="stat"><b>${s.married}</b><span> / Married</span></div>
+    <div class="stat" style="background:linear-gradient(150deg,#92700E,#C9A227)"><b>${s.pending || 0}</b><span> / Pending</span></div>
+    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span> / Top District</span></div>`;
 }
 
-function filters {
+function filters() {
   return {
     q: gv('f-q'), gender: gv('f-gender'), ageMin: gv('f-ageMin'), ageMax: gv('f-ageMax'),
     district: gv('f-district'), city: gv('f-city'), caste: gv('f-caste'), sect: gv('f-sect'),
     education: gv('f-education'), maritalStatus: gv('f-marital'), status: gv('f-status')
   };
 }
-function gv(id) { return document.getElementById(id).value.trim; }
-function clearFilters { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); search; }
+function gv(id) { return document.getElementById(id).value.trim(); }
+function clearFilters() { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); search(); }
 
-async function search {
+async function search() {
   document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">⏳ …</td></tr>';
-  const r = await api('adminSearch', { filters: filters });
+  const r = await api('adminSearch', { filters: filters() });
   if (!r.ok) return authFail(r);
   ALL = r.profiles || [];
   document.getElementById('rc').textContent = ALL.length;
   document.getElementById('tbody').innerHTML = ALL.length ? ALL.map((p, i) => `
-    <tr><td class="mono"><b>${v(p.id)}</b></td><td>${v(p.fullName)}</td><td><span class="chip ${p.gender === 'male' ? 'm' : 'f'}">${G[p.gender] || '—'}</span></td><td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td><td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td><td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td><td><button class="btn btn-p btn-sm" onclick="openP(${i})"> View</button></td></tr>`).join('') : '<tr><td colspan="11" style="text-align:center"> / No profiles found</td></tr>';
+    <tr>
+      <td class="mono"><b>${v(p.id)}</b></td><td>${v(p.fullName)}</td>
+      <td><span class="chip ${p.gender === 'male' ? 'm' : 'f'}">${G[p.gender] || '—'}</span></td>
+      <td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td>
+      <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
+      <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
+      <td><button class="btn btn-p btn-sm" onclick="openP(${i})"> View</button></td>
+    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center"> / No profiles found</td></tr>';
 }
 function authFail(r) {
-  if (r.error === 'AUTH') { logout; }
+  if (r.error === 'AUTH') { logout(); }
   else alert('Error: ' + r.error);
 }
 
@@ -200,19 +312,19 @@ function waNotice(kind) {
   const p = CUR;
   const num = String(p.mobile || p.contact || '').replace(/\D/g, '').replace(/^0/, '92');
   const txt = kind === 'approved'
-    ? '**\n\n ' + (p.fullName || '') + ' /\n\n🎉 !  *' + p.id + '*  ** \n\n\n\n\n'
-    : '**\n\n ' + (p.fullName || '') + ' /\n\n *' + p.id + '* \n\n🕒  **  ( 1  2 ) \n\n\n';
-  window.open('https:/wa.me/' + num + '?text=' + encodeURIComponent(txt), '_blank');
+    ? '**\n\n ' + (p.fullName || '') + ' \n\n🎉 !  *' + p.id + '*  ** \n\n\n\n\n'
+    : '**\n\n ' + (p.fullName || '') + ' \n\n *' + p.id + '* \n\n🕒  **  ( 1  2 ) \n\n\n';
+  window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(txt), '_blank');
 }
 
-async function unlockP {
+async function unlockP() {
   const r = await api('adminUnlock', { profileId: CUR.id });
   alert(r.ok ? '🔓  —  / Account unlocked — the user can log in again.' : 'Error: ' + r.error);
 }
 function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
-function closeModal { document.getElementById('modal').classList.add('hidden'); }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
-async function resetPw {
+async function resetPw() {
   const p = prompt(' ' + CUR.id + '  ( 4 ):');
   if (!p) return;
   if (p.length < 4) return alert(' 4 ');
@@ -220,13 +332,13 @@ async function resetPw {
   alert(r.ok ? '✅  — ' : 'Error: ' + r.error);
 }
 
-async function changeStatus {
+async function changeStatus() {
   const s = document.getElementById('mstatus').value;
   const r = await api('adminSetStatus', { profileId: CUR.id, status: s });
-  if (r.ok) { CUR.status = s; search; loadStats; }
+  if (r.ok) { CUR.status = s; search(); loadStats(); }
 }
 
-function waShare {
+function waShare() {
   const p = CUR;
   const t = `* —  ${p.id}*\n` +
     `: ${v(p.fullName)}\n: ${v(G[p.gender])} | : ${v(p.age)} | : ${v(p.height)}\n` +
@@ -235,11 +347,11 @@ function waShare {
     `: ${v(p.city)}  ${v(p.district)}\n` +
     `:  ${v(p.prefAge)} ${v(p.prefCity)} ${v(p.prefCaste)}\n` +
     `:  +${CONFIG.SUPPORT_WHATSAPP}`;
-  window.open('https:/wa.me/?text=' + encodeURIComponent(t), '_blank');
+  window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
 }
 
 /* ---- matching ---- */
-async function findMatches {
+async function findMatches() {
   const p = CUR;
   const box = document.getElementById('matches');
   box.innerHTML = '<div class="sechead">💞 …</div>';
@@ -248,7 +360,7 @@ async function findMatches {
   const scored = (r.profiles || []).map(c => {
     let sc = 0, why = [];
     const ar = String(p.prefAge || '').match(/(\d+)\D+(\d+)/);
-    if (ar && c.age && +c.age>= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push(''); }
+    if (ar && c.age && +c.age >= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push(''); }
     if (p.prefCity && (has(c.city, p.prefCity) || has(c.district, p.prefCity))) { sc += 20; why.push(''); }
     if (p.prefCaste && has(c.caste, p.prefCaste)) { sc += 20; why.push(''); }
     if (p.prefSect && has(c.sect, p.prefSect)) { sc += 15; why.push(''); }
@@ -257,42 +369,47 @@ async function findMatches {
     if (!p.prefCity && p.district && c.district === p.district) { sc += 10; why.push(''); }
     if (p.caste && c.caste && has(c.caste, p.caste)) { sc += 5; }
     return { c, sc, why };
-  }).filter(x => x.sc> 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
+  }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
   box.innerHTML = '<div class="sechead">💞  / Possible Matches (' + scored.length + ')</div>' +
     (scored.length ? scored.map(x => `
-      <div class="kv"><b class="mono">${x.c.id}</b><span>${v(x.c.fullName)} — ${v(x.c.age)}  ${v(x.c.city || x.c.district)} ${v(x.c.caste)}</span><span><span class="score">${x.sc}%</span><button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'></button></span></div><div style="font-size:12.5px;color:var(--muted);margin:0 4px 6px">${x.why.join(' • ')}</div>`).join('')
+      <div class="kv"><b class="mono">${x.c.id}</b>
+        <span>${v(x.c.fullName)} — ${v(x.c.age)}  ${v(x.c.city || x.c.district)} ${v(x.c.caste)}</span>
+        <span><span class="score">${x.sc}%</span>
+        <button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'></button></span>
+      </div>
+      <div style="font-size:12.5px;color:var(--muted);margin:0 4px 6px">${x.why.join(' • ')}</div>`).join('')
       : '<p style="text-align:center;color:var(--muted)"> — </p>');
 }
-function has(a, b) { return String(a || '').toLowerCase.includes(String(b || '').toLowerCase); }
+function has(a, b) { return String(a || '').toLowerCase().includes(String(b || '').toLowerCase()); }
 
 
 /* ===== v7 commercial services (admin) ===== */
 var SVC_PRICE_FIELDS=[['unlock',' / Profile unlock'],['boost1',' 1  / Boost 1mo'],['boost3',' 3  / Boost 3mo'],['boost6',' 6  / Boost 6mo'],['med3',' 3  / Mediator 3mo'],['med6',' 6  / Mediator 6mo'],['med12',' / Mediator yr'],['medLump',' / Mediator lump'],['verJob',' / Verify Govt'],['verBiz',' / Verify Business'],['verNadra',' / Verify NADRA'],['memberMonthly',' / Membership'],['refCheck',' / Reference check'],['nikahPack',' / Nikah pack']];
 var SVC_PRICING={}, SVC_PAYTO={};
 function svcTypeLabel(r){ if(r.type==='unlock')return '🔒 Unlock '+(r.target||''); if(r.type==='boost')return '⭐ Boost '+(r.tier||''); if(r.type==='mediator')return '🤝 Mediator '+(r.tier||''); if(r.type==='verify')return '🔍 Verify '+(r.vtype||'')+' '+(r.target||''); return r.type; }
-async function loadPayments{
+async function loadPayments(){
   var box=document.getElementById('payList'); if(!box)return;
   var r=await api('svcListRequests');
   if(!r.ok){ box.innerHTML='<p style="color:var(--err)">'+(r.error||'error')+'</p>'; return; }
-  var reqs=(r.requests||[]).slice.reverse;
+  var reqs=(r.requests||[]).slice().reverse();
   var pend=reqs.filter(function(x){return x.status==='pending';}).length;
   var pc=document.getElementById('payc'); if(pc)pc.textContent=pend;
   if(!reqs.length){ box.innerHTML='<p style="color:var(--muted)"> / No requests yet</p>'; return; }
   box.innerHTML=reqs.map(function(x){
     var proof=x.proofUrl?('<a href="'+x.proofUrl+'" target="_blank" class="btn btn-o btn-sm">🧾  / Proof</a>'):'<span style="color:var(--muted);font-size:13px">— no proof —</span>';
-    var act=x.status==='pending' ? '<button class="btn btn-p btn-sm" onclick="svcApprovePay(\''+x.rid+'\')">✅  / Approve</button><button class="btn btn-o btn-sm" style="border-color:var(--err);color:var(--err)" onclick="svcRejectPay(\''+x.rid+'\')">✖  / Reject</button>' : '<span class="chip '+x.status+'">'+x.status+'</span>';
+    var act=x.status==='pending' ? '<button class="btn btn-p btn-sm" onclick="svcApprovePay(\''+x.rid+'\')">✅  / Approve</button> <button class="btn btn-o btn-sm" style="border-color:var(--err);color:var(--err)" onclick="svcRejectPay(\''+x.rid+'\')">✖  / Reject</button>' : '<span class="chip '+x.status+'">'+x.status+'</span>';
     return '<div style="border:1px solid #F1EDE0;border-radius:10px;padding:10px;margin:6px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b>'+svcTypeLabel(x)+'</b><br><small class="mono" style="color:var(--muted)">'+x.rid+' · '+x.user+' · PKR '+x.fee+'</small></div><div>'+proof+'</div></div><div style="margin-top:6px">'+act+'</div></div>';
   }).join('');
 }
-async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments; if(typeof loadStats==='function')loadStats; } else alert('Error: '+r.error); }
-async function svcRejectPay(rid){ if(!confirm(' / Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments; else alert('Error: '+r.error); }
-async function loadPricing{
+async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments(); if(typeof loadStats==='function')loadStats(); } else alert('Error: '+r.error); }
+async function svcRejectPay(rid){ if(!confirm(' / Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments(); else alert('Error: '+r.error); }
+async function loadPricing(){
   var r=await api('svcGetPricing'); if(!r.ok)return; SVC_PRICING=r.pricing||{}; SVC_PAYTO=r.payto||{};
   var box=document.getElementById('pricingBox'); if(!box)return;
   var inp=SVC_PRICE_FIELDS.map(function(f){return '<div><label>'+f[1]+'</label><input type="number" id="pr_'+f[0]+'" value="'+(SVC_PRICING[f[0]]||0)+'"></div>';}).join('');
   box.innerHTML='<div class="grid">'+inp+'</div><div class="grid" style="margin-top:8px"><div><label>JazzCash</label><input id="pt_jazzcash" value="'+(SVC_PAYTO.jazzcash||'')+'"></div><div><label>EasyPaisa</label><input id="pt_easypaisa" value="'+(SVC_PAYTO.easypaisa||'')+'"></div><div><label> / Bank</label><input id="pt_bank" value="'+(SVC_PAYTO.bank||'')+'"></div></div>';
 }
-async function svcSavePricing{
+async function svcSavePricing(){
   var pricing={}; SVC_PRICE_FIELDS.forEach(function(f){var e=document.getElementById('pr_'+f[0]); if(e) pricing[f[0]]=Number(e.value)||0;});
   var g=function(id){var e=document.getElementById(id);return e?e.value:'';};
   var r=await api('svcSetPricing',{pricing:pricing,payto:{jazzcash:g('pt_jazzcash'),easypaisa:g('pt_easypaisa'),bank:g('pt_bank')}});
@@ -300,9 +417,9 @@ async function svcSavePricing{
 }
 
 /* init */
-if (TOKEN) enter;
-</script><script>(function{function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run{hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run;else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);});
-function download1PagePDF{if(!window._currentProfile)return;var p=window._currentProfile;var J=window.jspdf.jsPDF;var d=new J("p","mm","a4");var w=210;d.setFillColor(20,83,45);d.rect(0,0,w,38,"F");d.setTextColor(227,199,102);d.setFontSize(22);d.text("Al-Baraka Marriage Bureau",w/2,16,{align:"center"});d.setFontSize(11);d.setTextColor(255,255,255);d.text("Rishta Profile",w/2,24,{align:"center"});d.setFillColor(255,255,255);d.roundedRect(15,28,40,8,2,2,"F");d.setTextColor(20,83,45);d.setFontSize(13);d.text(v(p.id),35,34,{align:"center"});var y=48;function sec(t,f){d.setFillColor(253,246,227);d.rect(12,y-1,w-24,7,"F");d.setTextColor(20,83,45);d.setFontSize(11);d.setFont(undefined,"bold");d.text(t,15,y+4);y+=9;d.setFont(undefined,"normal");d.setFontSize(10);for(var i=0;i<f.length;i++){if(y>282){d.addPage;y=15;}d.setTextColor(20,83,45);d.text(f[i][0],16,y);d.setTextColor(31,41,55);d.text(String(v(f[i][1])).substring(0,60),80,y);y+=6;}y+=3;}
+if (TOKEN) enter();
+</script>
+function download1PagePDF(){if(!window._currentProfile)return;var p=window._currentProfile;var J=window.jspdf.jsPDF;var d=new J("p","mm","a4");var w=210;d.setFillColor(20,83,45);d.rect(0,0,w,38,"F");d.setTextColor(227,199,102);d.setFontSize(22);d.text("Al-Baraka Marriage Bureau",w/2,16,{align:"center"});d.setFontSize(11);d.setTextColor(255,255,255);d.text("Rishta Profile",w/2,24,{align:"center"});d.setFillColor(255,255,255);d.roundedRect(15,28,40,8,2,2,"F");d.setTextColor(20,83,45);d.setFontSize(13);d.text(v(p.id),35,34,{align:"center"});var y=48;function sec(t,f){d.setFillColor(253,246,227);d.rect(12,y-1,w-24,7,"F");d.setTextColor(20,83,45);d.setFontSize(11);d.setFont(undefined,"bold");d.text(t,15,y+4);y+=9;d.setFont(undefined,"normal");d.setFontSize(10);for(var i=0;i<f.length;i++){if(y>282){d.addPage;y=15;}d.setTextColor(20,83,45);d.text(f[i][0],16,y);d.setTextColor(31,41,55);d.text(String(v(f[i][1])).substring(0,60),80,y);y+=6;}y+=3;}
 sec("Personal",[["Name",p.fullName],["Gender",p.gender],["Age/DOB",v(p.age)+(p.dob?" - "+p.dob:"")],["Height",p.height],["Marital",p.maritalStatus],["Children",p.children],["Lang/Tone",v(p.motherTongue)+"/"+v(p.complexion)]]);
 sec("Religion",[["Religion/Sect",v(p.religion)+"/"+v(p.sect)],["Caste",p.caste],["Hafiz/Prayer",(p.hafizQuran||"--")+"/"+(p.prayerRegular||"--")]]);
 sec("Education",[["Education",p.education],["Profession",v(p.profession)+(p.company?" - "+p.company:"")],["Income",p.income]]);
@@ -311,4 +428,7 @@ sec("Family",[["Father",p.guardianName],["Parents",v(p.fatherOccupation)+"/"+v(p
 sec("Contact",[["Mobile",p.mobile]]);
 sec("Preferences",[["Age/Height",v(p.prefAge)+"/"+v(p.prefHeight)],["Edu/City",v(p.prefEducation)+"/"+v(p.prefCity)],["Caste/Sect",v(p.prefCaste)+"/"+v(p.prefSect)],["Other",p.otherConditions]]);
 d.setTextColor(150);d.setFontSize(8);d.text("Al-Baraka | +92 315 4822167 | "+new Date.toLocaleDateString,w/2,289,{align:"center"});d.save((p.id||"profile")+"_1page.pdf");}
-</script></body></html>
+
+<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
+</body>
+</html>
