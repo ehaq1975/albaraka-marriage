@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> — </title>
+<title>Al-Baraka Admin Panel</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--cream:#FAF7F0;--ink:#1F2937;--muted:#6B7280;--err:#B91C1C;--ok:#15803D}
@@ -63,7 +63,6 @@ h3{font-size:14px!important}
 table{page-break-inside:avoid}
 }
 </style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
@@ -72,20 +71,20 @@ table{page-break-inside:avoid}
     <div class="brand"><div class="logo">🕌</div>
       <div><h1> — </h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
     </div>
-    <div><a href="index.html" class="btn btn-o btn-sm">🏠  / Main Site</a>
-    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()"> / Logout</button></div>
+    <div><a href="index.html" class="btn btn-o btn-sm">🏠 Main Site</a>
+    <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">Logout</button></div>
   </div>
 
   <!-- LOGIN -->
   <div id="v-login" class="card" style="max-width:420px;margin:30px auto">
-    <h2 style="color:var(--green)"> / Admin Login</h2>
-    <label> / Username</label>
+    <h2 style="color:var(--green)">Admin Login</h2>
+    <label>Username</label>
     <input id="au" class="mono" autocomplete="username">
-    <label> / Password</label>
+    <label>Password</label>
     <input id="ap" type="password" class="mono" autocomplete="current-password">
     <div id="aerr" class="badge hidden"></div>
     <div style="height:12px"></div>
-    <button class="btn btn-p" style="width:100%" onclick="adminLogin()"> / Log in</button>
+    <button class="btn btn-p" style="width:100%" onclick="adminLogin()">Log in</button>
   </div>
 
   <!-- PANEL -->
@@ -93,46 +92,46 @@ table{page-break-inside:avoid}
     <div class="stats" id="stats"></div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-<h2 style="color:var(--green)">💳  / Payment Requests <span id="payc" class="score">0</span></h2>
-<button class="btn btn-o btn-sm" onclick="loadPayments()">🔄  / Refresh</button>
+<h2 style="color:var(--green)">💳 Payment Requests <span id="payc" class="score">0</span></h2>
+<button class="btn btn-o btn-sm" onclick="loadPayments()">🔄 Refresh</button>
 </div>
-<div id="payList"><p style="color:var(--muted)">… / Loading…</p></div>
+<div id="payList"><p style="color:var(--muted)">…Loading…</p></div>
 </div>
 <div class="card">
-<h2 style="color:var(--green)">⚙️  / Pricing & Payment Accounts</h2>
-<p style="color:var(--muted);font-size:14px"> / Edit each fee and your payment accounts here.</p>
+<h2 style="color:var(--green)">⚙️ Pricing & Payment Accounts</h2>
+<p style="color:var(--muted);font-size:14px">Edit each fee and your payment accounts here.</p>
 <div id="pricingBox"></div>
-<button class="btn btn-p btn-sm" onclick="svcSavePricing()" style="margin-top:8px">💾  / Save</button>
+<button class="btn btn-p btn-sm" onclick="svcSavePricing()" style="margin-top:8px">💾 Save</button>
 </div>
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <h2 style="color:var(--green)">🔎  / Search Profiles</h2>
+        <h2 style="color:var(--green)">🔎 Search Profiles</h2>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕  / Add Profile</a>
-          <button class="btn btn-g btn-sm" onclick="search()"> / Search</button>
+          <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ Add Profile</a>
+          <button class="btn btn-g btn-sm" onclick="search()">Search</button>
         </div>
       </div>
       <div class="grid">
         <div><label> — Profile ID / Mobile</label><input id="f-q" placeholder="ABM-0001  03xx-xxxxxxx"></div>
-        <div><label> / Gender</label><select id="f-gender"><option value=""> / All</option><option value="male"> / Male</option><option value="female"> / Female</option></select></div>
-        <div><label> / Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
-        <div><label> / Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
-        <div><label> / District</label><input id="f-district" placeholder=" / Lahore"></div>
-        <div><label> / City</label><input id="f-city"></div>
-        <div><label> / Caste</label><input id="f-caste" placeholder="… / Jutt, Arain…"></div>
-        <div><label> / Sect</label><select id="f-sect"><option value=""> / All</option><option></option><option></option><option></option><option></option><option></option><option></option></select></div>
-        <div><label> / Education</label><input id="f-education" placeholder="… / Doctor, Engineer…"></div>
-        <div><label> / Marital Status</label><select id="f-marital"><option value=""> / All</option><option value="single"> / Single</option><option value="divorced"> / Divorced</option><option value="widowed"> / Widowed</option><option value="second"> / Second marriage</option></select></div>
-        <div><label> / Status</label><select id="f-status"><option value=""> / All</option><option value="Pending"> / Pending</option><option value="Active"> / Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option></select></div>
+        <div><label>Gender</label><select id="f-gender"><option value="">All</option><option value="male">Male</option><option value="female">Female</option></select></div>
+        <div><label>Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
+        <div><label>Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
+        <div><label>District</label><input id="f-district" placeholder="Lahore"></div>
+        <div><label>City</label><input id="f-city"></div>
+        <div><label>Caste</label><input id="f-caste" placeholder="…Jutt, Arain…"></div>
+        <div><label>Sect</label><select id="f-sect"><option value="">All</option><option></option><option></option><option></option><option></option><option></option><option></option></select></div>
+        <div><label>Education</label><input id="f-education" placeholder="…Doctor, Engineer…"></div>
+        <div><label>Marital Status</label><select id="f-marital"><option value="">All</option><option value="single">Single</option><option value="divorced">Divorced</option><option value="widowed">Widowed</option><option value="second">Second marriage</option></select></div>
+        <div><label>Status</label><select id="f-status"><option value="">All</option><option value="Pending">Pending</option><option value="Active">Active</option><option value="Married">Married</option><option value="Closed">Closed</option></select></div>
       </div>
-      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()"> / Clear</button></div>
+      <div style="margin-top:8px"><button class="btn btn-o btn-sm" onclick="clearFilters()">Clear</button></div>
     </div>
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 style="color:var(--green)"> / Results <span id="rc" class="score">0</span></h2>
-        <button class="btn btn-o btn-sm" onclick="search()">🔄  / Refresh</button>
+        <h2 style="color:var(--green)">Results <span id="rc" class="score">0</span></h2>
+        <button class="btn btn-o btn-sm" onclick="search()">🔄 Refresh</button>
       </div>
       <div class="tblwrap">
         <table id="tbl">
@@ -150,12 +149,12 @@ table{page-break-inside:avoid}
     <button class="mclose noprint" onclick="closeModal()">✖</button>
     <div id="mbody"></div>
     <div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-g btn-sm" onclick="waShare()">💚  / Share</button>
-      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️  / Print PDF</button>
-      <button class="btn btn-o btn-sm" onclick="findMatches()">💞  / Find Matches</button>
-      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑  / Reset Password</button>
+      <button class="btn btn-g btn-sm" onclick="waShare()">💚 Share</button>
+      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ Print PDF</button>
+      <button class="btn btn-o btn-sm" onclick="findMatches()">💞 Find Matches</button>
+      <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 Reset Password</button>
       <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
-        <option value="Pending"> / Pending</option><option value="Active"> / Active</option><option value="Married"> / Married</option><option value="Closed"> / Closed</option>
+        <option value="Pending">Pending</option><option value="Active">Active</option><option value="Married">Married</option><option value="Closed">Closed</option>
       </select>
     </div>
     <div class="noprint" id="pendActions" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div>
@@ -208,13 +207,13 @@ async function loadStats() {
   const s = r.stats;
   const topD = Object.entries(s.byDistrict || {}).sort((a, b) => b[1] - a[1]).slice(0, 1).map(d => d[0] + ' (' + d[1] + ')').join('') || '—';
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><b>${s.total}</b><span> / Total</span></div>
-    <div class="stat"><b>${s.male}</b><span> / Male</span></div>
-    <div class="stat"><b>${s.female}</b><span> / Female</span></div>
-    <div class="stat"><b>${s.active}</b><span> / Active</span></div>
-    <div class="stat"><b>${s.married}</b><span> / Married</span></div>
-    <div class="stat" style="background:linear-gradient(150deg,#92700E,#C9A227)"><b>${s.pending || 0}</b><span> / Pending</span></div>
-    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span> / Top District</span></div>`;
+    <div class="stat"><b>${s.total}</b><span>Total</span></div>
+    <div class="stat"><b>${s.male}</b><span>Male</span></div>
+    <div class="stat"><b>${s.female}</b><span>Female</span></div>
+    <div class="stat"><b>${s.active}</b><span>Active</span></div>
+    <div class="stat"><b>${s.married}</b><span>Married</span></div>
+    <div class="stat" style="background:linear-gradient(150deg,#92700E,#C9A227)"><b>${s.pending || 0}</b><span>Pending</span></div>
+    <div class="stat"><b style="font-size:16px;line-height:2.2">${topD}</b><span>Top District</span></div>`;
 }
 
 function filters() {
@@ -241,7 +240,7 @@ async function search() {
       <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
       <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
       <td><button class="btn btn-p btn-sm" onclick="openP(${i})"> View</button></td>
-    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center"> / No profiles found</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">No profiles found</td></tr>';
 }
 function authFail(r) {
   if (r.error === 'AUTH') { logout(); }
@@ -259,48 +258,48 @@ function showProfile(p) {
       <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
       <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
     </div>
-    <div class="sechead"> / Personal Information</div>
-    ${kv(' / Gender', G[p.gender])}${kv(' / Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv(' / Height', p.height)}
-    ${kv(' / Marital Status', MS[p.maritalStatus])}${kv(' / Children', p.children)}${kv(' / CNIC', p.cnic)}
-    ${kv(' / Caste', p.caste)}${kv(' / Mother Tongue', p.motherTongue)}${kv(' / Complexion', p.complexion)}
-    <div class="sechead"> / Religious Information</div>
-    ${kv(' / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}
-    ${kv(' / Hafiz-e-Quran', YN[p.hafizQuran])}${kv(' / Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv(' / Purdah', YN[p.purdah]) : ''}
-    <div class="sechead"> / Education & Work</div>
-    ${kv(' / Education', p.education)}${kv(' / Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv(' / Income', p.income)}
-    <div class="sechead"> / Residence</div>
-    ${kv(' / Province, District', v(p.province) + ' / ' + v(p.district))}${kv(' / City/Village', p.city)}${kv(' / House', HT[p.houseType])}
-    <div class="sechead"> / Family</div>
-    ${kv(' / Guardian', p.guardianName)}${kv(' / Father\'s Occupation', p.fatherOccupation)}${kv(' / Mother\'s Occupation', p.motherOccupation)}
-    ${kv(' / Brothers, Sisters', v(p.brothers) + ' / ' + v(p.sisters))}
-    ${kv(' / Married Brothers, Sisters', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
-    ${kv(' / Birth Order', p.birthOrder)}
-    <div class="sechead"> / Contact</div>
-    ${kv(' / Mobile', p.mobile)}${kv(' / Alternate', p.altMobile)}${kv(' () / Verified Contact', p.contact)}
-    <div class="sechead"> / Partner Preferences</div>
-    ${kv(' / Age, Height', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv(' / Education, City', v(p.prefEducation) + ' / ' + v(p.prefCity))}
-    ${kv(' / Caste, Sect', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv(' / Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : ' / Any'))}${kv(' / Other Conditions', p.otherConditions)}
+    <div class="sechead">Personal Information</div>
+    ${kv('Gender', G[p.gender])}${kv('Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('Height', p.height)}
+    ${kv('Marital Status', MS[p.maritalStatus])}${kv('Children', p.children)}${kv('CNIC', p.cnic)}
+    ${kv('Caste', p.caste)}${kv('Mother Tongue', p.motherTongue)}${kv('Complexion', p.complexion)}
+    <div class="sechead">Religious Information</div>
+    ${kv('Religion, Sect', v(p.religion) + '' + v(p.sect))}
+    ${kv('Hafiz-e-Quran', YN[p.hafizQuran])}${kv('Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv('Purdah', YN[p.purdah]) : ''}
+    <div class="sechead">Education & Work</div>
+    ${kv('Education', p.education)}${kv('Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('Income', p.income)}
+    <div class="sechead">Residence</div>
+    ${kv('Province, District', v(p.province) + '' + v(p.district))}${kv('City/Village', p.city)}${kv('House', HT[p.houseType])}
+    <div class="sechead">Family</div>
+    ${kv('Guardian', p.guardianName)}${kv('Father\'s Occupation', p.fatherOccupation)}${kv('Mother\'s Occupation', p.motherOccupation)}
+    ${kv('Brothers, Sisters', v(p.brothers) + '' + v(p.sisters))}
+    ${kv('Married Brothers, Sisters', v(p.marriedBrothers) + '' + v(p.marriedSisters))}
+    ${kv('Birth Order', p.birthOrder)}
+    <div class="sechead">Contact</div>
+    ${kv('Mobile', p.mobile)}${kv('Alternate', p.altMobile)}${kv(' () Verified Contact', p.contact)}
+    <div class="sechead">Partner Preferences</div>
+    ${kv('Age, Height', v(p.prefAge) + '' + v(p.prefHeight))}${kv('Education, City', v(p.prefEducation) + '' + v(p.prefCity))}
+    ${kv('Caste, Sect', v(p.prefCaste) + '' + v(p.prefSect))}${kv('Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'Any'))}${kv('Other Conditions', p.otherConditions)}
     <div style="margin-top:8px">${imgs} ${cnic}</div>`;
   document.getElementById('mstatus').value = p.status || 'Active';
   document.getElementById('matches').innerHTML = '';
   const pa = document.getElementById('pendActions');
   pa.innerHTML = '';
   if (p.status === 'Pending') {
-    pa.innerHTML = '<button class="btn btn-p btn-sm" onclick="approveP()">✅  / Approve</button>' +
+    pa.innerHTML = '<button class="btn btn-p btn-sm" onclick="approveP()">✅ Approve</button>' +
       (!String(p.contact || '').includes('@')
-        ? '<button class="btn btn-o btn-sm" onclick="waNotice(\'review\')">📱  / Send review notice</button>' : '');
+        ? '<button class="btn btn-o btn-sm" onclick="waNotice(\'review\')">📱 Send review notice</button>' : '');
   }
-  pa.innerHTML += '<button class="btn btn-o btn-sm" onclick="unlockP()">🔓  / Unlock account</button>';
+  pa.innerHTML += '<button class="btn btn-o btn-sm" onclick="unlockP()">🔓 Unlock account</button>';
   document.getElementById('modal').classList.remove('hidden');
 }
 
 async function approveP() {
-  if (!confirm(' ' + CUR.id + '  / Approve this profile?')) return;
+  if (!confirm(' ' + CUR.id + ' Approve this profile?')) return;
   const r = await api('adminApprove', { profileId: CUR.id });
   if (!r.ok) return alert('Error: ' + r.error);
   CUR.status = 'Active';
-  let msg = '✅  / Profile approved.';
-  if (r.emailed) msg += '\n📧  / Approval email sent automatically.';
+  let msg = '✅ Profile approved.';
+  if (r.emailed) msg += '\n📧 Approval email sent automatically.';
   alert(msg);
   if (r.whatsapp) {
     if (confirm(' — \nUser registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
@@ -319,7 +318,7 @@ function waNotice(kind) {
 
 async function unlockP() {
   const r = await api('adminUnlock', { profileId: CUR.id });
-  alert(r.ok ? '🔓  —  / Account unlocked — the user can log in again.' : 'Error: ' + r.error);
+  alert(r.ok ? '🔓  — Account unlocked — the user can log in again.' : 'Error: ' + r.error);
 }
 function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
@@ -370,7 +369,7 @@ async function findMatches() {
     if (p.caste && c.caste && has(c.caste, p.caste)) { sc += 5; }
     return { c, sc, why };
   }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
-  box.innerHTML = '<div class="sechead">💞  / Possible Matches (' + scored.length + ')</div>' +
+  box.innerHTML = '<div class="sechead">💞 Possible Matches (' + scored.length + ')</div>' +
     (scored.length ? scored.map(x => `
       <div class="kv"><b class="mono">${x.c.id}</b>
         <span>${v(x.c.fullName)} — ${v(x.c.age)}  ${v(x.c.city || x.c.district)} ${v(x.c.caste)}</span>
@@ -384,7 +383,7 @@ function has(a, b) { return String(a || '').toLowerCase().includes(String(b || '
 
 
 /* ===== v7 commercial services (admin) ===== */
-var SVC_PRICE_FIELDS=[['unlock',' / Profile unlock'],['boost1',' 1  / Boost 1mo'],['boost3',' 3  / Boost 3mo'],['boost6',' 6  / Boost 6mo'],['med3',' 3  / Mediator 3mo'],['med6',' 6  / Mediator 6mo'],['med12',' / Mediator yr'],['medLump',' / Mediator lump'],['verJob',' / Verify Govt'],['verBiz',' / Verify Business'],['verNadra',' / Verify NADRA'],['memberMonthly',' / Membership'],['refCheck',' / Reference check'],['nikahPack',' / Nikah pack']];
+var SVC_PRICE_FIELDS=[['unlock','Profile unlock'],['boost1',' 1 Boost 1mo'],['boost3',' 3 Boost 3mo'],['boost6',' 6 Boost 6mo'],['med3',' 3 Mediator 3mo'],['med6',' 6 Mediator 6mo'],['med12','Mediator yr'],['medLump','Mediator lump'],['verJob','Verify Govt'],['verBiz','Verify Business'],['verNadra','Verify NADRA'],['memberMonthly','Membership'],['refCheck','Reference check'],['nikahPack','Nikah pack']];
 var SVC_PRICING={}, SVC_PAYTO={};
 function svcTypeLabel(r){ if(r.type==='unlock')return '🔒 Unlock '+(r.target||''); if(r.type==='boost')return '⭐ Boost '+(r.tier||''); if(r.type==='mediator')return '🤝 Mediator '+(r.tier||''); if(r.type==='verify')return '🔍 Verify '+(r.vtype||'')+' '+(r.target||''); return r.type; }
 async function loadPayments(){
@@ -394,31 +393,32 @@ async function loadPayments(){
   var reqs=(r.requests||[]).slice().reverse();
   var pend=reqs.filter(function(x){return x.status==='pending';}).length;
   var pc=document.getElementById('payc'); if(pc)pc.textContent=pend;
-  if(!reqs.length){ box.innerHTML='<p style="color:var(--muted)"> / No requests yet</p>'; return; }
+  if(!reqs.length){ box.innerHTML='<p style="color:var(--muted)">No requests yet</p>'; return; }
   box.innerHTML=reqs.map(function(x){
-    var proof=x.proofUrl?('<a href="'+x.proofUrl+'" target="_blank" class="btn btn-o btn-sm">🧾  / Proof</a>'):'<span style="color:var(--muted);font-size:13px">— no proof —</span>';
-    var act=x.status==='pending' ? '<button class="btn btn-p btn-sm" onclick="svcApprovePay(\''+x.rid+'\')">✅  / Approve</button> <button class="btn btn-o btn-sm" style="border-color:var(--err);color:var(--err)" onclick="svcRejectPay(\''+x.rid+'\')">✖  / Reject</button>' : '<span class="chip '+x.status+'">'+x.status+'</span>';
+    var proof=x.proofUrl?('<a href="'+x.proofUrl+'" target="_blank" class="btn btn-o btn-sm">🧾 Proof</a>'):'<span style="color:var(--muted);font-size:13px">— no proof —</span>';
+    var act=x.status==='pending' ? '<button class="btn btn-p btn-sm" onclick="svcApprovePay(\''+x.rid+'\')">✅ Approve</button> <button class="btn btn-o btn-sm" style="border-color:var(--err);color:var(--err)" onclick="svcRejectPay(\''+x.rid+'\')">✖ Reject</button>' : '<span class="chip '+x.status+'">'+x.status+'</span>';
     return '<div style="border:1px solid #F1EDE0;border-radius:10px;padding:10px;margin:6px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b>'+svcTypeLabel(x)+'</b><br><small class="mono" style="color:var(--muted)">'+x.rid+' · '+x.user+' · PKR '+x.fee+'</small></div><div>'+proof+'</div></div><div style="margin-top:6px">'+act+'</div></div>';
   }).join('');
 }
 async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments(); if(typeof loadStats==='function')loadStats(); } else alert('Error: '+r.error); }
-async function svcRejectPay(rid){ if(!confirm(' / Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments(); else alert('Error: '+r.error); }
+async function svcRejectPay(rid){ if(!confirm('Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments(); else alert('Error: '+r.error); }
 async function loadPricing(){
   var r=await api('svcGetPricing'); if(!r.ok)return; SVC_PRICING=r.pricing||{}; SVC_PAYTO=r.payto||{};
   var box=document.getElementById('pricingBox'); if(!box)return;
   var inp=SVC_PRICE_FIELDS.map(function(f){return '<div><label>'+f[1]+'</label><input type="number" id="pr_'+f[0]+'" value="'+(SVC_PRICING[f[0]]||0)+'"></div>';}).join('');
-  box.innerHTML='<div class="grid">'+inp+'</div><div class="grid" style="margin-top:8px"><div><label>JazzCash</label><input id="pt_jazzcash" value="'+(SVC_PAYTO.jazzcash||'')+'"></div><div><label>EasyPaisa</label><input id="pt_easypaisa" value="'+(SVC_PAYTO.easypaisa||'')+'"></div><div><label> / Bank</label><input id="pt_bank" value="'+(SVC_PAYTO.bank||'')+'"></div></div>';
+  box.innerHTML='<div class="grid">'+inp+'</div><div class="grid" style="margin-top:8px"><div><label>JazzCash</label><input id="pt_jazzcash" value="'+(SVC_PAYTO.jazzcash||'')+'"></div><div><label>EasyPaisa</label><input id="pt_easypaisa" value="'+(SVC_PAYTO.easypaisa||'')+'"></div><div><label>Bank</label><input id="pt_bank" value="'+(SVC_PAYTO.bank||'')+'"></div></div>';
 }
 async function svcSavePricing(){
   var pricing={}; SVC_PRICE_FIELDS.forEach(function(f){var e=document.getElementById('pr_'+f[0]); if(e) pricing[f[0]]=Number(e.value)||0;});
   var g=function(id){var e=document.getElementById(id);return e?e.value:'';};
   var r=await api('svcSetPricing',{pricing:pricing,payto:{jazzcash:g('pt_jazzcash'),easypaisa:g('pt_easypaisa'),bank:g('pt_bank')}});
-  alert(r.ok?'💾  / Saved':'Error: '+r.error);
+  alert(r.ok?'💾 Saved':'Error: '+r.error);
 }
 
 /* init */
 if (TOKEN) enter();
 </script>
+<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();
 function download1PagePDF(){if(!window._currentProfile)return;var p=window._currentProfile;var J=window.jspdf.jsPDF;var d=new J("p","mm","a4");var w=210;d.setFillColor(20,83,45);d.rect(0,0,w,38,"F");d.setTextColor(227,199,102);d.setFontSize(22);d.text("Al-Baraka Marriage Bureau",w/2,16,{align:"center"});d.setFontSize(11);d.setTextColor(255,255,255);d.text("Rishta Profile",w/2,24,{align:"center"});d.setFillColor(255,255,255);d.roundedRect(15,28,40,8,2,2,"F");d.setTextColor(20,83,45);d.setFontSize(13);d.text(v(p.id),35,34,{align:"center"});var y=48;function sec(t,f){d.setFillColor(253,246,227);d.rect(12,y-1,w-24,7,"F");d.setTextColor(20,83,45);d.setFontSize(11);d.setFont(undefined,"bold");d.text(t,15,y+4);y+=9;d.setFont(undefined,"normal");d.setFontSize(10);for(var i=0;i<f.length;i++){if(y>282){d.addPage;y=15;}d.setTextColor(20,83,45);d.text(f[i][0],16,y);d.setTextColor(31,41,55);d.text(String(v(f[i][1])).substring(0,60),80,y);y+=6;}y+=3;}
 sec("Personal",[["Name",p.fullName],["Gender",p.gender],["Age/DOB",v(p.age)+(p.dob?" - "+p.dob:"")],["Height",p.height],["Marital",p.maritalStatus],["Children",p.children],["Lang/Tone",v(p.motherTongue)+"/"+v(p.complexion)]]);
 sec("Religion",[["Religion/Sect",v(p.religion)+"/"+v(p.sect)],["Caste",p.caste],["Hafiz/Prayer",(p.hafizQuran||"--")+"/"+(p.prayerRegular||"--")]]);
@@ -428,7 +428,6 @@ sec("Family",[["Father",p.guardianName],["Parents",v(p.fatherOccupation)+"/"+v(p
 sec("Contact",[["Mobile",p.mobile]]);
 sec("Preferences",[["Age/Height",v(p.prefAge)+"/"+v(p.prefHeight)],["Edu/City",v(p.prefEducation)+"/"+v(p.prefCity)],["Caste/Sect",v(p.prefCaste)+"/"+v(p.prefSect)],["Other",p.otherConditions]]);
 d.setTextColor(150);d.setFontSize(8);d.text("Al-Baraka | +92 315 4822167 | "+new Date.toLocaleDateString,w/2,289,{align:"center"});d.save((p.id||"profile")+"_1page.pdf");}
-
-<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
+</script>
 </body>
 </html>
