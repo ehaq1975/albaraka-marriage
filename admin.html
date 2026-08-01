@@ -137,47 +137,65 @@ function authFail(r) {
 }
 
 function openP(i) { showProfile(ALL[i]); }
-function showProfile(p){
-  if(!p)return;window._currentProfile=p;
-  var h='<div class="admin-sticky"><div class="row">';
-  h+='<button class="btn btn-pdf" onclick="download1PagePDF">1-Page PDF</button>';
-  h+='<button class="btn btn-p" style="background:#15803D" onclick="approveP">Approve</button>';
-  h+='<button class="btn btn-o" onclick="waNotice">WhatsApp</button>';
-  h+='<button class="btn btn-o" onclick="unlockP">Unlock</button>';
-  h+='<select id="mstatus" style="min-height:42px;border-radius:12px;border:2px solid #D6D3C8;padding:4px 10px;font-size:14px" onchange="changeStatus(this.value)">';
-  h+='<option value="">Change Status</option><option value="Active">Active</option><option value="Pending">Pending</option><option value="Married">Married</option><option value="Closed">Closed</option></select>';
-  h+='</div></div>';
-  if(p.photo1Url){h+='<div class="profile-photo-wrap"><img class="profile-photo-frame" src="'+p.photo1Url+'"><div style="margin-top:6px;font-weight:700;color:#14532D">'+v(p.fullName)+'</div><div style="color:#6B7280;font-size:13px">'+v(p.id)+'</div></div>';}
-  h+='<div class="sec"><h4>Personal Details</h4>';
-  h+=kv("Name",p.fullName)+kv("Gender",p.gender)+kv("Age / DOB",v(p.age)+(p.dob?" - "+p.dob:""));
-  h+=kv("Height",p.height)+kv("Marital Status",p.maritalStatus)+kv("Children",p.children);
-  h+=kv("Mother Tongue",p.motherTongue)+kv("Complexion",p.complexion)+'</div>';
-  h+='<div class="sec"><h4>Religion</h4>';
-  h+=kv("Religion / Sect",v(p.religion)+" / "+v(p.sect))+kv("Caste",p.caste);
-  h+=kv("Hafiz Quran",p.hafizQuran)+kv("Prayer",p.prayerRegular);
-  if(p.gender==="female")h+=kv("Purdah",p.purdah);h+='</div>';
-  h+='<div class="sec"><h4>Education & Work</h4>';
-  h+=kv("Education",p.education)+kv("Specialization",p.specialization||"--");
-  h+=kv("Profession",p.profession)+kv("Company",p.company)+kv("Income",p.income)+'</div>';
-  h+='<div class="sec"><h4>Residence</h4>';
-  h+=kv("Province / District",v(p.province)+" / "+v(p.district))+kv("City",p.city)+kv("House",p.houseType)+'</div>';
-  h+='<div class="sec"><h4>Family</h4>';
-  h+=kv("Father / Guardian",p.guardianName)+kv("Father Occ.",p.fatherOccupation);
-  h+=kv("Mother Occ.",p.motherOccupation)+kv("Brothers",p.brothers)+kv("Sisters",p.sisters);
-  h+=kv("Married Bros",p.marriedBrothers)+kv("Married Sis",p.marriedSisters)+kv("Birth Order",p.birthOrder)+'</div>';
-  h+='<div class="sec"><h4>Contact</h4>';
-  h+=kv("Mobile",p.mobile)+kv("Alt Mobile",p.altMobile)+kv("Email",p.email||p.contact)+'</div>';
-  h+='<div class="sec"><h4>Partner Preferences</h4>';
-  h+=kv("Pref Age",p.prefAge)+kv("Pref Height",p.prefHeight)+kv("Pref Education",p.prefEducation);
-  h+=kv("Pref City",p.prefCity)+kv("Pref Caste",p.prefCaste)+kv("Pref Sect",p.prefSect);
-  h+=kv("Pref Marital",p.prefMaritalStatus)+kv("Other",p.otherConditions)+'</div>';
-  h+='<div class="sec noprint"><h4>Admin</h4>';
-  h+=kv("Status",p.status)+kv("Registered",p.createdAt)+kv("Approved",p.approvedAt||"--")+'</div>';
-  document.getElementById("mbody").innerHTML=h;
-  if(document.getElementById("mstatus"))document.getElementById("mstatus").value=p.status||"";
-  document.getElementById("pendActions").innerHTML="";
-  document.getElementById("modal").classList.remove("hidden");
+function showProfile(p) {
+  CUR = p;
+  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🖼️ Photo</a>`).join(' ');
+  const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪  ${i + 1}</a>`).join(' ');
+  document.getElementById('mbody').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h2 style="color:var(--green)">${v(p.fullName)}</h2>
+      <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
+      <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
+    </div>
+    <div class="sechead"> / Personal Information</div>
+    ${kv(' / Gender', G[p.gender])}${kv(' / Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv(' / Height', p.height)}
+    ${kv(' / Marital Status', MS[p.maritalStatus])}${kv(' / Children', p.children)}${kv(' / CNIC', p.cnic)}
+    ${kv(' / Caste', p.caste)}${kv(' / Mother Tongue', p.motherTongue)}${kv(' / Complexion', p.complexion)}
+    <div class="sechead"> / Religious Information</div>
+    ${kv(' / Religion, Sect', v(p.religion) + ' / ' + v(p.sect))}
+    ${kv(' / Hafiz-e-Quran', YN[p.hafizQuran])}${kv(' / Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv(' / Purdah', YN[p.purdah]) : ''}
+    <div class="sechead"> / Education & Work</div>
+    ${kv(' / Education', p.education)}${kv(' / Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv(' / Income', p.income)}
+    <div class="sechead"> / Residence</div>
+    ${kv(' / Province, District', v(p.province) + ' / ' + v(p.district))}${kv(' / City/Village', p.city)}${kv(' / House', HT[p.houseType])}
+    <div class="sechead"> / Family</div>
+    ${kv(' / Guardian', p.guardianName)}${kv(' / Father\'s Occupation', p.fatherOccupation)}${kv(' / Mother\'s Occupation', p.motherOccupation)}
+    ${kv(' / Brothers, Sisters', v(p.brothers) + ' / ' + v(p.sisters))}
+    ${kv(' / Married Brothers, Sisters', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
+    ${kv(' / Birth Order', p.birthOrder)}
+    <div class="sechead"> / Contact</div>
+    ${kv(' / Mobile', p.mobile)}${kv(' / Alternate', p.altMobile)}${kv(' () / Verified Contact', p.contact)}
+    <div class="sechead"> / Partner Preferences</div>
+    ${kv(' / Age, Height', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv(' / Education, City', v(p.prefEducation) + ' / ' + v(p.prefCity))}
+    ${kv(' / Caste, Sect', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv(' / Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : ' / Any'))}${kv(' / Other Conditions', p.otherConditions)}
+    <div style="margin-top:8px">${imgs} ${cnic}</div>`;
+  document.getElementById('mstatus').value = p.status || 'Active';
+  document.getElementById('matches').innerHTML = '';
+  const pa = document.getElementById('pendActions');
+  pa.innerHTML = '';
+  if (p.status === 'Pending') {
+    pa.innerHTML = '<button class="btn btn-p btn-sm" onclick="approveP()">✅  / Approve</button>' +
+      (!String(p.contact || '').includes('@')
+        ? '<button class="btn btn-o btn-sm" onclick="waNotice(\'review\')">📱  / Send review notice</button>' : '');
+  }
+  pa.innerHTML += '<button class="btn btn-o btn-sm" onclick="unlockP()">🔓  / Unlock account</button>';
+  document.getElementById('modal').classList.remove('hidden');
 }
+
+async function approveP() {
+  if (!confirm(' ' + CUR.id + '  / Approve this profile?')) return;
+  const r = await api('adminApprove', { profileId: CUR.id });
+  if (!r.ok) return alert('Error: ' + r.error);
+  CUR.status = 'Active';
+  let msg = '✅  / Profile approved.';
+  if (r.emailed) msg += '\n📧  / Approval email sent automatically.';
+  alert(msg);
+  if (r.whatsapp) {
+    if (confirm(' — \nUser registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
+  }
+  search(); loadStats();
+}
+
 function waNotice(kind) {
   const p = CUR;
   const num = String(p.mobile || p.contact || '').replace(/\D/g, '').replace(/^0/, '92');
