@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +8,18 @@
 <style>
 :root{--green:#14532D;--green2:#1E6B3C;--gold:#C9A227;--gold2:#E3C766;--cream:#FAF7F0;--ink:#1F2937;--muted:#6B7280;--err:#B91C1C;--ok:#15803D}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Nastaliq Urdu','Atkinson Hyperlegible',serif;background:var(--cream);color:var(--ink);font-size:16px;line-height:1.9}
+body{font-family:'Atkinson Hyperlegible','Noto Nastaliq Urdu',sans-serif;background:var(--cream);color:var(--ink);font-size:15.5px;line-height:1.7}
 .wrap{max-width:1100px;margin:0 auto;padding:12px}
 .hidden{display:none!important}
 .card{background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(31,41,55,.08);padding:20px;margin:12px 0}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:12px;padding:10px 20px;font-size:16px;font-family:inherit;cursor:pointer;min-height:46px;transition:.15s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:12px;padding:10px 20px;font-size:15px;font-family:inherit;cursor:pointer;min-height:46px;transition:.15s}
 .btn-p{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff}
 .btn-g{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#3B2F04}
 .btn-o{background:#fff;color:var(--green);border:2px solid var(--green)}
-.btn-sm{min-height:36px;padding:4px 14px;font-size:14px}
+.btn-sm{min-height:36px;padding:4px 14px;font-size:13.5px}
 .btn:disabled{opacity:.5}
-label{display:block;font-size:14.5px;font-weight:700;color:var(--green);margin:8px 0 2px}
-input,select{width:100%;min-height:44px;border:2px solid #D6D3C8;border-radius:10px;padding:6px 12px;font-size:15.5px;font-family:inherit;background:#fff}
+label{display:block;font-size:13.5px;font-weight:700;color:var(--green);margin:8px 0 2px}
+input,select{width:100%;min-height:44px;border:2px solid #D6D3C8;border-radius:10px;padding:6px 12px;font-size:15px;font-family:inherit;background:#fff}
 input:focus,select:focus{outline:3px solid var(--gold2);border-color:var(--gold)}
 .top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 4px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px}
@@ -28,13 +28,13 @@ h1{font-size:20px;color:var(--green)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .stat{background:linear-gradient(150deg,var(--green),var(--green2));color:#fff;border-radius:14px;padding:12px;text-align:center}
 .stat b{font-size:26px;color:var(--gold2);display:block;font-family:'Atkinson Hyperlegible'}
-.stat span{font-size:13.5px}
+.stat span{font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-table{width:100%;border-collapse:collapse;font-size:14.5px}
-th{background:#EAF4EE;color:var(--green);padding:8px 6px;text-align:right;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:#EAF4EE;color:var(--green);padding:8px 6px;text-align:left;white-space:nowrap}
 td{padding:7px 6px;border-bottom:1px solid #F1EDE0;vertical-align:top}
 tr:hover td{background:#FFFDF5}
-.chip{display:inline-block;border-radius:99px;padding:1px 12px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.chip{display:inline-block;border-radius:99px;padding:1px 12px;font-size:12px;font-weight:700;white-space:nowrap}
 .chip.Active{background:#EAF4EE;color:var(--ok)}
 .chip.Married{background:#FEF3C7;color:#92400E}
 .chip.Closed{background:#F3F4F6;color:#6B7280}
@@ -43,33 +43,22 @@ tr:hover td{background:#FFFDF5}
 .chip.f{background:#FCE7F3;color:#BE185D}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:20px 8px}
 #modal .mcard{background:#fff;border-radius:18px;max-width:720px;width:100%;padding:22px;position:relative;max-height:92vh;overflow-y:auto}
-.mclose{position:absolute;top:10px;left:14px;background:#F3F4F6;border:none;border-radius:99px;width:38px;height:38px;font-size:17px;cursor:pointer}
-.kv{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #E5E1D5;padding:5px 2px;font-size:15px}
+.mclose{position:absolute;top:10px;right:14px;background:#F3F4F6;border:none;border-radius:99px;width:38px;height:38px;font-size:17px;cursor:pointer;z-index:2}
+.kv{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #E5E1D5;padding:5px 2px;font-size:14.5px}
 .kv b{color:var(--green);white-space:nowrap}
-.sechead{background:#FDF6E3;color:var(--green);border-radius:8px;padding:4px 14px;margin:12px 0 4px;font-weight:700;font-size:15.5px;border-right:4px solid var(--gold)}
+.sechead{background:#FDF6E3;color:var(--green);border-radius:8px;padding:4px 14px;margin:12px 0 4px;font-weight:700;font-size:14.5px;border-left:4px solid var(--gold)}
 .badge{display:inline-block;background:#FEE2E2;color:var(--err);border-radius:99px;padding:2px 14px;font-size:14px;margin-top:6px}
 .score{background:var(--gold2);color:#3B2F04;font-weight:700;border-radius:99px;padding:1px 12px;font-size:13px;font-family:'Atkinson Hyperlegible'}
 .mono{direction:ltr;font-family:'Atkinson Hyperlegible';text-align:left}
+.pphoto{width:96px;height:114px;object-fit:cover;border-radius:10px;border:3px solid var(--gold);box-shadow:0 3px 10px rgba(0,0,0,.15)}
 @media(max-width:640px){ .tblwrap{overflow-x:auto} h1{font-size:17px} }
-@media print{
-.noprint{display:none!important}
-body>*:not(#modal){display:none!important}
-#modal{position:static!important;background:none!important;overflow:visible!important;padding:0!important}
-#modal>div{position:static!important;max-height:none!important;overflow:visible!important;box-shadow:none!important;margin:0!important;padding:10px!important;max-width:100%!important}
-.admin-sticky{position:static!important;display:none!important}
-.btn,.btn-pdf{display:none!important}
-*{font-size:11px!important;line-height:1.3!important}
-h3{font-size:14px!important}
-table{page-break-inside:avoid}
-}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
     <div class="brand"><div class="logo">🕌</div>
-      <div><h1> — </h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
+      <div><h1>Al-Baraka Marriage Bureau</h1><small style="color:var(--muted);font-family:'Atkinson Hyperlegible'">Al-Baraka Admin Panel</small></div>
     </div>
     <div><a href="index.html" class="btn btn-o btn-sm">🏠 Main Site</a>
     <button class="btn btn-o btn-sm hidden" id="lo" onclick="logout()">Logout</button></div>
@@ -113,15 +102,15 @@ table{page-break-inside:avoid}
         </div>
       </div>
       <div class="grid">
-        <div><label> — Profile ID / Mobile</label><input id="f-q" placeholder="ABM-0001  03xx-xxxxxxx"></div>
+        <div><label>Search (Name / ID / Mobile)</label><input id="f-q" placeholder="ABM-0001 or 03xx-xxxxxxx"></div>
         <div><label>Gender</label><select id="f-gender"><option value="">All</option><option value="male">Male</option><option value="female">Female</option></select></div>
         <div><label>Min Age</label><input id="f-ageMin" inputmode="numeric" placeholder="20"></div>
         <div><label>Max Age</label><input id="f-ageMax" inputmode="numeric" placeholder="30"></div>
         <div><label>District</label><input id="f-district" placeholder="Lahore"></div>
         <div><label>City</label><input id="f-city"></div>
-        <div><label>Caste</label><input id="f-caste" placeholder="…Jutt, Arain…"></div>
-        <div><label>Sect</label><select id="f-sect"><option value="">All</option><option></option><option></option><option></option><option></option><option></option><option></option></select></div>
-        <div><label>Education</label><input id="f-education" placeholder="…Doctor, Engineer…"></div>
+        <div><label>Caste</label><input id="f-caste" placeholder="Jutt, Arain…"></div>
+        <div><label>Sect</label><select id="f-sect"><option value="">All</option><option>سنی</option><option>اہلحدیث</option><option>دیوبندی</option><option>بریلوی</option><option>شیعہ</option><option>دیگر</option></select></div>
+        <div><label>Education</label><input id="f-education" placeholder="Doctor, Engineer…"></div>
         <div><label>Marital Status</label><select id="f-marital"><option value="">All</option><option value="single">Single</option><option value="divorced">Divorced</option><option value="widowed">Widowed</option><option value="second">Second marriage</option></select></div>
         <div><label>Status</label><select id="f-status"><option value="">All</option><option value="Pending">Pending</option><option value="Active">Active</option><option value="Married">Married</option><option value="Closed">Closed</option></select></div>
       </div>
@@ -135,7 +124,7 @@ table{page-break-inside:avoid}
       </div>
       <div class="tblwrap">
         <table id="tbl">
-          <thead><tr><th>ID</th><th><br><small>Name</small></th><th><br><small>Gender</small></th><th><br><small>Age</small></th><th><br><small>Height</small></th><th><br><small>City</small></th><th><br><small>Caste</small></th><th><br><small>Sect</small></th><th><br><small>Education</small></th><th><br><small>Status</small></th><th></th></tr></thead>
+          <thead><tr><th>ID</th><th>Name</th><th>Gender</th><th>Age</th><th>Height</th><th>City</th><th>Caste</th><th>Sect</th><th>Education</th><th>Status</th><th></th></tr></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
@@ -150,7 +139,7 @@ table{page-break-inside:avoid}
     <div id="mbody"></div>
     <div class="noprint" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
       <button class="btn btn-g btn-sm" onclick="waShare()">💚 Share</button>
-      <button class="btn btn-p btn-sm" onclick="window.print()">🖨️ Print PDF</button>
+      <button class="btn btn-p btn-sm" onclick="downloadPDF()">📄 Download PDF</button>
       <button class="btn btn-o btn-sm" onclick="findMatches()">💞 Find Matches</button>
       <button class="btn btn-o btn-sm" onclick="resetPw()">🔑 Reset Password</button>
       <select id="mstatus" style="width:auto;min-height:36px" onchange="changeStatus()">
@@ -170,12 +159,17 @@ const CONFIG = {
 let TOKEN = sessionStorage.getItem('admToken') || '';
 let ALL = [], CUR = null;
 
-const MS = { single: '', divorced: '', widowed: '' };
-const G = { male: '', female: '' };
-const YN = { yes: '', no: '', always: '', sometimes: '', rarely: '' };
-const HT = { owned: '', rented: '' };
-const ST = { Active: ' Active', Married: ' Married', Closed: ' Closed', Pending: ' Pending' };
+const MS = { single: 'Single', divorced: 'Divorced', widowed: 'Widowed', second: 'Second marriage' };
+const G = { male: 'Male', female: 'Female' };
+const YN = { yes: 'Yes', no: 'No', always: 'Always', sometimes: 'Sometimes', rarely: 'Rarely' };
+const HT = { owned: 'Owned', rented: 'Rented' };
+const ST = { Active: 'Active', Married: 'Married', Closed: 'Closed', Pending: 'Pending' };
 function v(x) { return (x == null || x === '') ? '—' : x; }
+// Drive viewer URLs cannot render inside <img>; convert to the thumbnail endpoint
+function thumb(u, size) {
+  const m = String(u || '').match(/[-\w]{25,}/);
+  return m ? ('https://drive.google.com/thumbnail?id=' + m[0] + '&sz=w' + (size || 400)) : '';
+}
 
 async function api(action, payload) {
   const res = await fetch(CONFIG.API_URL, {
@@ -188,7 +182,7 @@ async function api(action, payload) {
 async function adminLogin() {
   const err = document.getElementById('aerr'); err.classList.add('hidden');
   const r = await api('adminLogin', { username: document.getElementById('au').value.trim(), password: document.getElementById('ap').value });
-  if (!r.ok) { err.textContent = ''; err.classList.remove('hidden'); return; }
+  if (!r.ok) { err.textContent = 'Wrong username or password'; err.classList.remove('hidden'); return; }
   TOKEN = r.token; sessionStorage.setItem('admToken', TOKEN);
   enter();
 }
@@ -227,7 +221,7 @@ function gv(id) { return document.getElementById(id).value.trim(); }
 function clearFilters() { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); search(); }
 
 async function search() {
-  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">⏳ …</td></tr>';
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">⏳ Loading…</td></tr>';
   const r = await api('adminSearch', { filters: filters() });
   if (!r.ok) return authFail(r);
   ALL = r.profiles || [];
@@ -239,7 +233,7 @@ async function search() {
       <td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td>
       <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
       <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
-      <td><button class="btn btn-p btn-sm" onclick="openP(${i})"> View</button></td>
+      <td><button class="btn btn-p btn-sm" onclick="openP(${i})">View</button></td>
     </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">No profiles found</td></tr>';
 }
 function authFail(r) {
@@ -250,36 +244,44 @@ function authFail(r) {
 function openP(i) { showProfile(ALL[i]); }
 function showProfile(p) {
   CUR = p;
-  const imgs = [p.photo1Url, p.photo2Url].filter(Boolean).map(u => `<a href="${u}" target="_blank"><img src="${u}" style="width:120px;height:140px;object-fit:cover;border-radius:10px;border:3px solid #C9A227;margin:4px"></a>`).join(' ');
-  const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪  ${i + 1}</a>`).join(' ');
+  const headPhoto = p.photo1Url
+    ? `<a href="${p.photo1Url}" target="_blank" title="Open full photo"><img class="pphoto" src="${thumb(p.photo1Url, 300)}" onerror="this.style.display='none'"></a>`
+    : '';
+  const gallery = [p.photo1Url, p.photo2Url].filter(Boolean).map(u =>
+    `<a href="${u}" target="_blank"><img src="${thumb(u, 300)}" style="width:110px;height:130px;object-fit:cover;border-radius:10px;border:2px solid var(--gold);margin:4px" onerror="this.outerHTML='<a href=&quot;${u}&quot; target=&quot;_blank&quot; class=&quot;btn btn-o btn-sm&quot;>🖼️ Photo</a>'"></a>`).join(' ');
+  const cnic = [p.cnicFrontUrl, p.cnicBackUrl].filter(Boolean).map((u, i) => `<a href="${u}" target="_blank" class="btn btn-o btn-sm noprint">🪪 CNIC ${i + 1}</a>`).join(' ');
   document.getElementById('mbody').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-      <h2 style="color:var(--green)">${v(p.fullName)}</h2>
-      <div><span class="mono" style="font-weight:700;color:var(--green)">${v(p.id)}</span>
-      <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--gold);padding-bottom:10px;margin-bottom:6px">
+      <div>
+        <h2 style="color:var(--green);margin-bottom:4px">${v(p.fullName)}</h2>
+        <span class="mono" style="font-weight:700;color:var(--green);font-size:17px">${v(p.id)}</span>
+        <span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span>
+      </div>
+      ${headPhoto}
     </div>
     <div class="sechead">Personal Information</div>
-    ${kv('Gender', G[p.gender])}${kv('Age, DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('Height', p.height)}
+    ${kv('Gender', G[p.gender])}${kv('Age / DOB', v(p.age) + (p.dob ? ' — ' + p.dob : ''))}${kv('Height', p.height)}
     ${kv('Marital Status', MS[p.maritalStatus])}${kv('Children', p.children)}${kv('CNIC', p.cnic)}
     ${kv('Caste', p.caste)}${kv('Mother Tongue', p.motherTongue)}${kv('Complexion', p.complexion)}
     <div class="sechead">Religious Information</div>
-    ${kv('Religion, Sect', v(p.religion) + '' + v(p.sect))}
+    ${kv('Religion / Sect', v(p.religion) + ' / ' + v(p.sect))}
     ${kv('Hafiz-e-Quran', YN[p.hafizQuran])}${kv('Prayers', YN[p.prayerRegular])}${p.gender === 'female' ? kv('Purdah', YN[p.purdah]) : ''}
-    <div class="sechead">Education & Work</div>
+    <div class="sechead">Education &amp; Work</div>
     ${kv('Education', p.education)}${kv('Profession', v(p.profession) + (p.company ? ' — ' + p.company : ''))}${kv('Income', p.income)}
     <div class="sechead">Residence</div>
-    ${kv('Province, District', v(p.province) + '' + v(p.district))}${kv('City/Village', p.city)}${kv('House', HT[p.houseType])}
+    ${kv('Province / District', v(p.province) + ' / ' + v(p.district))}${kv('City / Village', p.city)}${kv('House', HT[p.houseType])}
     <div class="sechead">Family</div>
     ${kv('Guardian', p.guardianName)}${kv('Father\'s Occupation', p.fatherOccupation)}${kv('Mother\'s Occupation', p.motherOccupation)}
-    ${kv('Brothers, Sisters', v(p.brothers) + '' + v(p.sisters))}
-    ${kv('Married Brothers, Sisters', v(p.marriedBrothers) + '' + v(p.marriedSisters))}
+    ${kv('Brothers / Sisters', v(p.brothers) + ' / ' + v(p.sisters))}
+    ${kv('Married Brothers / Sisters', v(p.marriedBrothers) + ' / ' + v(p.marriedSisters))}
     ${kv('Birth Order', p.birthOrder)}
     <div class="sechead">Contact</div>
-    ${kv('Mobile', p.mobile)}${kv('Alternate', p.altMobile)}${kv(' () Verified Contact', p.contact)}
+    ${kv('Mobile', p.mobile)}${kv('Alternate', p.altMobile)}${kv('Verified Contact', p.contact)}
     <div class="sechead">Partner Preferences</div>
-    ${kv('Age, Height', v(p.prefAge) + '' + v(p.prefHeight))}${kv('Education, City', v(p.prefEducation) + '' + v(p.prefCity))}
-    ${kv('Caste, Sect', v(p.prefCaste) + '' + v(p.prefSect))}${kv('Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'Any'))}${kv('Other Conditions', p.otherConditions)}
-    <div style="margin-top:8px">${imgs} ${cnic}</div>`;
+    ${kv('Age / Height', v(p.prefAge) + ' / ' + v(p.prefHeight))}${kv('Education / City', v(p.prefEducation) + ' / ' + v(p.prefCity))}
+    ${kv('Caste / Sect', v(p.prefCaste) + ' / ' + v(p.prefSect))}${kv('Preferred Marital Status', MS[p.prefMaritalStatus] || (p.prefMaritalStatus ? p.prefMaritalStatus : 'Any'))}${kv('Other Conditions', p.otherConditions)}
+    <div style="margin-top:10px">${gallery}</div>
+    <div style="margin-top:6px">${cnic}</div>`;
   document.getElementById('mstatus').value = p.status || 'Active';
   document.getElementById('matches').innerHTML = '';
   const pa = document.getElementById('pendActions');
@@ -293,8 +295,95 @@ function showProfile(p) {
   document.getElementById('modal').classList.remove('hidden');
 }
 
+/* ---------- premium 1-page PDF (print window) ---------- */
+function downloadPDF() {
+  const p = CUR; if (!p) return;
+  const photo = thumb(p.photo1Url, 400);
+  const row = (k, val) => `<tr><td class="k">${k}</td><td>${v(val)}</td></tr>`;
+  const sec = (title, rows) => `<div class="sec"><div class="sh">${title}</div><table>${rows}</table></div>`;
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${v(p.id)} — Al-Baraka Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'Atkinson Hyperlegible','Noto Nastaliq Urdu',sans-serif;color:#1F2937;font-size:10.5pt;line-height:1.45}
+.page{width:210mm;min-height:297mm;margin:0 auto;background:#fff;display:flex;flex-direction:column}
+.hd{background:linear-gradient(135deg,#0E3B20,#14532D 60%,#1E6B3C);color:#fff;padding:9mm 12mm 7mm;display:flex;justify-content:space-between;align-items:center;border-bottom:2.5mm solid #C9A227}
+.hd .t1{font-family:'Amiri',serif;font-size:20pt;color:#E3C766;letter-spacing:.5px}
+.hd .t2{font-size:9.5pt;opacity:.9;letter-spacing:2.5px;text-transform:uppercase;margin-top:1mm}
+.hd .idb{background:rgba(255,255,255,.14);border:1px solid #E3C766;border-radius:3mm;padding:2mm 5mm;text-align:center}
+.hd .idb b{font-size:14.5pt;color:#E3C766;letter-spacing:1px}
+.hd .idb small{display:block;font-size:7pt;letter-spacing:1.5px;opacity:.85}
+.idrow{display:flex;gap:8mm;align-items:center;padding:6mm 12mm 3mm}
+.ph{width:33mm;height:40mm;object-fit:cover;border-radius:2.5mm;border:1.2mm solid #C9A227;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.phx{width:33mm;height:40mm;border-radius:2.5mm;border:1.2mm solid #C9A227;background:#EAF4EE;display:flex;align-items:center;justify-content:center;font-size:20pt;color:#14532D}
+.nm h1{font-size:19pt;color:#14532D;margin-bottom:1mm}
+.nm .sub{color:#6B7280;font-size:10pt}
+.stt{display:inline-block;background:#EAF4EE;color:#15803D;border:1px solid #15803D;border-radius:99px;padding:.5mm 5mm;font-size:8.5pt;font-weight:700;margin-top:1.5mm}
+.cols{columns:2;column-gap:7mm;padding:2mm 12mm;flex:1}
+.sec{break-inside:avoid;margin-bottom:4mm;border:1px solid #EADFC0;border-radius:2.5mm;overflow:hidden}
+.sh{background:linear-gradient(90deg,#FDF6E3,#fff);color:#14532D;font-weight:700;font-size:10pt;padding:1.6mm 4mm;border-bottom:1px solid #EADFC0;border-left:1.8mm solid #C9A227}
+table{width:100%;border-collapse:collapse}
+td{padding:1.2mm 4mm;font-size:9.5pt;border-bottom:1px solid #F6F1E3;vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.k{color:#14532D;font-weight:700;width:34mm;white-space:nowrap}
+.ft{border-top:1.5mm solid #C9A227;background:#0E3B20;color:#fff;padding:3.5mm 12mm;display:flex;justify-content:space-between;align-items:center;font-size:8.5pt}
+.ft b{color:#E3C766}
+.conf{text-align:center;color:#9CA3AF;font-size:7.5pt;padding:1.5mm;letter-spacing:1px}
+@media print{.noprint{display:none}}
+.noprint{position:fixed;top:8px;right:8px;background:#14532D;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:14px;cursor:pointer;font-family:inherit}
+</style></head><body>
+<button class="noprint" onclick="window.print()">🖨️ Print / Save PDF</button>
+<div class="page">
+  <div class="hd">
+    <div><div class="t1">Al-Baraka Marriage Bureau</div><div class="t2">Confidential Rishta Profile</div></div>
+    <div class="idb"><b>${v(p.id)}</b><small>PROFILE ID</small></div>
+  </div>
+  <div class="idrow">
+    ${photo ? `<img class="ph" src="${photo}" onerror="this.outerHTML='<div class=phx>🕌</div>'">` : '<div class="phx">🕌</div>'}
+    <div class="nm">
+      <h1>${v(p.fullName)}</h1>
+      <div class="sub">${[G[p.gender], p.age ? p.age + ' years' : '', p.height, p.city || p.district].filter(Boolean).join(' &nbsp;•&nbsp; ')}</div>
+      <span class="stt">${ST[p.status] || v(p.status)}</span>
+    </div>
+  </div>
+  <div class="cols">
+    ${sec('Personal Information',
+      row('Date of Birth', p.dob) + row('Marital Status', MS[p.maritalStatus]) + row('Children', p.children) +
+      row('Caste', p.caste) + row('Mother Tongue', p.motherTongue) + row('Complexion', p.complexion))}
+    ${sec('Religion',
+      row('Religion', p.religion) + row('Sect', p.sect) + row('Hafiz-e-Quran', YN[p.hafizQuran]) +
+      row('Prayers', YN[p.prayerRegular]) + (p.gender === 'female' ? row('Purdah', YN[p.purdah]) : ''))}
+    ${sec('Education & Career',
+      row('Education', p.education) + row('Profession', p.profession) + row('Organization', p.company) + row('Monthly Income', p.income))}
+    ${sec('Residence',
+      row('Province', p.province) + row('District', p.district) + row('City / Village', p.city) + row('House', HT[p.houseType]))}
+    ${sec('Family Background',
+      row('Guardian', p.guardianName) + row("Father's Occupation", p.fatherOccupation) + row("Mother's Occupation", p.motherOccupation) +
+      row('Brothers', v(p.brothers) + (p.marriedBrothers ? ' (' + p.marriedBrothers + ' married)' : '')) +
+      row('Sisters', v(p.sisters) + (p.marriedSisters ? ' (' + p.marriedSisters + ' married)' : '')) +
+      row('Birth Order', p.birthOrder))}
+    ${sec('Partner Preferences',
+      row('Preferred Age', p.prefAge) + row('Preferred Height', p.prefHeight) + row('Preferred Education', p.prefEducation) +
+      row('Preferred City', p.prefCity) + row('Preferred Caste', p.prefCaste) + row('Preferred Sect', p.prefSect) +
+      row('Marital Status', MS[p.prefMaritalStatus] || 'Any') + (p.otherConditions ? row('Other Conditions', p.otherConditions) : ''))}
+  </div>
+  <div class="conf">This profile is shared in confidence for match-making purposes only. Please do not redistribute.</div>
+  <div class="ft">
+    <div><b>Al-Baraka Marriage Bureau</b> &nbsp;|&nbsp; WhatsApp: +92 315 4822167</div>
+    <div>Prepared: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+  </div>
+</div>
+<script>window.addEventListener('load',function(){setTimeout(function(){window.print();},700);});<\/script>
+</body></html>`;
+  const w = window.open('', '_blank');
+  if (!w) return alert('Popup blocked — please allow popups for this site.');
+  w.document.write(html);
+  w.document.close();
+}
+
 async function approveP() {
-  if (!confirm(' ' + CUR.id + ' Approve this profile?')) return;
+  if (!confirm('Approve profile ' + CUR.id + '?')) return;
   const r = await api('adminApprove', { profileId: CUR.id });
   if (!r.ok) return alert('Error: ' + r.error);
   CUR.status = 'Active';
@@ -302,7 +391,7 @@ async function approveP() {
   if (r.emailed) msg += '\n📧 Approval email sent automatically.';
   alert(msg);
   if (r.whatsapp) {
-    if (confirm(' — \nUser registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
+    if (confirm('User registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
   }
   search(); loadStats();
 }
@@ -311,24 +400,24 @@ function waNotice(kind) {
   const p = CUR;
   const num = String(p.mobile || p.contact || '').replace(/\D/g, '').replace(/^0/, '92');
   const txt = kind === 'approved'
-    ? '**\n\n ' + (p.fullName || '') + ' \n\n🎉 !  *' + p.id + '*  ** \n\n\n\n\n'
-    : '**\n\n ' + (p.fullName || '') + ' \n\n *' + p.id + '* \n\n🕒  **  ( 1  2 ) \n\n\n';
+    ? '*البرکہ میرج بیورو*\n\nالسلام علیکم ' + (p.fullName || '') + ' صاحب/صاحبہ،\n\n🎉 مبارک ہو! آپ کی پروفائل *' + p.id + '* کا جائزہ مکمل ہوگیا ہے اور اسے *منظور* کرلیا گیا ہے۔ آپ کی پروفائل اب فعال ہے اور رشتہ تلاش کے عمل میں شامل ہوگئی ہے۔\n\nمناسب رشتہ سامنے آنے پر ہماری ٹیم آپ سے رابطہ کرے گی۔\n\nشکریہ،\nالبرکہ میرج بیورو'
+    : '*البرکہ میرج بیورو*\n\nالسلام علیکم ' + (p.fullName || '') + ' صاحب/صاحبہ،\n\nآپ کی رجسٹریشن موصول ہوگئی ہے۔ آپ کی پروفائل آئی ڈی *' + p.id + '* ہے۔\n\n🕒 آپ کی پروفائل اس وقت ہماری ٹیم کے *زیرِ جائزہ* ہے۔ جائزہ مکمل ہونے پر (عموماً 1 تا 2 کاروباری دن) آپ کو منظوری کی اطلاع دے دی جائے گی، ان شاء اللہ۔\n\nشکریہ،\nالبرکہ میرج بیورو';
   window.open('https://wa.me/' + num + '?text=' + encodeURIComponent(txt), '_blank');
 }
 
 async function unlockP() {
   const r = await api('adminUnlock', { profileId: CUR.id });
-  alert(r.ok ? '🔓  — Account unlocked — the user can log in again.' : 'Error: ' + r.error);
+  alert(r.ok ? '🔓 Account unlocked — the user can log in again.' : 'Error: ' + r.error);
 }
 function kv(k, val) { return `<div class="kv"><b>${k}</b><span>${v(val)}</span></div>`; }
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 async function resetPw() {
-  const p = prompt(' ' + CUR.id + '  ( 4 ):');
+  const p = prompt('New password for ' + CUR.id + ' (min 4 characters):');
   if (!p) return;
-  if (p.length < 4) return alert(' 4 ');
+  if (p.length < 4) return alert('Password must be at least 4 characters');
   const r = await api('adminResetPassword', { profileId: CUR.id, newPassword: p });
-  alert(r.ok ? '✅  — ' : 'Error: ' + r.error);
+  alert(r.ok ? '✅ Password changed — inform the user of the new password.' : 'Error: ' + r.error);
 }
 
 async function changeStatus() {
@@ -339,13 +428,13 @@ async function changeStatus() {
 
 function waShare() {
   const p = CUR;
-  const t = `* —  ${p.id}*\n` +
-    `: ${v(p.fullName)}\n: ${v(G[p.gender])} | : ${v(p.age)} | : ${v(p.height)}\n` +
-    `: ${v(MS[p.maritalStatus])}\n: ${v(p.caste)} | : ${v(p.sect)}\n` +
-    `: ${v(p.education)} | : ${v(p.profession)}\n` +
-    `: ${v(p.city)}  ${v(p.district)}\n` +
-    `:  ${v(p.prefAge)} ${v(p.prefCity)} ${v(p.prefCaste)}\n` +
-    `:  +${CONFIG.SUPPORT_WHATSAPP}`;
+  const t = `*البرکہ میرج بیورو — پروفائل ${p.id}*\n` +
+    `Name: ${v(p.fullName)}\nGender: ${v(G[p.gender])} | Age: ${v(p.age)} | Height: ${v(p.height)}\n` +
+    `Marital: ${v(MS[p.maritalStatus])}\nCaste: ${v(p.caste)} | Sect: ${v(p.sect)}\n` +
+    `Education: ${v(p.education)} | Profession: ${v(p.profession)}\n` +
+    `City: ${v(p.city)} (${v(p.district)})\n` +
+    `Preference: Age ${v(p.prefAge)}, ${v(p.prefCity)}, ${v(p.prefCaste)}\n` +
+    `Contact: Al-Baraka Marriage Bureau +${CONFIG.SUPPORT_WHATSAPP}`;
   window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
 }
 
@@ -353,37 +442,37 @@ function waShare() {
 async function findMatches() {
   const p = CUR;
   const box = document.getElementById('matches');
-  box.innerHTML = '<div class="sechead">💞 …</div>';
+  box.innerHTML = '<div class="sechead">💞 Finding possible matches…</div>';
   const r = await api('adminSearch', { filters: { gender: p.gender === 'male' ? 'female' : 'male', status: 'Active' } });
   if (!r.ok) return authFail(r);
   const scored = (r.profiles || []).map(c => {
     let sc = 0, why = [];
     const ar = String(p.prefAge || '').match(/(\d+)\D+(\d+)/);
-    if (ar && c.age && +c.age >= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push(''); }
-    if (p.prefCity && (has(c.city, p.prefCity) || has(c.district, p.prefCity))) { sc += 20; why.push(''); }
-    if (p.prefCaste && has(c.caste, p.prefCaste)) { sc += 20; why.push(''); }
-    if (p.prefSect && has(c.sect, p.prefSect)) { sc += 15; why.push(''); }
-    else if (p.sect && c.sect === p.sect) { sc += 10; why.push(''); }
-    if (p.prefEducation && has(c.education, p.prefEducation)) { sc += 15; why.push(''); }
-    if (!p.prefCity && p.district && c.district === p.district) { sc += 10; why.push(''); }
+    if (ar && c.age && +c.age >= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push('age match'); }
+    if (p.prefCity && (has(c.city, p.prefCity) || has(c.district, p.prefCity))) { sc += 20; why.push('city match'); }
+    if (p.prefCaste && has(c.caste, p.prefCaste)) { sc += 20; why.push('caste match'); }
+    if (p.prefSect && has(c.sect, p.prefSect)) { sc += 15; why.push('sect match'); }
+    else if (p.sect && c.sect === p.sect) { sc += 10; why.push('same sect'); }
+    if (p.prefEducation && has(c.education, p.prefEducation)) { sc += 15; why.push('education match'); }
+    if (!p.prefCity && p.district && c.district === p.district) { sc += 10; why.push('same district'); }
     if (p.caste && c.caste && has(c.caste, p.caste)) { sc += 5; }
     return { c, sc, why };
   }).filter(x => x.sc > 0).sort((a, b) => b.sc - a.sc).slice(0, 10);
   box.innerHTML = '<div class="sechead">💞 Possible Matches (' + scored.length + ')</div>' +
     (scored.length ? scored.map(x => `
       <div class="kv"><b class="mono">${x.c.id}</b>
-        <span>${v(x.c.fullName)} — ${v(x.c.age)}  ${v(x.c.city || x.c.district)} ${v(x.c.caste)}</span>
+        <span>${v(x.c.fullName)} — ${v(x.c.age)} yrs, ${v(x.c.city || x.c.district)}, ${v(x.c.caste)}</span>
         <span><span class="score">${x.sc}%</span>
-        <button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'></button></span>
+        <button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'>View</button></span>
       </div>
       <div style="font-size:12.5px;color:var(--muted);margin:0 4px 6px">${x.why.join(' • ')}</div>`).join('')
-      : '<p style="text-align:center;color:var(--muted)"> — </p>');
+      : '<p style="text-align:center;color:var(--muted)">No suitable match found — adjust filters and search manually.</p>');
 }
 function has(a, b) { return String(a || '').toLowerCase().includes(String(b || '').toLowerCase()); }
 
 
 /* ===== v7 commercial services (admin) ===== */
-var SVC_PRICE_FIELDS=[['unlock','Profile unlock'],['boost1',' 1 Boost 1mo'],['boost3',' 3 Boost 3mo'],['boost6',' 6 Boost 6mo'],['med3',' 3 Mediator 3mo'],['med6',' 6 Mediator 6mo'],['med12','Mediator yr'],['medLump','Mediator lump'],['verJob','Verify Govt'],['verBiz','Verify Business'],['verNadra','Verify NADRA'],['memberMonthly','Membership'],['refCheck','Reference check'],['nikahPack','Nikah pack']];
+var SVC_PRICE_FIELDS=[['unlock','Profile unlock'],['boost1','Boost 1mo'],['boost3','Boost 3mo'],['boost6','Boost 6mo'],['med3','Mediator 3mo'],['med6','Mediator 6mo'],['med12','Mediator yr'],['medLump','Mediator lump'],['verJob','Verify Govt'],['verBiz','Verify Business'],['verNadra','Verify NADRA'],['memberMonthly','Membership'],['refCheck','Reference check'],['nikahPack','Nikah pack']];
 var SVC_PRICING={}, SVC_PAYTO={};
 function svcTypeLabel(r){ if(r.type==='unlock')return '🔒 Unlock '+(r.target||''); if(r.type==='boost')return '⭐ Boost '+(r.tier||''); if(r.type==='mediator')return '🤝 Mediator '+(r.tier||''); if(r.type==='verify')return '🔍 Verify '+(r.vtype||'')+' '+(r.target||''); return r.type; }
 async function loadPayments(){
@@ -418,16 +507,6 @@ async function svcSavePricing(){
 /* init */
 if (TOKEN) enter();
 </script>
-<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();
-function download1PagePDF(){if(!window._currentProfile)return;var p=window._currentProfile;var J=window.jspdf.jsPDF;var d=new J("p","mm","a4");var w=210;d.setFillColor(20,83,45);d.rect(0,0,w,38,"F");d.setTextColor(227,199,102);d.setFontSize(22);d.text("Al-Baraka Marriage Bureau",w/2,16,{align:"center"});d.setFontSize(11);d.setTextColor(255,255,255);d.text("Rishta Profile",w/2,24,{align:"center"});d.setFillColor(255,255,255);d.roundedRect(15,28,40,8,2,2,"F");d.setTextColor(20,83,45);d.setFontSize(13);d.text(v(p.id),35,34,{align:"center"});var y=48;function sec(t,f){d.setFillColor(253,246,227);d.rect(12,y-1,w-24,7,"F");d.setTextColor(20,83,45);d.setFontSize(11);d.setFont(undefined,"bold");d.text(t,15,y+4);y+=9;d.setFont(undefined,"normal");d.setFontSize(10);for(var i=0;i<f.length;i++){if(y>282){d.addPage;y=15;}d.setTextColor(20,83,45);d.text(f[i][0],16,y);d.setTextColor(31,41,55);d.text(String(v(f[i][1])).substring(0,60),80,y);y+=6;}y+=3;}
-sec("Personal",[["Name",p.fullName],["Gender",p.gender],["Age/DOB",v(p.age)+(p.dob?" - "+p.dob:"")],["Height",p.height],["Marital",p.maritalStatus],["Children",p.children],["Lang/Tone",v(p.motherTongue)+"/"+v(p.complexion)]]);
-sec("Religion",[["Religion/Sect",v(p.religion)+"/"+v(p.sect)],["Caste",p.caste],["Hafiz/Prayer",(p.hafizQuran||"--")+"/"+(p.prayerRegular||"--")]]);
-sec("Education",[["Education",p.education],["Profession",v(p.profession)+(p.company?" - "+p.company:"")],["Income",p.income]]);
-sec("Residence",[["Province/District",v(p.province)+"/"+v(p.district)],["City",p.city],["House",p.houseType]]);
-sec("Family",[["Father",p.guardianName],["Parents",v(p.fatherOccupation)+"/"+v(p.motherOccupation)],["Bros/Sis",v(p.brothers)+"/"+v(p.sisters)],["Married",v(p.marriedBrothers)+"/"+v(p.marriedSisters)]]);
-sec("Contact",[["Mobile",p.mobile]]);
-sec("Preferences",[["Age/Height",v(p.prefAge)+"/"+v(p.prefHeight)],["Edu/City",v(p.prefEducation)+"/"+v(p.prefCity)],["Caste/Sect",v(p.prefCaste)+"/"+v(p.prefSect)],["Other",p.otherConditions]]);
-d.setTextColor(150);d.setFontSize(8);d.text("Al-Baraka | +92 315 4822167 | "+new Date.toLocaleDateString,w/2,289,{align:"center"});d.save((p.id||"profile")+"_1page.pdf");}
-</script>
+<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
 </body>
 </html>
