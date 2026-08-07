@@ -98,7 +98,7 @@ tr:hover td{background:#FFFDF5}
         <h2 style="color:var(--green)">🔎 Search Profiles</h2>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <a class="btn btn-p btn-sm" href="index.html?byadmin=1" target="_blank">➕ Add Profile</a>
-          <button class="btn btn-g btn-sm" onclick="search()">Search</button>
+          <button class="btn btn-g btn-sm" onclick="applyFilters()">Search</button>
         </div>
       </div>
       <div class="grid">
@@ -119,8 +119,8 @@ tr:hover td{background:#FFFDF5}
 
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h2 style="color:var(--green)">Results <span id="rc" class="score">0</span></h2>
-        <button class="btn btn-o btn-sm" onclick="search()">🔄 Refresh</button>
+        <h2 style="color:var(--green)">Results <span id="rc" class="score">0</span> <small style="color:var(--muted);font-size:12px" id="loadms"></small></h2>
+        <button class="btn btn-o btn-sm" onclick="boot(1)">🔄 Refresh</button>
       </div>
       <div class="tblwrap">
         <table id="tbl">
@@ -192,13 +192,23 @@ async function enter() {
   document.getElementById('v-login').classList.add('hidden');
   document.getElementById('v-panel').classList.remove('hidden');
   document.getElementById('lo').classList.remove('hidden');
-  loadStats(); search(); loadPayments(); loadPricing();
+  boot();
 }
 
-async function loadStats() {
-  const r = await api('adminStats');
+let FILTERED = [];
+async function boot(fresh) {
+  const t0 = Date.now();
+  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">\u23f3 Loading\u2026</td></tr>';
+  const r = await api('adminBoot', fresh ? { fresh: 1 } : {});
   if (!r.ok) return authFail(r);
-  const s = r.stats;
+  ALL = r.list || [];
+  renderStats(r.stats || {});
+  applyFilters();
+  const el = document.getElementById('loadms');
+  if (el) el.textContent = ((Date.now() - t0) / 1000).toFixed(1) + 's' + (r.cached ? ' (cached)' : '');
+}
+
+function renderStats(s) {
   const topD = Object.entries(s.byDistrict || {}).sort((a, b) => b[1] - a[1]).slice(0, 1).map(d => d[0] + ' (' + d[1] + ')').join('') || '—';
   document.getElementById('stats').innerHTML = `
     <div class="stat"><b>${s.total}</b><span>Total</span></div>
@@ -217,16 +227,34 @@ function filters() {
     education: gv('f-education'), maritalStatus: gv('f-marital'), status: gv('f-status')
   };
 }
-function gv(id) { return document.getElementById(id).value.trim(); }
-function clearFilters() { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); search(); }
+function gv(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+function clearFilters() { document.querySelectorAll('#v-panel input,#v-panel select').forEach(e => e.value = ''); applyFilters(); }
 
-async function search() {
-  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">⏳ Loading…</td></tr>';
-  const r = await api('adminSearch', { filters: filters() });
-  if (!r.ok) return authFail(r);
-  ALL = r.profiles || [];
-  document.getElementById('rc').textContent = ALL.length;
-  document.getElementById('tbody').innerHTML = ALL.length ? ALL.map((p, i) => `
+function txt(a) { return String(a == null ? '' : a).toLowerCase(); }
+function hasTxt(a, b) { return txt(a).indexOf(txt(b)) !== -1; }
+function applyFilters() {
+  const f = filters();
+  FILTERED = ALL.filter(function (p) {
+    if (f.gender && p.gender !== f.gender) return false;
+    if (f.status && p.status !== f.status) return false;
+    if (f.maritalStatus && p.maritalStatus !== f.maritalStatus) return false;
+    if (f.ageMin && Number(p.age) < Number(f.ageMin)) return false;
+    if (f.ageMax && Number(p.age) > Number(f.ageMax)) return false;
+    if (f.district && !hasTxt(p.district, f.district)) return false;
+    if (f.city && !hasTxt(p.city, f.city)) return false;
+    if (f.caste && !hasTxt(p.caste, f.caste)) return false;
+    if (f.sect && !hasTxt(p.sect, f.sect)) return false;
+    if (f.education && !hasTxt(p.education, f.education)) return false;
+    if (f.q && !(hasTxt(p.fullName, f.q) || hasTxt(p.id, f.q) || hasTxt(p.mobile, f.q))) return false;
+    return true;
+  });
+  renderTable(FILTERED);
+}
+function search() { boot(1); }
+
+function renderTable(list) {
+  document.getElementById('rc').textContent = list.length;
+  document.getElementById('tbody').innerHTML = list.length ? list.map((p, i) => `
     <tr>
       <td class="mono"><b>${v(p.id)}</b></td><td>${v(p.fullName)}</td>
       <td><span class="chip ${p.gender === 'male' ? 'm' : 'f'}">${G[p.gender] || '—'}</span></td>
@@ -241,7 +269,17 @@ function authFail(r) {
   else alert('Error: ' + r.error);
 }
 
-function openP(i) { showProfile(ALL[i]); }
+async function openP(i) {
+  const light = FILTERED[i];
+  if (!light) return;
+  showProfile(light);
+  const r = await api('adminProfile', { profileId: light.id });
+  if (r.ok && r.profile) showProfile(r.profile);
+}
+async function openById(id) {
+  const r = await api('adminProfile', { profileId: id });
+  if (r.ok && r.profile) showProfile(r.profile); else alert('Error: ' + r.error);
+}
 function showProfile(p) {
   CUR = p;
   const headPhoto = p.photo1Url
@@ -393,7 +431,8 @@ async function approveP() {
   if (r.whatsapp) {
     if (confirm('User registered via WhatsApp — send the approval message on WhatsApp now?')) waNotice('approved');
   }
-  search(); loadStats();
+  const l = ALL.find(x => x.id === CUR.id); if (l) l.status = 'Active';
+  applyFilters(); boot(1);
 }
 
 function waNotice(kind) {
@@ -423,7 +462,7 @@ async function resetPw() {
 async function changeStatus() {
   const s = document.getElementById('mstatus').value;
   const r = await api('adminSetStatus', { profileId: CUR.id, status: s });
-  if (r.ok) { CUR.status = s; search(); loadStats(); }
+  if (r.ok) { CUR.status = s; const l = ALL.find(x => x.id === CUR.id); if (l) l.status = s; applyFilters(); }
 }
 
 function waShare() {
@@ -439,13 +478,11 @@ function waShare() {
 }
 
 /* ---- matching ---- */
-async function findMatches() {
+function findMatches() {
   const p = CUR;
   const box = document.getElementById('matches');
   box.innerHTML = '<div class="sechead">💞 Finding possible matches…</div>';
-  const r = await api('adminSearch', { filters: { gender: p.gender === 'male' ? 'female' : 'male', status: 'Active' } });
-  if (!r.ok) return authFail(r);
-  const scored = (r.profiles || []).map(c => {
+  const scored = ALL.filter(function (c) { return c.gender === (p.gender === 'male' ? 'female' : 'male') && c.status === 'Active'; }).map(c => {
     let sc = 0, why = [];
     const ar = String(p.prefAge || '').match(/(\d+)\D+(\d+)/);
     if (ar && c.age && +c.age >= +ar[1] && +c.age <= +ar[2]) { sc += 25; why.push('age match'); }
@@ -463,7 +500,7 @@ async function findMatches() {
       <div class="kv"><b class="mono">${x.c.id}</b>
         <span>${v(x.c.fullName)} — ${v(x.c.age)} yrs, ${v(x.c.city || x.c.district)}, ${v(x.c.caste)}</span>
         <span><span class="score">${x.sc}%</span>
-        <button class="btn btn-o btn-sm noprint" onclick='showProfile(${JSON.stringify(x.c).replace(/'/g, "&#39;")})'>View</button></span>
+        <button class="btn btn-o btn-sm noprint" onclick="openById('${x.c.id}')">View</button></span>
       </div>
       <div style="font-size:12.5px;color:var(--muted);margin:0 4px 6px">${x.why.join(' • ')}</div>`).join('')
       : '<p style="text-align:center;color:var(--muted)">No suitable match found — adjust filters and search manually.</p>');
@@ -489,7 +526,7 @@ async function loadPayments(){
     return '<div style="border:1px solid #F1EDE0;border-radius:10px;padding:10px;margin:6px 0"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><div><b>'+svcTypeLabel(x)+'</b><br><small class="mono" style="color:var(--muted)">'+x.rid+' · '+x.user+' · PKR '+x.fee+'</small></div><div>'+proof+'</div></div><div style="margin-top:6px">'+act+'</div></div>';
   }).join('');
 }
-async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments(); if(typeof loadStats==='function')loadStats(); } else alert('Error: '+r.error); }
+async function svcApprovePay(rid){ var r=await api('svcApproveRequest',{rid:rid}); if(r.ok){ loadPayments(); } else alert('Error: '+r.error); }
 async function svcRejectPay(rid){ if(!confirm('Reject this request?'))return; var r=await api('svcRejectRequest',{rid:rid}); if(r.ok) loadPayments(); else alert('Error: '+r.error); }
 async function loadPricing(){
   var r=await api('svcGetPricing'); if(!r.ok)return; SVC_PRICING=r.pricing||{}; SVC_PAYTO=r.payto||{};
@@ -503,6 +540,12 @@ async function svcSavePricing(){
   var r=await api('svcSetPricing',{pricing:pricing,payto:{jazzcash:g('pt_jazzcash'),easypaisa:g('pt_easypaisa'),bank:g('pt_bank')}});
   alert(r.ok?'💾 Saved':'Error: '+r.error);
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('#v-panel input, #v-panel select').forEach(function (el) {
+    if (el.id && el.id.indexOf('f-') === 0) { el.addEventListener('input', applyFilters); el.addEventListener('change', applyFilters); }
+  });
+});
 
 /* init */
 if (TOKEN) enter();
