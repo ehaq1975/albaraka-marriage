@@ -79,14 +79,14 @@ tr:hover td{background:#FFFDF5}
   <!-- PANEL -->
   <div id="v-panel" class="hidden">
     <div class="stats" id="stats"></div>
-<div class="card">
+<div class="card" style="display:none">
 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
 <h2 style="color:var(--green)">💳 Payment Requests <span id="payc" class="score">0</span></h2>
 <button class="btn btn-o btn-sm" onclick="loadPayments()">🔄 Refresh</button>
 </div>
 <div id="payList"><p style="color:var(--muted)">…Loading…</p></div>
 </div>
-<div class="card">
+<div class="card" style="display:none">
 <h2 style="color:var(--green)">⚙️ Pricing & Payment Accounts</h2>
 <p style="color:var(--muted);font-size:14px">Edit each fee and your payment accounts here.</p>
 <div id="pricingBox"></div>
@@ -171,12 +171,19 @@ function thumb(u, size) {
   return m ? ('https://drive.google.com/thumbnail?id=' + m[0] + '&sz=w' + (size || 400)) : '';
 }
 
-async function api(action, payload) {
-  const res = await fetch(CONFIG.API_URL, {
-    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(Object.assign({ action, token: TOKEN }, payload || {}))
-  });
-  return res.json();
+async function api(action, payload, ms) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function(){ ctrl.abort(); }, ms || 25000);
+  try {
+    const res = await fetch(CONFIG.API_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action, token: TOKEN }, payload || {})),
+      signal: ctrl.signal
+    });
+    return await res.json();
+  } catch (e) {
+    return { ok: false, error: e.name === 'AbortError' ? 'TIMEOUT' : String(e.message || e) };
+  } finally { clearTimeout(timer); }
 }
 
 async function adminLogin() {
@@ -198,10 +205,22 @@ async function enter() {
 let FILTERED = [];
 async function boot(fresh) {
   const t0 = Date.now();
-  document.getElementById('tbody').innerHTML = '<tr><td colspan="11" style="text-align:center">\u23f3 Loading\u2026</td></tr>';
+  const tb = document.getElementById('tbody');
+  if (!fresh) {
+    try {
+      const c = JSON.parse(sessionStorage.getItem('admCache') || 'null');
+      if (c && c.list && c.list.length) { ALL = c.list; renderStats(c.stats || {}); applyFilters(); }
+    } catch (e) {}
+  }
+  if (!ALL.length) tb.innerHTML = '<tr><td colspan="11" style="text-align:center">\u23f3 Loading\u2026</td></tr>';
   const r = await api('adminBoot', fresh ? { fresh: 1 } : {});
-  if (!r.ok) return authFail(r);
+  if (!r.ok) {
+    if (ALL.length) return;
+    if (r.error === 'TIMEOUT') { tb.innerHTML = '<tr><td colspan="11" style="text-align:center">\u26a0\ufe0f Server slow \u2014 <button class="btn btn-o btn-sm" onclick="boot(1)">Retry</button></td></tr>'; return; }
+    return authFail(r);
+  }
   ALL = r.list || [];
+  try { sessionStorage.setItem('admCache', JSON.stringify({ list: ALL, stats: r.stats })); } catch (e) {}
   renderStats(r.stats || {});
   applyFilters();
   const el = document.getElementById('loadms');
@@ -252,18 +271,27 @@ function applyFilters() {
 }
 function search() { boot(1); }
 
-function renderTable(list) {
-  document.getElementById('rc').textContent = list.length;
-  document.getElementById('tbody').innerHTML = list.length ? list.map((p, i) => `
-    <tr>
+const PAGE = 50;
+let shown = PAGE;
+function rowHtml(p, i) {
+  return `<tr>
       <td class="mono"><b>${v(p.id)}</b></td><td>${v(p.fullName)}</td>
       <td><span class="chip ${p.gender === 'male' ? 'm' : 'f'}">${G[p.gender] || '—'}</span></td>
       <td>${v(p.age)}</td><td class="mono">${v(p.height)}</td><td>${v(p.city || p.district)}</td>
       <td>${v(p.caste)}</td><td>${v(p.sect)}</td><td>${v(p.education)}</td>
       <td><span class="chip ${p.status}">${ST[p.status] || v(p.status)}</span></td>
       <td><button class="btn btn-p btn-sm" onclick="openP(${i})">View</button></td>
-    </tr>`).join('') : '<tr><td colspan="11" style="text-align:center">No profiles found</td></tr>';
+    </tr>`;
 }
+function renderTable(list, keepPage) {
+  if (!keepPage) shown = PAGE;
+  document.getElementById('rc').textContent = list.length;
+  const slice = list.slice(0, shown);
+  const more = list.length > shown ? `<tr><td colspan="11" style="text-align:center;padding:12px"><button class="btn btn-o btn-sm" onclick="showMore()">Show more (${list.length - shown} remaining)</button></td></tr>` : '';
+  document.getElementById('tbody').innerHTML = list.length ? slice.map(function(p,i){return rowHtml(p,i);}).join('') + more : '<tr><td colspan="11" style="text-align:center">No profiles found</td></tr>';
+}
+function showMore() { shown += PAGE; renderTable(FILTERED, true); }
+
 function authFail(r) {
   if (r.error === 'AUTH') { logout(); }
   else alert('Error: ' + r.error);
@@ -550,6 +578,6 @@ document.addEventListener('DOMContentLoaded', function () {
 /* init */
 if (TOKEN) enter();
 </script>
-<script>(function(){function hide(t){[].slice.call(document.querySelectorAll('.card')).forEach(function(c){if((c.textContent||'').indexOf(t)>-1)c.style.display='none';});}function run(){hide('Payment Requests');hide('Pricing & Payment Accounts');}if(document.readyState!=='loading')run();else document.addEventListener('DOMContentLoaded',run);setInterval(run,600);})();</script>
+
 </body>
 </html>
